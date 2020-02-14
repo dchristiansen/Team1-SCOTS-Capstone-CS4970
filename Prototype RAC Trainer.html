@@ -8,38 +8,7 @@
 
 <body>
   <canvas id="canv" width="640px" height="480px"></canvas>
-  <script>
-    let cnv = document.querySelector("#canv");
-    let ctx = cnv.getContext("2d");
-    let beatCounter = 0;
-    let bpm = 120;
-    let beatTime = 60000 / bpm;
-    let beatSound = new Audio("beat.wav");
-    let keyPressTimings = [];
-    ctx.fillStyle = "white";
-    ctx.strokeStyle = "black";
-    ctx.font = "72px Arial";
-    let date = new Date();
-    let startTime = date.getTime();
-    setInterval(playBeat, beatTime);
-
-    function playBeat() {
-      beatSound.play();
-    }
-
-    function keyPressDown(event) {
-      date = new Date();
-      let currentTime = date.getTime();
-      let timing = ((currentTime - startTime) % beatTime);
-      if (timing > beatTime / 2){
-        timing = +timing - +beatTime;
-      }
-      keyPressTimings.push(timing);
-      ctx.fillRect(0,0,640,480);
-      ctx.strokeText(timing + "ms",100, 240)
-    }
-    document.addEventListener("keydown", keyPressDown);
-  </script>
+  <script src="RACTrainer.js" type="module"></script>
 </body>
 
 </html>
