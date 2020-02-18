@@ -1,0 +1,20 @@
+.switch label input[type=checkbox]:checked+.lever {
+  background-color: #d81b60;
+}
+
+.switch label input[type=checkbox]:checked+.lever:after {
+  background-color: #ad1457;
+}
+
+input[type=range]::-webkit-slider-thumb {
+    background-color: #d81b60;
+  }
+input[type=range]::-moz-range-thumb {
+      background-color: #d81b60;
+  }
+input[type=range]::-ms-thumb {
+      background-color: #d81b60;
+  }
+input[type=range] + .thumb {
+       background-color: #d81b60;
+  }
