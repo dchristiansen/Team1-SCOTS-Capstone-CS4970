@@ -1,4 +1,5 @@
 import TapInfo from "./TapInfo.js";
+import ScoreCalculator from "./ScoreCalculator.js";
 
 let cnv = document.querySelector("#canv");
 let ctx = cnv.getContext("2d");
@@ -16,15 +17,22 @@ let side = "right";
 let ready = true;
 let startBeats = 0;
 let currentBeat = 0;
-setInterval(playBeat, beatTime);
+let gameTime = 5000;
+let calculator = new ScoreCalculator();
+let interval = setInterval(playBeat, beatTime);
 
 function playBeat() {
     //TODO: Maintain and check soundOn variable
-    if (soundOn){
-        beatSound.play();
+    if(new Date().getTime() < (startTime + gameTime)){
+        //if (soundOn){
+            beatSound.play();
+        //}
+    } else {
+        clearInterval(interval);
+        console.log(calculator.calculateScore(data, beatTime, gameTime));
     }
 }
-
+ 
 function keyPressDown(event) {
     if (event.key == " " && ready) {
         date = new Date();
