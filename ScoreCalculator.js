@@ -21,8 +21,8 @@ class ScoreCalculator{
                 } 
                 //Missed a beat
                 else {
-                    console.log("Missed a beat");
-                    let numMisses = currentBeat - lastBeat;
+                    console.log("Missed a beat at " + lastBeat);
+                    let numMisses = (currentBeat - beatTime) - lastBeat;
                     numMisses = numMisses / beatTime;
                     //console.log("Number of misses: " + numMisses);
                     misses += numMisses;
@@ -46,6 +46,11 @@ class ScoreCalculator{
         console.log("Miss Penalty: " + missPenalty + ", with " + misses + " misses");
         score -= missPenalty;
         score /= totalTime;
+
+        if(score < 0) {
+            score = 0;
+        }
+
         return score;
     }
 }

@@ -17,16 +17,26 @@ let side = "right";
 let ready = true;
 let startBeats = 0;
 let currentBeat = 0;
-let gameTime = 5000;
+let gameTime = 10000;
 let calculator = new ScoreCalculator();
 let interval = setInterval(playBeat, beatTime);
+let volumeChange = (0.25 * (gameTime/1000))/10;
 
 function playBeat() {
     //TODO: Maintain and check soundOn variable
-    if(new Date().getTime() < (startTime + gameTime)){
-        //if (soundOn){
-            beatSound.play();
-        //}
+    let current = new Date().getTime();
+    if(current < (startTime + gameTime)){
+        if(current >= (startTime + (0.75 * gameTime))) {
+            //beatSound.volume = beatSound.volume - volumeChange;
+            let newVolume = beatSound.volume - volumeChange;
+            if(newVolume < 0) {
+                newVolume = 0;
+            }
+            console.log("Lowering volume to " + newVolume);
+            beatSound.volume = newVolume;
+        }
+
+        beatSound.play();
     } else {
         clearInterval(interval);
         console.log(calculator.calculateScore(data, beatTime, gameTime));
