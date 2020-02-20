@@ -7,7 +7,8 @@ const HITS_TO_START = 10;
 let bpm = 120;
 let beatTime = 60000 / bpm;
 let beatSound = new Audio("beat.wav");
-let data = [];
+let tapDataSoundOn = [];
+let tapDataSoundOff = [];
 let date = new Date();
 let startTime = date.getTime();
 let tapInfo;
@@ -20,6 +21,7 @@ let currentBeat = 0;
 let gameTime = 5000;
 let calculator = new ScoreCalculator();
 let interval = setInterval(playBeat, beatTime);
+//Calculate the volume change based off of the game time and beat timing
 let volumeChange = 1/(((0.25 * (gameTime/1000)))/(beatTime/1000));
 
 function playBeat() {
@@ -39,7 +41,7 @@ function playBeat() {
     } else {
         soundOn = false;
         clearInterval(interval);
-        console.log(calculator.calculateScore(data, beatTime, gameTime));
+        console.log(calculator.calculateScore(tapDataSoundOn, beatTime, gameTime));
     }
 }
  
@@ -90,7 +92,11 @@ function keyPressUp(event) {
         let currentTime = date.getTime()
         tapInfo.releaseTime = currentTime - startTime;
         tapInfo.updateDuration();
-        data.push(tapInfo);
+        if(soundOn){
+            tapDataSoundOn.push(tapInfo);
+        } else {
+            tapDataSoundnOff.push(tapInfo);
+        }
         ready = true;
         console.log(tapInfo);
     }
