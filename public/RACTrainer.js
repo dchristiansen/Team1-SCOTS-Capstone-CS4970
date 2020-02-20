@@ -19,7 +19,7 @@ let side = "right";
 let ready = true;
 let startBeats = 0;
 let currentBeat = 0;
-let gameTime = 5000;
+let gameTime = 20000;
 let calculator = new ScoreCalculator();
 let interval = setInterval(playBeat, beatTime);
 //Calculate the volume change based off of the game time and beat timing
@@ -47,7 +47,6 @@ function playBeat() {
     }
 }
 
-
 function draw() {
     ctx.save();
     {
@@ -73,24 +72,15 @@ function keyPressDown(event) {
         tapInfo = new TapInfo(currentTime - startTime - timing, beatTime, currentTime - startTime, "none", currentTime - startTime - lastTap, soundOn, side);
         lastTap = currentTime - startTime;
 
-        if (startBeats < HITS_TO_START) {
-            if (startBeats == 0) {
-                circle.fill = "darkolivegreen";
-                currentBeat = currentTime - startTime - timing + beatTime;
-                startBeats++;
+        if(soundOn){
+            if (Math.abs(tapInfo.delta) < beatTime / 6) {
+                circle.fill = "green";
             }
-            else if (tapInfo.beat == currentBeat) {
-                circle.fill = "darkolivegreen";
-                currentBeat += beatTime;
-                startBeats++;
-                if (startBeats >= HITS_TO_START) {
-                    circle.fill = "white"
-                    soundOn = false;
-                }
+            else if (Math.abs(tapInfo.delta) < beatTime * 2 / 6){
+                circle.fill = "yellow"
             }
-            else {
+            else{
                 circle.fill = "red";
-                startBeats = 0;
             }
         }
     }
@@ -107,7 +97,7 @@ function keyPressUp(event) {
         if (soundOn) {
             tapDataSoundOn.push(tapInfo);
         } else {
-            tapDataSoundnOff.push(tapInfo);
+            tapDataSoundOff.push(tapInfo);
         }
         ready = true;
         console.log(tapInfo);
