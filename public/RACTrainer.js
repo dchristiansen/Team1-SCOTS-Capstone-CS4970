@@ -1,5 +1,6 @@
 import TapInfo from "./TapInfo.js";
 import ScoreCalculator from "./ScoreCalculator.js";
+import Circle from "./Circle.js";
 
 let cnv = document.querySelector("#canv");
 let ctx = cnv.getContext("2d");
@@ -22,31 +23,46 @@ let gameTime = 5000;
 let calculator = new ScoreCalculator();
 let interval = setInterval(playBeat, beatTime);
 //Calculate the volume change based off of the game time and beat timing
-let volumeChange = 1/(((0.25 * (gameTime/1000)))/(beatTime/1000));
+let volumeChange = 1 / (((0.25 * (gameTime / 1000))) / (beatTime / 1000));
+setInterval(draw, 1000 / 20);
+let circle = new Circle(320, 240, 100, "white", "black");
 
 function playBeat() {
     //TODO: Maintain and check soundOn variable
     let current = new Date().getTime();
-    if(current < (startTime + gameTime)){
-        if(current >= (startTime + (0.75 * gameTime))) {
+    if (current < (startTime + gameTime)) {
+        if (current >= (startTime + (0.75 * gameTime))) {
             let newVolume = beatSound.volume - volumeChange;
-            if(newVolume < 0) {
+            if (newVolume < 0) {
                 newVolume = 0;
             }
             console.log("Lowering volume to " + newVolume);
             beatSound.volume = newVolume;
         }
-
-        beatSound.play();
+        beatSound.play()
     } else {
         soundOn = false;
         clearInterval(interval);
         console.log(calculator.calculateScore(tapDataSoundOn, beatTime, gameTime));
     }
 }
- 
+
+
+function draw() {
+    ctx.save();
+    {
+        ctx.fillStyle = "white";
+        ctx.strokeStyle = "black";
+        ctx.font = "72px Arial";
+        ctx.fillRect(0, 0, 640, 480);
+        circle.draw(ctx);
+    }
+    ctx.restore();
+}
+
 function keyPressDown(event) {
     if (event.key == " " && ready) {
+        circle.goalRadius = 90;
         date = new Date();
         ready = false;
         let currentTime = date.getTime();
@@ -54,31 +70,26 @@ function keyPressDown(event) {
         if (timing > beatTime / 2) {
             timing = +timing - +beatTime;
         }
-        ctx.save();
-        {
-            ctx.fillStyle = "white";
-            ctx.strokeStyle = "black";
-            ctx.font = "72px Arial";
-            ctx.fillRect(0, 0, 640, 480);
-            ctx.strokeText(timing + "ms", 100, 240)
-        }
         tapInfo = new TapInfo(currentTime - startTime - timing, beatTime, currentTime - startTime, "none", currentTime - startTime - lastTap, soundOn, side);
         lastTap = currentTime - startTime;
 
-        if (startBeats < HITS_TO_START){
-            if (startBeats == 0){
+        if (startBeats < HITS_TO_START) {
+            if (startBeats == 0) {
+                circle.fill = "darkolivegreen";
                 currentBeat = currentTime - startTime - timing + beatTime;
                 startBeats++;
             }
-            else if (tapInfo.beat == currentBeat)
-            {
+            else if (tapInfo.beat == currentBeat) {
+                circle.fill = "darkolivegreen";
                 currentBeat += beatTime;
                 startBeats++;
-                if (startBeats >= HITS_TO_START){
+                if (startBeats >= HITS_TO_START) {
+                    circle.fill = "white"
                     soundOn = false;
                 }
             }
-            else{
+            else {
+                circle.fill = "red";
                 startBeats = 0;
             }
         }
@@ -88,11 +99,12 @@ function keyPressDown(event) {
 
 function keyPressUp(event) {
     if (event.key == " ") {
+        circle.goalRadius = 100;
         date = new Date();
         let currentTime = date.getTime()
         tapInfo.releaseTime = currentTime - startTime;
         tapInfo.updateDuration();
-        if(soundOn){
+        if (soundOn) {
             tapDataSoundOn.push(tapInfo);
         } else {
             tapDataSoundnOff.push(tapInfo);
