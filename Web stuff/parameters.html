@@ -35,12 +35,28 @@
    <div class="container">
      <h2 class="white-text">Parameter Select</h2>
 
-     <form action="#">
-  <p class="range-field white-text">
+     <form class="col s6"action="#">
+  <div class="row">
+  <p class="range-field white-text col s3">
     BPM
-    <input type="range" class="pink"  min="50" max="150" />
+    <input type="number" class="white-text" value="100"  min="40" max="300" />
   </p>
+  <p class="range-field white-text col s3">
+    Time with sound
+    <input type="number" class="white-text" value="100"  min="40" max="300" />
+  </p>
+</div>
+<div class="row">
+  <p class="white-text col s3">Cycles
+    <input type="number" class="white-text" value="3" min="1" max="10" />
+  </p>
+  <p class="range-field white-text col s3">
+    Time without sound
+    <input type="number" class="white-text" value="100"  min="40" max="300" />
+  </p>
+</div>
 </form>
+
 
       <p class="white-text">Feedback</p>
      <div class="switch">
