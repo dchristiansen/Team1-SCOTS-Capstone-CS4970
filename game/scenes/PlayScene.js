@@ -10,8 +10,12 @@ export default class PlayScene extends Engine.Base.Scene{
         let circle = new Engine.Components.CircleComponent(100, "white", "black");
         circleObject.addComponent(circle);
 
-        let test = new GameBehaviours.test();
-        circleObject.addComponent(test);
+        let TapHandler = new GameBehaviours.TapHandler();
+        circleObject.addComponent(TapHandler);
+
+        let CircleBehaviour = new GameBehaviours.CircleBehaviour();
+        circleObject.addComponent(CircleBehaviour);
+
 
         this.children.push(circleObject);
     }

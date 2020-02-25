@@ -1,5 +1,7 @@
-import test from "./behaviours/test.js"
+import CircleBehaviour from "./behaviours/CircleBehaviour.js"
+import TapHandler from "./behaviours/TapHandler.js"
 
 export default{
-  test,
+  CircleBehaviour,
+  TapHandler,
 }

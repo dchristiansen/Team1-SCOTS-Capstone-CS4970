@@ -14,6 +14,8 @@ export default class GameObject extends NameableParent {
     addComponent(component) {
         this.components.push(component);
         component.gameObject = this;
+        if(component.start)
+            component.start();
     }
     draw(ctx) {
         ctx.save();
@@ -39,8 +41,8 @@ export default class GameObject extends NameableParent {
         if (component) return component;
         throw "Error, couldn't find type " + type;
     }
-    pulse(event) {
-        this.components.filter(i=>i.pulse).forEach(i=>i.pulse(event));
-        this.children.filter(i=>i.pulse).forEach(i=>i.pulse(event));
+    pulse() {
+        this.components.filter(i=>i.pulse).forEach(i=>i.pulse());
+        this.children.filter(i=>i.pulse).forEach(i=>i.pulse());
     }
 }

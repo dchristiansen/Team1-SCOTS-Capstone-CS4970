@@ -20,7 +20,7 @@ function keydown(event) {
         Input.down[event.key] = true;
     Input.keys[event.key] = true;
 
-    pulse(event);
+    pulse();
 }
 
 function keyup(event) {
@@ -28,7 +28,7 @@ function keyup(event) {
         Input.up[event.key] = true;
     Input.keys[event.key] = false;
 
-    pulse(event);
+    pulse();
 }
 
 let canv, ctx;
@@ -54,8 +54,8 @@ function draw(ctx) {
     SceneManager.currentScene.draw(ctx, canv.width, canv.height);
 }
 
-function pulse(event) {
-    SceneManager.currentScene.pulse(event);
+function pulse() {
+    SceneManager.currentScene.pulse();
 }
 
 main();

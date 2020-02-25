@@ -17,7 +17,7 @@ export default class Scene extends NameableParent{
         this.children.filter(i=>i.update).forEach(i=>i.update());
     }
 
-    pulse(event) {
-        this.children.filter(i=>i.pulse).forEach(i=>i.pulse(event));
+    pulse() {
+        this.children.filter(i=>i.pulse).forEach(i=>i.pulse());
     }
 }
