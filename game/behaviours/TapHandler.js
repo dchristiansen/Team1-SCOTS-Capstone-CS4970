@@ -18,6 +18,10 @@ export default class TapHandler extends Base.Behavior {
     tapDown() {
         let date = new Date();
         let currentTime = date.getTime();
+        //First tap, set startTime to that tap
+        if(this.startTime == -1) {
+            this.startTime = currentTime;
+        }
         let timing = ((currentTime - this.startTime) % this.beatTime);
         if (timing > this.beatTime / 2) {
             timing = timing - this.beatTime;
