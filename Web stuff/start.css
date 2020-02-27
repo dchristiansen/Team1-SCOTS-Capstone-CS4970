@@ -1,0 +1,82 @@
+#startButton {
+  background-color: #ad1457;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+  line-height: 32px;
+  border-radius: 2px;
+  border:none;
+  outline: none;
+  width: 100%;
+  color:#fff;
+  font-size: 48px;
+  padding: 30px 0;
+  cursor: pointer;
+  font-family: "Roboto Mono", Roboto, sans-serif;
+  font-weight: 400;
+}
+
+#startButton:hover {
+  box-shadow: 0 5px 11px 0 rgba(0, 0, 0, 0.26), 0 4px 15px 0 rgba(0, 0, 0, 0.26);
+  background-color: #880e4f;
+}
+
+.hidden{
+  visibility: hidden;
+}
+
+#circle{
+  top: 50%;
+  left: 42%;
+  position: absolute;
+  -webkit-animation: pulse 1.5s infinite;
+}
+
+#circle:before{
+  background: rgba(51, 204, 51, 0.25);
+  border-radius: 100%;
+  content: "";
+  display: block;
+  height: 200px;
+  position: absolute;
+  width: 200px;
+  -webkit-animation: colorchange-outside 15s infinite;
+}
+
+#circle:after{
+  background: #00bf46;
+  border-radius: 100%;
+  content: "";
+  display: block;
+  height: 120px;
+  margin-left: 40px;
+  margin-top: 40px;
+  width: 120px;
+  -webkit-animation: colorchange 15s infinite;
+ }
+
+@-webkit-keyframes pulse{
+  0%{
+    -webkit-transform: scale(0.98);
+  }
+  50%{
+    -webkit-transform: scale(1.1);
+  }
+  100%{
+    -webkit-transform: scale(0.98);
+  }
+}
+
+@-webkit-keyframes colorchange
+   {
+     0%   {background: red;}
+     25%  {background: yellow;}
+     75%  {background: green;}
+     100% {background: red;}
+   }
+
+   @-webkit-keyframes colorchange-outside
+      {
+        0%   {background: rgba(255, 51, 51, 0.25);}
+        25%  {background: rgba(255, 255, 51, 0.25);}
+        75%  {background: rgba(51, 255, 51, 0.25)}
+        100% {background: rgba(255, 51, 51, 0.25);}
+      }
