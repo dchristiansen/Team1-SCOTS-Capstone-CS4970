@@ -2,10 +2,12 @@ import Base from "../../engine/Base.js";
 
 export default class ScoreCalculator extends Base.Behavior{
     calculateScore(data, beatTime, phaseTime) {
-        let closestHitDelta = phaseTime;
-        let lastBeat = 0;
+        let closestHitDelta = 0;
+        let lastBeat = phaseTime;
         let misses = 0;
         let score = phaseTime;
+
+        console.log(data);
 
         data.forEach(tap => {
             let currentBeat = tap.beat;
@@ -14,7 +16,6 @@ export default class ScoreCalculator extends Base.Behavior{
             if(currentBeat != lastBeat) {
                 //New beat hit
                 if(lastBeat + beatTime == currentBeat) {
-                    console.log("New beat hit");
                     //Factor the last beat hit into the score
                     score -= closestHitDelta;
 
@@ -43,6 +44,17 @@ export default class ScoreCalculator extends Base.Behavior{
                 misses++;
             }
         });
+
+        //Check if missed the last beat
+        if(lastBeat != (phaseTime*2)) {
+            console.log("Missed the last beat");
+            //Calculate the number of misses from the last beat
+            let numMisses = (phaseTime*2) - lastBeat;
+            numMisses = numMisses / beatTime;
+            misses += numMisses;
+        } else {
+            score -= closestHitDelta;
+        }
 
         let missPenalty = misses * beatTime;
         console.log("Miss Penalty: " + missPenalty + ", with " + misses + " misses");

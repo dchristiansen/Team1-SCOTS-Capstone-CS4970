@@ -28,8 +28,8 @@ export default class TapHandler extends Base.Behavior {
         let currentTime = date.getTime();
         //First tap, set startTime to that tap
         if(this.timer.startTime == -1) {
-            this.timer.startTimer();
-            this.startTime = currentTime;
+            this.startTime = this.timer.startTimer();
+            //this.startTime = this.timer.startTime;
         }
         let timing = ((currentTime - this.startTime) % this.beatTime);
         if (timing > this.beatTime / 2) {
