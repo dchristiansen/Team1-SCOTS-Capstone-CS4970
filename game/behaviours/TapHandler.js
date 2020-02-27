@@ -1,5 +1,6 @@
 import Base from "../../engine/Base.js"
 import TapInfo from "../../TapInfo.js"
+import Timer from "./Timer.js"
 
 export default class TapHandler extends Base.Behavior {
 
@@ -9,17 +10,25 @@ export default class TapHandler extends Base.Behavior {
     soundOn = true;
     side = 0;
     tapInfo;
+    timer;
+    tapDataSoundOff = [];
+    tapDataSoundOn = [];
 
     constructor(beatTime) {
         super();
-        this.beatTime = 5000;
+        this.beatTime = beatTime;
+    }
+
+    start() {
+        this.timer = this.gameObject.getComponent(Timer);
     }
 
     tapDown() {
         let date = new Date();
         let currentTime = date.getTime();
         //First tap, set startTime to that tap
-        if(this.startTime == -1) {
+        if(this.timer.startTime == -1) {
+            this.timer.startTimer();
             this.startTime = currentTime;
         }
         let timing = ((currentTime - this.startTime) % this.beatTime);
@@ -37,11 +46,12 @@ export default class TapHandler extends Base.Behavior {
         let currentTime = date.getTime()
         this.tapInfo.releaseTime = currentTime - this.startTime;
         this.tapInfo.updateDuration();
-        // if (this.soundOn) {
-        //     tapDataSoundOn.push(this.tapInfo);
-        // } else {
-        //     tapDataSoundOff.push(this.tapInfo);
-        // }
+        if (this.timer.soundOn) {
+            this.tapDataSoundOn.push(this.tapInfo);
+        } else {
+            if(!this.timer.gameOver)
+                this.tapDataSoundOff.push(this.tapInfo);
+        }
         console.log(this.tapInfo);
     }
 }

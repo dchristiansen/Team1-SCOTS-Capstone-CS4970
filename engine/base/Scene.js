@@ -7,7 +7,7 @@ export default class Scene extends NameableParent{
         
     }
     draw(ctx, width, height){
-        ctx.fillStyle = "white";
+        ctx.fillStyle = "#212121";
         ctx.fillRect(0,0,width, height)
         
         this.children.filter(i=>i.draw).forEach(i=>i.draw(ctx));

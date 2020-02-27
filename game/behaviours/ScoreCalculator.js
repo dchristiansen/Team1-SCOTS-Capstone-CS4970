@@ -1,9 +1,11 @@
-class ScoreCalculator{
-    calculateScore(data, beatTime, totalTime) {
-        let closestHitDelta = 0;
+import Base from "../../engine/Base.js";
+
+export default class ScoreCalculator extends Base.Behavior{
+    calculateScore(data, beatTime, phaseTime) {
+        let closestHitDelta = phaseTime;
         let lastBeat = 0;
         let misses = 0;
-        let score = totalTime;
+        let score = phaseTime;
 
         data.forEach(tap => {
             let currentBeat = tap.beat;
@@ -45,7 +47,7 @@ class ScoreCalculator{
         let missPenalty = misses * beatTime;
         console.log("Miss Penalty: " + missPenalty + ", with " + misses + " misses");
         score -= missPenalty;
-        score /= totalTime;
+        score /= phaseTime;
 
         if(score < 0) {
             score = 0;
@@ -54,4 +56,3 @@ class ScoreCalculator{
         return score;
     }
 }
-export default ScoreCalculator;

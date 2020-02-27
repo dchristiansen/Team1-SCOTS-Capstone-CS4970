@@ -6,17 +6,22 @@ export default class PlayScene extends Engine.Base.Scene{
     constructor(){
         super("PlayScene");
 
-        let circleObject = new Engine.Base.GameObject(100, 100);
+        let gameObject = new Engine.Base.GameObject(100, 100);
         let circle = new Engine.Components.CircleComponent(100, "white", "black");
-        circleObject.addComponent(circle);
+        gameObject.addComponent(circle);
 
-        let TapHandler = new GameBehaviours.TapHandler();
-        circleObject.addComponent(TapHandler);
+        let ScoreCalculator = new GameBehaviours.ScoreCalculator();
+        gameObject.addComponent(ScoreCalculator);
+
+        let Timer = new GameBehaviours.Timer(500, 1000);
+        gameObject.addComponent(Timer);
+
+        let TapHandler = new GameBehaviours.TapHandler(500);
+        gameObject.addComponent(TapHandler);
 
         let CircleBehaviour = new GameBehaviours.CircleBehaviour();
-        circleObject.addComponent(CircleBehaviour);
+        gameObject.addComponent(CircleBehaviour);
 
-
-        this.children.push(circleObject);
+        this.children.push(gameObject);
     }
 }

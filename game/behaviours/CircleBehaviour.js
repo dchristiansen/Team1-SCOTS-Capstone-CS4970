@@ -16,11 +16,11 @@ export default class CircleBehaviour extends Base.Behavior {
     }
 
     pulse() {
-        if(Input.down[' '] || Input.frameDown[' ']) {
+        if(Input.keys[' ']) {
             this.circle.radius = 90;
             let delta = this.tapHandler.tapDown();
 
-            if (this.tapHandler.soundOn) {
+            if (this.tapHandler.timer.soundOn) {
                 if (Math.abs(delta) < this.tapHandler.beatTime / 6) {
                     this.circle.fill = "green";
                 }
@@ -32,7 +32,8 @@ export default class CircleBehaviour extends Base.Behavior {
                 }
             }
         } 
-        else if (Input.up[' '] || Input.frameUp[' ']){
+
+        if (!Input.keys[' ']){
             this.circle.radius = 100;
             this.circle.fill = "white";
             this.tapHandler.tapUp();
