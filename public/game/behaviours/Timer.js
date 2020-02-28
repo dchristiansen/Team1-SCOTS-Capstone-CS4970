@@ -27,7 +27,7 @@ export default class Timer extends Base.Behavior {
 
     start() {
         this.scoreCalculator = this.gameObject.getComponent(ScoreCalculator);
-        this.beatSound = new Audio("beat.wav");
+        this.beatSound = new Audio("./game/assets/beat.wav");
         this.volumeChange = 1 / (((0.25 * (this.phaseTime / 1000))) / (this.beatTime / 1000));
         this.interval = setInterval(this.playBeat.bind(this), this.beatTime);
     }

@@ -1,5 +1,5 @@
 import Base from "../../engine/Base.js"
-import TapInfo from "../../TapInfo.js"
+import TapInfo from "../data/TapInfo.js"
 import Timer from "./Timer.js"
 
 export default class TapHandler extends Base.Behavior {
