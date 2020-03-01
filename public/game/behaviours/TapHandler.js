@@ -14,9 +14,9 @@ export default class TapHandler extends Base.Behavior {
     tapDataSoundOff = [];
     tapDataSoundOn = [];
 
-    constructor(beatTime) {
+    constructor(bpm) {
         super();
-        this.beatTime = beatTime;
+        this.beatTime = 60000/bpm;
     }
 
     start() {

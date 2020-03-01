@@ -7,8 +7,11 @@ export default class Timer extends Base.Behavior {
     currentTime;
     startTime = -1;
     beatTime;
-    phaseTime;
+    soundPhaseTime;
+    noSoundPhaseTime;
     phaseSwitchTime;
+    cycles;
+    feedback;
     endTime;
     tapHandler;
     soundOn = true;
@@ -16,25 +19,32 @@ export default class Timer extends Base.Behavior {
     gameOver = false;
     interval;
     beatSound;
-    mostRecentBeat;
+    mostRecentBeat = 0;
     volumeChange;
 
-    constructor(beatTime, phaseTime) {
+    constructor(bpm, soundPhaseTime, noSoundPhaseTime, cycles, feedback) {
         super();
-        this.beatTime = beatTime;
-        this.phaseTime = phaseTime;
+        this.beatTime = 60000/bpm;
+        this.soundPhaseTime = soundPhaseTime*1000;
+        this.noSoundPhaseTime = noSoundPhaseTime*1000;
+        this.cycles = cycles;
+        this.feedback = feedback;
+
+        console.log("in timer");
     }
 
     start() {
+        console.log(this.beatTime + " " + this.soundPhaseTime + " " + this.noSoundPhaseTime + " " + this.cycles + " " + this.feedback);
+
         this.scoreCalculator = this.gameObject.getComponent(ScoreCalculator);
-        this.beatSound = new Audio("./game/assets/beat.wav");
-        this.volumeChange = 1 / (((0.25 * (this.phaseTime / 1000))) / (this.beatTime / 1000));
+        this.beatSound = new Audio("./game/assets/newbeat.wav");
+        this.volumeChange = 1 / (((0.25 * (this.soundPhaseTime / 1000))) / (this.beatTime / 1000));
         this.interval = setInterval(this.playBeat.bind(this), this.beatTime);
     }
 
     playBeat() {
         //Check if volume needs to be lowered, if so lower it
-        if (this.currentTime >= (this.startTime + (0.75 * this.phaseTime))  && this.startTime != -1) {
+        if (this.currentTime >= (this.startTime + (0.75 * this.soundPhaseTime))  && this.startTime != -1) {
             let newVolume = this.beatSound.volume - this.volumeChange;
             if (newVolume < 0) {
                 newVolume = 0;
@@ -49,8 +59,8 @@ export default class Timer extends Base.Behavior {
     startTimer() {
         this.tapHandler = this.gameObject.getComponent(TapHandler);
         this.startTime = this.mostRecentBeat;
-        this.phaseSwitchTime = this.startTime + this.phaseTime;
-        this.endTime = this.phaseSwitchTime + this.phaseTime + (this.beatTime/2);
+        this.phaseSwitchTime = this.startTime + this.soundPhaseTime;
+        this.endTime = this.phaseSwitchTime + this.noSoundPhaseTime + (this.beatTime/2);
         this.tapHandler.startTime = this.startTime;
         return this.startTime;
     }
@@ -63,12 +73,13 @@ export default class Timer extends Base.Behavior {
                 this.soundOn = false;
                 clearInterval(this.interval);
             }
-            //TODO: Add the volume decrement algorithm
         } else {
             if(this.currentTime > this.endTime) {
                 if(!this.gameOver) {
                     this.gameOver = true;
-                    console.log(this.scoreCalculator.calculateScore(this.tapHandler.tapDataSoundOff, this.beatTime, this.phaseTime));
+                    sessionStorage.setItem('score', this.scoreCalculator.calculateScore(this.tapHandler.tapDataSoundOff, this.beatTime, this.noSoundPhaseTime));
+                    sessionStorage.setItem('data', JSON.stringify(this.tapHandler.tapDataSoundOff));
+                    document.location.href = "./results.html";
                 }
             }
         }

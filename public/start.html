@@ -5,10 +5,11 @@
       <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
       <!--Import materialize.css-->
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+        <link rel="stylesheet" href="start.css">
 
       <!--Let browser know website is optimized for mobile-->
       <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-      <title>Scots | Results</title>
+      <title>Scots | Play</title>
     </head>
 
     <body class="grey darken-4">
@@ -31,14 +32,15 @@
       <li><a href="#">About</a></li>
       <li><a href="#">Contact</a></li>
     </ul>
-    <div class="container">
-      <h2 class="white-text center-align">Score: 85%</h2>
-      <canvas id="Results" width="200" height="200"></canvas>
-    </div>
+
+<div class="container">
+  <button id="startButton">START</button>
+  <div class="row">
+    <canvas id="gameCanvas" width="640px" height="480px" class="hidden col s12"></canvas>
+  </div>
+</div>
 
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
-    <script src="graph.js"></script>
     <script
       src="https://code.jquery.com/jquery-3.4.1.min.js"
       integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
@@ -50,5 +52,6 @@
           $('.sidenav').sidenav();
         });
       </script>
+    <script src="./EdgeRACTrainer.js" type="module"></script>
     </body>
   </html>

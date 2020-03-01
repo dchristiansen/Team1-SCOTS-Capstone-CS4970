@@ -12,11 +12,17 @@
   cursor: pointer;
   font-family: "Roboto Mono", Roboto, sans-serif;
   font-weight: 400;
+  margin-top: 10%;
 }
 
 #startButton:hover {
   box-shadow: 0 5px 11px 0 rgba(0, 0, 0, 0.26), 0 4px 15px 0 rgba(0, 0, 0, 0.26);
   background-color: #880e4f;
+}
+
+#gameCanvas {
+  height: 100%;
+  margin: auto;
 }
 
 .hidden{
