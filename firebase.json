@@ -10,7 +10,7 @@
     "rewrites": [
       {
         "source": "**",
-        "destination": "/Prototype RAC Trainer.html"
+        "destination": "/parameters.html"
       }
     ]
   },
