@@ -27,8 +27,8 @@
     firebase.auth().onAuthStateChanged(function(user) {
         if (user) {
             console.log(user);
-          username = user.email.split("@")[0];
-          greeting.innerHTML = "Welcome, " + username;
+            username = user.email.split("@")[0];
+            greeting.innerHTML = "Welcome, " + username + "!";
         } else {
           // No user is signed in.
         }
