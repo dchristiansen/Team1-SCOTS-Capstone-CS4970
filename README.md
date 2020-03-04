@@ -12,3 +12,11 @@ This is where RAC Trainer comes into play. Similar to how a metronome helps a mu
 From the user's perspective, a user can visit the website, register or login to an account, choose the parameters for your rhythm training session, and then play the game. When finished, a score for accuracy will be displayed to the screen.
 
 [Click here to visit the web application](https://ractrainer.firebaseapp.com/)
+
+## Steps to Setup the Project
+1. Install Node.js
+2. Clone the master branch from https://github.com/dchristiansen/Team1-SCOTS-Capstone-CS4970
+3. In the root directory of the project, run `npm install -g firebase-tools`
+4. Run `firebase login` and login via the browser
+5. Run `firebase projects: list` to verify that the Scots-Capstone project is there
+6. To serve the application locally, run `firebase serve`
