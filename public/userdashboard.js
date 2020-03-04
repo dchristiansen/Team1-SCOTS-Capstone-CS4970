@@ -13,7 +13,6 @@
     firebase.initializeApp(firebaseConfig);
     const greeting = document.getElementById("greeting");
     var username;
-
     const btnLogout = document.getElementById("btnLogout");
 
     btnLogout.addEventListener("click", e => {
@@ -26,7 +25,6 @@
 
     firebase.auth().onAuthStateChanged(function(user) {
         if (user) {
-            console.log(user);
             username = user.email.split("@")[0];
             greeting.innerHTML = "Welcome, " + username + "!";
         } else {

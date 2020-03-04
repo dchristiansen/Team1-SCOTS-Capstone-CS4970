@@ -15,20 +15,21 @@
     const usernameField = document.getElementById('Uname');
     const passwordField = document.getElementById('password');
     const btnLogin = document.getElementById('btnLogin');
-    // const btnRegister = document.getElementById('btnRegister');
+    const btnRegister = document.getElementById('btnRegister');
 
-    /*
+    
     btnRegister.addEventListener('click', e => {
         const username = usernameField.value;
         const password = passwordField.value;
         const auth = firebase.auth();
 
-        auth.createUserWithEmailAndPassword(username,password).then(cred => {
-            console.log(cred);
-        });
+        auth.createUserWithEmailAndPassword(username,password).catch(function(error) {
+            var errorMessage = error.message;
+            alert(errorMessage);
+        })
 
     }); 
-    */
+    
     btnLogin.addEventListener('click', e => {
         const username = usernameField.value;
         const password = passwordField.value;
