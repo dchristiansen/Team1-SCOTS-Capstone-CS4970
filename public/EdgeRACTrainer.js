@@ -15,6 +15,7 @@ document.body.addEventListener('keydown', keydown);
 document.body.addEventListener('keyup', keyup);
 
 let Input = Engine.Base.Input;
+let pressed = false;
 
 function keydown(event) {
     event.stopPropagation();
@@ -22,7 +23,10 @@ function keydown(event) {
         Input.down[event.key] = true;
     Input.keys[event.key] = true;
 
-    pulse();
+    if(!pressed) {
+        pressed = true;
+        pulse();
+    }
 }
 
 function keyup(event) {
@@ -30,6 +34,7 @@ function keyup(event) {
         Input.up[event.key] = true;
     Input.keys[event.key] = false;
 
+    pressed = false;
     pulse();
 }
 

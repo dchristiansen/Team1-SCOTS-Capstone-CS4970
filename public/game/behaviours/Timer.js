@@ -40,6 +40,7 @@ export default class Timer extends Base.Behavior {
         this.beatSound = new Audio("./game/assets/newbeat.wav");
         this.volumeChange = 1 / (((0.25 * (this.soundPhaseTime / 1000))) / (this.beatTime / 1000));
         this.interval = setInterval(this.playBeat.bind(this), this.beatTime);
+        this.mostRecentBeat = new Date().getTime();
     }
 
     playBeat() {
