@@ -40,7 +40,7 @@ function keyup(event) {
 
 let canv, ctx;
 
-function slamMeToPlay() {
+function playGame() {
     playScene = new Scenes.PlayScene(bpm, timeWSound, timeWOSound, cycles, feedback);
 
     SceneManager.addScene(playScene);
@@ -76,4 +76,4 @@ function pulse() {
 }
 
 let button = document.querySelector("#startButton");
-button.onclick = slamMeToPlay;
+button.onclick = playGame;
