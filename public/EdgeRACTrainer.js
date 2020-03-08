@@ -49,7 +49,9 @@ function playGame() {
     canv = document.querySelector("#gameCanvas");
     ctx = canv.getContext('2d');
     let button = document.querySelector("#startButton");
-    canv.classList.remove("hidden");
+    if(feedback == "true") {
+        canv.classList.remove("hidden");
+    }
     button.style.display = "none";
    
     //console.log(bpm + " " + timeWSound + " " + timeWOSound + " " + cycles + " " + feedback);
