@@ -1,7 +1,7 @@
 import Base from "../../engine/Base.js";
 
 export default class ScoreCalculator extends Base.Behavior{
-    calculateScore(data, beatTime, phaseTime) {
+    calculateScore(data, beatTime, phaseTime, cycles) {
         let closestHitDelta = 0;
         let lastBeat = phaseTime;
         let misses = 0;

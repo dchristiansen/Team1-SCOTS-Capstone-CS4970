@@ -11,7 +11,6 @@ export default class Timer extends Base.Behavior {
     noSoundPhaseTime;
     phaseSwitchTime;
     cycles;
-    feedback;
     endTime;
     tapHandler;
     soundOn = true;
@@ -21,20 +20,20 @@ export default class Timer extends Base.Behavior {
     beatSound;
     mostRecentBeat = 0;
     volumeChange;
+    currentCycle = 1;
 
-    constructor(bpm, soundPhaseTime, noSoundPhaseTime, cycles, feedback) {
+    constructor(bpm, soundPhaseTime, noSoundPhaseTime, cycles) {
         super();
         this.beatTime = 60000/bpm;
         this.soundPhaseTime = soundPhaseTime*1000;
         this.noSoundPhaseTime = noSoundPhaseTime*1000;
         this.cycles = cycles;
-        this.feedback = feedback;
 
         console.log("in timer");
     }
 
     start() {
-        console.log(this.beatTime + " " + this.soundPhaseTime + " " + this.noSoundPhaseTime + " " + this.cycles + " " + this.feedback);
+        console.log(this.beatTime + " " + this.soundPhaseTime + " " + this.noSoundPhaseTime + " " + this.cycles);
 
         this.scoreCalculator = this.gameObject.getComponent(ScoreCalculator);
         this.beatSound = new Audio("./game/assets/newbeat.wav");
@@ -68,19 +67,31 @@ export default class Timer extends Base.Behavior {
 
     update() {
         this.currentTime = new Date().getTime();
+        //If we're in the sound phase
         if(this.soundOn) {
             if(this.currentTime > this.phaseSwitchTime + (this.beatTime / 2)) {
                 console.log("Turning sound off");
                 this.soundOn = false;
-                clearInterval(this.interval);
             }
+            //In the sound off phase
         } else {
+            //If the current time we are at is the final time
             if(this.currentTime > this.endTime) {
                 if(!this.gameOver) {
-                    this.gameOver = true;
-                    sessionStorage.setItem('score', this.scoreCalculator.calculateScore(this.tapHandler.tapDataSoundOff, this.beatTime, this.noSoundPhaseTime));
-                    sessionStorage.setItem('data', JSON.stringify(this.tapHandler.tapDataSoundOff));
-                    document.location.href = "./results.html";
+                    //If we are on the last cycle
+                    if(this.currentCycle == this.cycles) {
+                        this.gameOver = true;
+                        sessionStorage.setItem('score', this.scoreCalculator.calculateScore(this.tapHandler.tapDataSoundOff, this.beatTime, this.noSoundPhaseTime, this.cycles));
+                        sessionStorage.setItem('data', JSON.stringify(this.tapHandler.tapDataSoundOff));
+                        document.location.href = "./results.html";
+                    } else {
+                        //Reset everything for the next cycle
+                        console.log("Resetting");
+                        this.currentCycle++;
+                        this.beatSound.volume = 1;
+                        this.startTimer();
+                        this.tapHandler.currentCycle = this.currentCycle;
+                    }
                 }
             }
         }
