@@ -8,7 +8,7 @@
     messagingSenderId: "699046472990",
     appId: "1:699046472990:web:4b62279ece6940359a2d0f",
     measurementId: "G-F619W4DX2K"
-    };
+    }; //pull out to a config file
     
     firebase.initializeApp(firebaseConfig);
     
@@ -18,7 +18,7 @@
     const btnRegister = document.getElementById('btnRegister');
 
     
-    btnRegister.addEventListener('click', e => {
+    /* btnRegister.addEventListener('click', e => {
         const username = usernameField.value;
         const password = passwordField.value;
         const auth = firebase.auth();
@@ -28,7 +28,7 @@
             alert(errorMessage);
         })
 
-    }); 
+    }); */
     
     btnLogin.addEventListener('click', e => {
         const username = usernameField.value;
