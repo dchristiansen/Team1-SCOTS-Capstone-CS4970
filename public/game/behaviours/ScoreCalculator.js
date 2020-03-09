@@ -7,7 +7,6 @@ export default class ScoreCalculator extends Base.Behavior{
         let misses = 0;
         let score = phaseTime;
 
-        console.log(data);
 
         data.forEach(tap => {
             let currentBeat = tap.beat;
@@ -59,7 +58,7 @@ export default class ScoreCalculator extends Base.Behavior{
         let missPenalty = misses * beatTime;
         console.log("Miss Penalty: " + missPenalty + ", with " + misses + " misses");
         score -= missPenalty;
-        score /= phaseTime;
+        score /= (phaseTime * cycles);
 
         if(score < 0) {
             score = 0;

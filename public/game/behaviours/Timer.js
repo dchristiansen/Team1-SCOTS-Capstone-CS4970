@@ -28,13 +28,9 @@ export default class Timer extends Base.Behavior {
         this.soundPhaseTime = soundPhaseTime*1000;
         this.noSoundPhaseTime = noSoundPhaseTime*1000;
         this.cycles = cycles;
-
-        console.log("in timer");
     }
 
     start() {
-        console.log(this.beatTime + " " + this.soundPhaseTime + " " + this.noSoundPhaseTime + " " + this.cycles);
-
         this.scoreCalculator = this.gameObject.getComponent(ScoreCalculator);
         this.beatSound = new Audio("./game/assets/newbeat.wav");
         this.volumeChange = 1 / (((0.25 * (this.soundPhaseTime / 1000))) / (this.beatTime / 1000));
@@ -43,16 +39,31 @@ export default class Timer extends Base.Behavior {
     }
 
     playBeat() {
-        //Check if volume needs to be lowered, if so lower it
-        if (this.currentTime >= (this.startTime + (0.75 * this.soundPhaseTime))  && this.startTime != -1) {
-            let newVolume = this.beatSound.volume - this.volumeChange;
-            if (newVolume < 0) {
-                newVolume = 0;
+        //Check if we're in the sound on phase
+        if(this.soundOn) {
+            //Check if volume needs to be lowered, if so lower it
+            if (this.currentTime >= (this.startTime + (0.75 * this.soundPhaseTime))  && this.startTime != -1) {
+                let newVolume = this.beatSound.volume - this.volumeChange;
+                if (newVolume < 0) {
+                    newVolume = 0;
+                }
+                console.log("Lowering volume to " + newVolume);
+                this.beatSound.volume = newVolume;
             }
-            console.log("Lowering volume to " + newVolume);
-            this.beatSound.volume = newVolume;
+            this.beatSound.play();
         }
-        this.beatSound.play();
+        //If we're in the sound off phase, check if we're not on the last cycle
+        else if(this.currentCycle != this.cycles) {
+            if (this.currentTime >= (this.phaseSwitchTime + (0.75 * this.noSoundPhaseTime))  && this.startTime != -1) {
+                let newVolume = this.beatSound.volume + this.volumeChange;
+                if (newVolume > 1) {
+                    newVolume = 1;
+                }
+                console.log("Increasing volume to " + newVolume);
+                this.beatSound.volume = newVolume;
+            }
+            this.beatSound.play();
+        }
         this.mostRecentBeat = new Date().getTime();
     }
 
@@ -62,6 +73,7 @@ export default class Timer extends Base.Behavior {
         this.phaseSwitchTime = this.startTime + this.soundPhaseTime;
         this.endTime = this.phaseSwitchTime + this.noSoundPhaseTime + (this.beatTime/2);
         this.tapHandler.startTime = this.startTime;
+        console.log("Start time is " + this.startTime);
         return this.startTime;
     }
 
@@ -88,8 +100,9 @@ export default class Timer extends Base.Behavior {
                         //Reset everything for the next cycle
                         console.log("Resetting");
                         this.currentCycle++;
-                        this.beatSound.volume = 1;
                         this.startTimer();
+                        this.beatSound.volume = 1;
+                        this.soundOn = true;
                         this.tapHandler.currentCycle = this.currentCycle;
                     }
                 }
