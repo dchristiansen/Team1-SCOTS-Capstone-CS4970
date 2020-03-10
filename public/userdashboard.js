@@ -8,7 +8,7 @@
         messagingSenderId: "699046472990",
         appId: "1:699046472990:web:4b62279ece6940359a2d0f",
         measurementId: "G-F619W4DX2K"
-    };
+    }; //pull out to config file
         
     firebase.initializeApp(firebaseConfig);
     const greeting = document.getElementById("greeting");

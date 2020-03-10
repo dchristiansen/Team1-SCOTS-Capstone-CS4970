@@ -54,7 +54,7 @@ function playGame() {
    
     //console.log(bpm + " " + timeWSound + " " + timeWOSound + " " + cycles + " " + feedback);
 
-    setInterval(gameLoop, 33);
+    setInterval(gameLoop, 33); //what does the magic number 33 mean?
 }
 
 function gameLoop() {
