@@ -33,7 +33,11 @@ export default class Timer extends Base.Behavior {
     start() {
         this.scoreCalculator = this.gameObject.getComponent(ScoreCalculator);
         this.beatSound = new Audio("./game/assets/newbeat.wav");
+
+        //Algorithm to determine the amount of volume change each beat once 3/4 of the way through soundPhase
         this.volumeChange = 1 / (((0.25 * (this.soundPhaseTime / 1000))) / (this.beatTime / 1000));
+
+        //Bind the variables that are being set in playBeat
         this.interval = setInterval(this.playBeat.bind(this), this.beatTime);
         this.mostRecentBeat = new Date().getTime();
     }
@@ -41,7 +45,7 @@ export default class Timer extends Base.Behavior {
     playBeat() {
         //Check if we're in the sound on phase
         if(this.soundOn) {
-            //Check if volume needs to be lowered, if so lower it
+            //Check if volume needs to be lowered (3/4 of the way through soundPhase), if so lower it
             if (this.currentTime >= (this.startTime + (0.75 * this.soundPhaseTime))  && this.startTime != -1) {
                 let newVolume = this.beatSound.volume - this.volumeChange;
                 if (newVolume < 0) {
@@ -54,6 +58,7 @@ export default class Timer extends Base.Behavior {
         }
         //If we're in the sound off phase, check if we're not on the last cycle
         else if(this.currentCycle != this.cycles) {
+            //If not on the last cycle, check if we need to raise volume (3/4 of the way through soundOffPhase)
             if (this.currentTime >= (this.phaseSwitchTime + (0.75 * this.noSoundPhaseTime))  && this.startTime != -1) {
                 let newVolume = this.beatSound.volume + this.volumeChange;
                 if (newVolume > 1) {
@@ -69,9 +74,11 @@ export default class Timer extends Base.Behavior {
 
     startTimer() {
         this.tapHandler = this.gameObject.getComponent(TapHandler);
+
+        //Set the start time to the most recent beat that they are trying to hit
         this.startTime = this.mostRecentBeat;
         this.phaseSwitchTime = this.startTime + this.soundPhaseTime;
-        this.endTime = this.phaseSwitchTime + this.noSoundPhaseTime + (this.beatTime/2);
+        this.endTime = this.phaseSwitchTime + this.noSoundPhaseTime;// + (this.beatTime/2);
         this.tapHandler.startTime = this.startTime;
         console.log("Start time is " + this.startTime);
         return this.startTime;
@@ -81,11 +88,11 @@ export default class Timer extends Base.Behavior {
         this.currentTime = new Date().getTime();
         //If we're in the sound phase
         if(this.soundOn) {
-            if(this.currentTime > this.phaseSwitchTime + (this.beatTime / 2)) {
+            if(this.currentTime > this.phaseSwitchTime){//} + (this.beatTime / 2)) {
                 console.log("Turning sound off");
                 this.soundOn = false;
             }
-            //In the sound off phase
+        //In the sound off phase
         } else {
             //If the current time we are at is the final time
             if(this.currentTime > this.endTime) {
