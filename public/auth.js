@@ -1,16 +1,19 @@
+//import firebase from './config.js';
+
 (function() {
+    /*
     var firebaseConfig = {
-    apiKey: "AIzaSyDDadfEqiZEovi1FrCu_6BS78CsQttkp9E",
-    authDomain: "scots-capstone.firebaseapp.com",
-    databaseURL: "https://scots-capstone.firebaseio.com",
-    projectId: "scots-capstone",
-    storageBucket: "scots-capstone.appspot.com",
-    messagingSenderId: "699046472990",
-    appId: "1:699046472990:web:4b62279ece6940359a2d0f",
-    measurementId: "G-F619W4DX2K"
+        apiKey: config.firebase.apiKey,
+        authDomain: config.firebase.authDomain,
+        databaseUrl: config.firebase.databaseUrl,
+        projectId: config.firebase.projectId,
+        storageBucket: config.firebase.storageBucket,
+        messagingSenderId: config.firebase.messagingSenderId,
+        appId: config.firebase.appId,
+        measurementId: config.firebase.measurementId
     };
-    
     firebase.initializeApp(firebaseConfig);
+    */
     
     const usernameField = document.getElementById('Uname');
     const passwordField = document.getElementById('password');
