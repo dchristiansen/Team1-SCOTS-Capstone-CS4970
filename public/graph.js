@@ -9,7 +9,9 @@ console.log(score);
 
 let chartArray = [];
 data.forEach(tap => {
-    chartArray.push({x: tap.beat/1000, y: tap.delta})
+    let beat = Math.round(tap.beat/10)/100;
+    let delta = Math.round(tap.delta);
+    chartArray.push({x: beat, y: delta})
 });
 
 let yMax = 30000/bpm;
