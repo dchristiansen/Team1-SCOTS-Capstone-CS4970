@@ -78,7 +78,7 @@ export default class Timer extends Base.Behavior {
         //Set the start time to the most recent beat that they are trying to hit
         this.startTime = this.mostRecentBeat;
         this.phaseSwitchTime = this.startTime + this.soundPhaseTime;
-        this.endTime = this.phaseSwitchTime + this.noSoundPhaseTime;// + (this.beatTime/2);
+        this.endTime = this.phaseSwitchTime + this.noSoundPhaseTime + (this.beatTime/2);
         this.tapHandler.startTime = this.startTime;
         console.log("Start time is " + this.startTime);
         return this.startTime;
@@ -88,7 +88,7 @@ export default class Timer extends Base.Behavior {
         this.currentTime = new Date().getTime();
         //If we're in the sound phase
         if(this.soundOn) {
-            if(this.currentTime > this.phaseSwitchTime){//} + (this.beatTime / 2)) {
+            if(this.currentTime > this.phaseSwitchTime + (this.beatTime / 2)) {
                 console.log("Turning sound off");
                 this.soundOn = false;
             }
