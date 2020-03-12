@@ -16,6 +16,10 @@
         if (user) {
             username = user.email.split("@")[0];
             greeting.innerHTML = "Welcome, " + username + "!";
+            let authId = user.uid;
+            //TODO: If user.uid is not the primary key for the user table, query user table to get
+            //primary key. Otherwise, save autId into sessionStorage
+            sessionStorage.setItem('uid', authId);
         } else {
           // No user is signed in.
         }

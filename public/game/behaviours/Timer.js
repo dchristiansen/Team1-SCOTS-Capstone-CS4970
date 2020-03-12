@@ -78,9 +78,19 @@ export default class Timer extends Base.Behavior {
             if(this.currentTime > this.endTime) {
                 if(!this.gameOver) {
                     this.gameOver = true;
+                    let tapDataTotal = this.tapHandler.tapDataSoundOn;
+                    tapDataTotal.push(this.tapHandler.tapDataSoundOff);
+                    let userId = sessionStorage.getItem('uid');
+                    //TODO: saveSessionData(userId, tapDataTotal, assignmentId);
+                    firebase.auth().onAuthStateChanged(firebaseUser => {
+                        if(firebaseUser) {
+                            console.log(firebaseUser);
+                        }
+                    });
+                    sessionStorage.setItem('totalTapArray', JSON.stringify(tapDataTotal));
                     sessionStorage.setItem('score', this.scoreCalculator.calculateScore(this.tapHandler.tapDataSoundOff, this.beatTime, this.noSoundPhaseTime));
                     sessionStorage.setItem('data', JSON.stringify(this.tapHandler.tapDataSoundOff));
-                    document.location.href = "./results.html";
+                    //document.location.href = "./results.html";
                 }
             }
         }

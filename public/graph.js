@@ -3,9 +3,15 @@ let score = sessionStorage.getItem('score');
 let data = sessionStorage.getItem('data');
 let duration = sessionStorage.getItem('timeWOSound');
 let bpm = sessionStorage.getItem('bpm');
+let userId = sessionStorage.getItem('uid');
+let total = sessionStorage.getItem('totalTapArray');
 
 data = JSON.parse(data);
 console.log(score);
+
+console.log(userId);
+
+console.log(total);
 
 let chartArray = [];
 data.forEach(tap => {
