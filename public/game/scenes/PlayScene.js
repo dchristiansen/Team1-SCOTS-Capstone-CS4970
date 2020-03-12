@@ -22,7 +22,7 @@ export default class PlayScene extends Engine.Base.Scene{
         let TapHandler = new GameBehaviours.TapHandler(bpm);
         gameObject.addComponent(TapHandler);
 
-        let CircleBehaviour = new GameBehaviours.CircleBehaviour();
+        let CircleBehaviour = new GameBehaviours.CircleBehaviour(feedback);
         gameObject.addComponent(CircleBehaviour);
 
         this.children.push(gameObject);
