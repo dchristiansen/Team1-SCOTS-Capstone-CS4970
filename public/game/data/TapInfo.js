@@ -11,7 +11,8 @@ class TapInfo{
     timeSinceLast;
     soundOn;
     side;
-    constructor(beat, beatLength, pressTime, releaseTime, timeSinceLast, soundOn, side){
+    cycleNumber;
+    constructor(beat, beatLength, pressTime, releaseTime, timeSinceLast, soundOn, side, cycleNumber){
         this.beat = beat;
         this.prevBeat = beat - beatLength;
         this.nextBeat = beat + beatLength;
@@ -24,6 +25,7 @@ class TapInfo{
         this.timeSinceLast = timeSinceLast;
         this.soundOn = soundOn;
         this.side = side;
+        this.cycleNumber = cycleNumber;
     }
     updateDuration(){
         this.duration = this.releaseTime - this.pressTime;
