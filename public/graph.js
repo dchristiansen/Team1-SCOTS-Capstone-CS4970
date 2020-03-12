@@ -8,7 +8,9 @@ data = JSON.parse(data);
 
 let chartArray = [];
 data.forEach(tap => {
-    chartArray.push({x: (tap.beat/1000)*tap.cycleNumber, y: tap.delta})
+    let beat = Math.round(tap.beat/10)/100;
+    let delta = Math.round(tap.delta);
+    chartArray.push({x: (beat)*tap.cycleNumber, y: delta})
 });
 console.log(chartArray);
 
