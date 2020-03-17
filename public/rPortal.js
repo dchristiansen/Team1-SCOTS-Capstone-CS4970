@@ -17,6 +17,8 @@ function populateTable(data, table){
     });
 }
 
+var url = "userData.html"
+
 let table = document.querySelector("#tablebody");
 let data = fetchData();
 populateTable(data, table);
