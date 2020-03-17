@@ -5,8 +5,12 @@
       <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
       <!--Import materialize.css-->
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-        <link rel="stylesheet" href="start.css">
-
+      <link rel="stylesheet" href="start.css">
+      <script src="/__/firebase/7.9.2/firebase-app.js"></script>
+      <script src="/__/firebase/7.9.2/firebase-auth.js"></script>
+      <script src="/__/firebase/7.9.2/firebase-firestore.js"></script>
+      <script src="/__/firebase/7.9.2/firebase-functions.js"></script>
+      <script defer src="/__/firebase/init.js"></script>
       <!--Let browser know website is optimized for mobile-->
       <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
       <title>Scots | Play</title>
@@ -27,8 +31,8 @@
   </nav>
 
     <ul class="sidenav" id="mobile-demo">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="#">Research Portal</a></li>
+      <li><a href="index.html">Create User</a></li>
+      <li><a href="#">Create Assignment</a></li>
       <li><a href="#">About</a></li>
       <li><a href="#">Contact</a></li>
     </ul>
@@ -100,6 +104,8 @@
    </div>
   </div>
 
+  <button id="btnLogout" class="btn btn-small pink darken-3 waves effect">Log Out</button>
+  <script src="rPortal.js"></script>
 
     <script
       src="https://code.jquery.com/jquery-3.4.1.min.js"

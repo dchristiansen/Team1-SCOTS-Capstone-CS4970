@@ -9,6 +9,7 @@
         <script src="/__/firebase/7.9.2/firebase-app.js"></script>
         <script src="/__/firebase/7.9.2/firebase-auth.js"></script>
         <script src="/__/firebase/7.9.2/firebase-firestore.js"></script>
+        <script src="/__/firebase/7.9.2/firebase-functions.js"></script>
         <script defer src="/__/firebase/init.js"></script>
         <!--Let browser know website is optimized for mobile-->
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -75,7 +76,12 @@
                 </div>
             </form>
             <button id="btnLogout" class="btn btn-small pink darken-3 waves effect">Log Out</button>
-            <!--<script src="userinfo.js"></script>-->
+            
+            <form class="col s12 width=50% font-size=50% admin-action">
+                <input type="email" id="admin-email" class="white-text"/>
+                <button id="btnMakeAdmin" class="btn btn-small pink darken-3 waves effect">Make Admin</button>
+            </form>
+
             <script src="userdashboard.js" type="module"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
             <script src="param.js"></script>
