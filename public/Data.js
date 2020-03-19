@@ -56,6 +56,7 @@ function createSession(assignmentID, bpm, soundOn, soundOff, cycles, feedback, u
 } */
 
 //Retrieves all sessions based on passed userID
+//TODO: Figure out order, by timestamp?
 function getAllSessionsForUser(userID){
     var sessions = firestore.collection("sessions");
     //IMPORTANT
@@ -67,7 +68,7 @@ function getAllSessionsForUser(userID){
     //We can change this to return a custom object later
     var returnData = [];
 
-    query.get()
+    let ret = query.get()
     .then(function(querySnapshot) {
         querySnapshot.forEach(function(doc){
             //console.log(doc.id, "=>", doc.data());
@@ -82,6 +83,8 @@ function getAllSessionsForUser(userID){
     }).catch(function(error) {
         console.log("Error getting sessions: ", error);
     })
+
+    return ret;
 
 }
 
@@ -114,7 +117,7 @@ function getAssignmentsForUser(userID){
     
     var returnData = [];
 
-    query.get()
+    let ret = query.get()
     .then(function(querySnapshot) {
         querySnapshot.forEach(function(doc){
             //console.log(doc.id, "=>", doc.data());
@@ -126,6 +129,7 @@ function getAssignmentsForUser(userID){
     }).catch(function(error) {
         console.log("Error getting assignments: ", error);
     })
+    return ret;
 }
 
 export {createAssignment, createSession, getAllSessionsForUser, getAssignmentsForUser}

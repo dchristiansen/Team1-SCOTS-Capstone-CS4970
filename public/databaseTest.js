@@ -40,13 +40,17 @@ import {createAssignment, createSession, getAllSessionsForUser, getAssignmentsFo
   getSession.addEventListener("click", function(){
       var user = firebase.auth().currentUser;
       console.log(user);
-    let data = getAllSessionsForUser("vkvd7hlKXEOJSxSnn0pe2CJ5OXE3");
-    console.log("my session data ", data);
+    let data = getAllSessionsForUser("vkvd7hlKXEOJSxSnn0pe2CJ5OXE3").then(function(sessions){
+        console.log("sessions ", sessions);
+    });
+    console.log("my session stuff ", data);
   })
 
   getAssign.addEventListener("click", function(){
-    let data = getAssignmentsForUser("vkvd7hlKXEOJSxSnn0pe2CJ5OXE3");
-    console.log("my assignment data ", data);
+    let data = getAssignmentsForUser("vkvd7hlKXEOJSxSnn0pe2CJ5OXE3").then(function(assignments){
+        console.log("assignments ", assignments);
+    });
+    console.log("my assignment stuff ", data);
   })
 
 
