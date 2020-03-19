@@ -3,7 +3,9 @@
 var firestore = firebase.firestore();
 
 //Creates new session upon completion of game. Stores tap objects as an array of maps
-function createSession(assignmentId, bpm, soundOn, soundOff, cycles, feedback, userID, tapData){
+//TODO: Add data validation for existing user? can also do with db rules
+function createSession(assignmentID, bpm, soundOn, soundOff, cycles, feedback, userID, tapData){
+
     // Create a batch
     var batch = firestore.batch();
 
@@ -11,7 +13,7 @@ function createSession(assignmentId, bpm, soundOn, soundOff, cycles, feedback, u
     let sessions = firestore.collection('sessions');
     let newSessionRef = sessions.doc()
     let docData = {
-        assignmentId: assignmentId,
+        assignmentID: assignmentID,
         parameters: {
             bpm: bpm,
             soundOnTime: soundOn,
@@ -27,6 +29,7 @@ function createSession(assignmentId, bpm, soundOn, soundOff, cycles, feedback, u
 
     //Also update the latest session time in the users/<userID> document
         //TODO: What is the userID, is it the document reference in the users table?
+        //Uncomment when user creation is ready
     //let userRef = firestore.collection("users").doc(userID);
     //batch.update(userRef, {"latestSessionTime": docData.sessionTime})
 
@@ -39,6 +42,7 @@ function createSession(assignmentId, bpm, soundOn, soundOff, cycles, feedback, u
 }
 
 //We can also store tap data as a subcollection
+//TODO: eventually delete
 /*function addTapData(data, sessionID){
     var collection = firestore.collection('sessions');
     var doc = collection.doc(sessionID);
@@ -46,17 +50,44 @@ function createSession(assignmentId, bpm, soundOn, soundOff, cycles, feedback, u
     taps.add(data); 
 } */
 
+//TODO: eventually delete
 /*function updateLatestSessionForUser(userID, sessionTimeStamp){
     var userRef = firestore.collection("users").doc(userID);
 } */
 
-function getAllSessionsFromUser(){
-    /*TODO*/
+//Retrieves all sessions based on passed userID
+function getAllSessionsForUser(userID){
+    var sessions = firestore.collection("sessions");
+    //IMPORTANT
+    //we can implement pagination later on to perform batched reads
+    //I am implementing a limit so we don't run into pricing issues
+    var query = sessions.where("userID", "==", userID).limit(20);
+
+    //Return data as an array of maps, where each item contains the docID and session data
+    //We can change this to return a custom object later
+    var returnData = [];
+
+    query.get()
+    .then(function(querySnapshot) {
+        querySnapshot.forEach(function(doc){
+            //console.log(doc.id, "=>", doc.data());
+            returnData.push(
+                {
+                    id: doc.id,
+                    data: doc.data()
+                }
+            );
+        });
+        return returnData;
+    }).catch(function(error) {
+        console.log("Error getting sessions: ", error);
+    })
+
 }
 
-function getSessionData(){
-    /*TODO*/
-}
+/*function getTapData(sessionID){
+    //var session = firestore.collection("sessions").doc(sessionID);
+} */
 
 function createAssignment(assignmentLabel, bpm, soundOn, soundOff, cycles, feedback, userIDs ){
     let assignments = firestore.collection("assignments");
@@ -77,8 +108,24 @@ function createAssignment(assignmentLabel, bpm, soundOn, soundOff, cycles, feedb
 }
 
 function getAssignmentsForUser(userID){
-    /*TODO*/
-    //Include DocRef ID
+    var assignments = firestore.collection("assignments");
+
+    var query = assignments.where("userIDs", "array-contains", userID).limit(20);
+    
+    var returnData = [];
+
+    query.get()
+    .then(function(querySnapshot) {
+        querySnapshot.forEach(function(doc){
+            //console.log(doc.id, "=>", doc.data());
+            returnData.push({
+                id: doc.id,
+                data: doc.data()})    
+        });
+        return returnData;
+    }).catch(function(error) {
+        console.log("Error getting assignments: ", error);
+    })
 }
 
-export {createAssignment, createSession}
+export {createAssignment, createSession, getAllSessionsForUser, getAssignmentsForUser}

@@ -1,5 +1,5 @@
 
-import {createAssignment, createSession} from "./Data.js";
+import {createAssignment, createSession, getAllSessionsForUser, getAssignmentsForUser} from "./Data.js";
 
 /*const firebaseConfig = {
     apiKey: "AIzaSyDDadfEqiZEovi1FrCu_6BS78CsQttkp9E",
@@ -19,8 +19,11 @@ import {createAssignment, createSession} from "./Data.js";
 
   const status = document.querySelector("#status");
   const inputBox = document.querySelector("#myText");
-  const saveButton = document.querySelector("#saveButton");
-  const loadButton = document.querySelector("#loadButton");
+  const insertSession = document.querySelector("#insertSession");
+  const insertAssign = document.querySelector("#insertAssign");
+  const getSession = document.querySelector("#getSession");
+  const getAssign = document.querySelector("#getAssignment");
+
 
  /*  saveButton.addEventListener("click", function(){
       const textToSave = inputBox.value;
@@ -34,19 +37,32 @@ import {createAssignment, createSession} from "./Data.js";
       });
   }) */
 
-saveButton.addEventListener("click", function(){
+  getSession.addEventListener("click", function(){
+      var user = firebase.auth().currentUser;
+      console.log(user);
+    let data = getAllSessionsForUser("vkvd7hlKXEOJSxSnn0pe2CJ5OXE3");
+    console.log("my session data ", data);
+  })
+
+  getAssign.addEventListener("click", function(){
+    let data = getAssignmentsForUser("vkvd7hlKXEOJSxSnn0pe2CJ5OXE3");
+    console.log("my assignment data ", data);
+  })
+
+
+insertAssign.addEventListener("click", function(){
     createAssignment(
-    "Assignment 1",
+    "Assignment 3",
     "120",
     "10",
     "10",
     "1",
     "True",
-    ["user1", "user2"])
+    ["vkvd7hlKXEOJSxSnn0pe2CJ5OXE3", "user2"]);
     console.log("Created Assignment");
 });
 
-  loadButton.addEventListener("click", function(){
+  insertSession.addEventListener("click", function(){
     let tapData = [{
         beat: 0,
         delta: -26,
@@ -91,10 +107,10 @@ saveButton.addEventListener("click", function(){
          "10",
          "1",
          "True",
-         "00001",
+         "vkvd7hlKXEOJSxSnn0pe2CJ5OXE3",
          tapData
      );
-     console.log(ret);
+     //console.log(ret);
   })
 
 
