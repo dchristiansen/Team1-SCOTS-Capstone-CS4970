@@ -40,16 +40,20 @@ import {createAssignment, createSession, getAllSessionsForUser, getAssignmentsFo
   getSession.addEventListener("click", function(){
       var user = firebase.auth().currentUser;
       console.log(user);
-    let data = getAllSessionsForUser("vkvd7hlKXEOJSxSnn0pe2CJ5OXE3").then(function(sessions){
+    /* let data = getAllSessionsForUser("vkvd7hlKXEOJSxSnn0pe2CJ5OXE3").then(function(sessions){
         console.log("sessions ", sessions);
-    });
+    }); */
+    let data = getAllSessionsForUser("vkvd7hlKXEOJSxSnn0pe2CJ5OXE3")
     console.log("my session stuff ", data);
   })
 
+  //I guess we can access the return data either way
   getAssign.addEventListener("click", function(){
-    let data = getAssignmentsForUser("vkvd7hlKXEOJSxSnn0pe2CJ5OXE3").then(function(assignments){
+   /* let data = getAssignmentsForUser("vkvd7hlKXEOJSxSnn0pe2CJ5OXE3").then(function(assignments){
         console.log("assignments ", assignments);
-    });
+    }); */
+
+    let data = getAssignmentsForUser("vkvd7hlKXEOJSxSnn0pe2CJ5OXE3")
     console.log("my assignment stuff ", data);
   })
 

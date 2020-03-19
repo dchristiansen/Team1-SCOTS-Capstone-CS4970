@@ -84,7 +84,7 @@ function getAllSessionsForUser(userID){
         console.log("Error getting sessions: ", error);
     })
 
-    return ret;
+    return returnData;
 
 }
 
@@ -129,7 +129,7 @@ function getAssignmentsForUser(userID){
     }).catch(function(error) {
         console.log("Error getting assignments: ", error);
     })
-    return ret;
+    return returnData;
 }
 
 export {createAssignment, createSession, getAllSessionsForUser, getAssignmentsForUser}
