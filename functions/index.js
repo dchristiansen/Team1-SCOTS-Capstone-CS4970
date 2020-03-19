@@ -18,3 +18,46 @@ exports.addAdminRole = functions.https.onCall((data, context) => {
         return err;
     });
 });
+
+exports.createUser = functions.https.onCall(async (data, context) => {
+    try {
+        if(!context.auth) {
+            throw new UnauthenticatedError("The user is not authenticated.");
+        }
+
+        const callingUid = context.auth.uid;
+        const callingUserRecord = await admin.auth().getUser(callingUid);
+
+        if(!callingUserRecord.customClaims.admin) {
+            throw new NotAnAdminError("Only Admin users can create new users.");
+        }
+
+        const newUser = {
+            email: data.email,
+            password: data.password
+        };
+
+        const userRecord = await admin.auth().createUser(newUser);
+        return {result: 'Success! ${data.email} has been created'}
+    } catch (error) {
+        if (error.type === 'UnauthenticatedError') {
+            throw new functions.https.HttpsError('unauthenticated', error.message);
+        } else if (error.type === 'NotAnAdminError' || error.type === 'InvalidRoleError') {
+            throw new functions.https.HttpsError('failed-precondition', error.message);
+        } else {
+            throw new functions.https.HttpsError('internal', error.message);
+        }
+    }
+    
+    
+    
+    
+    return admin.auth().createUser({
+        email: data.email,
+        password: data.password
+    }).then(function(userReord) {
+        console.log("Successfully created new user: ", userRecord.email);
+    }).catch(function(error) {
+        console.log("Error creating new user: ", error)
+    });
+});
