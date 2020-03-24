@@ -92,6 +92,9 @@ function getAllSessionsForUser(userID){
     //var session = firestore.collection("sessions").doc(sessionID);
 } */
 
+function getUsers(){
+    
+}
 function createAssignment(assignmentLabel, bpm, soundOn, soundOff, cycles, feedback, userIDs ){
     let assignments = firestore.collection("assignments");
     let docData = {
