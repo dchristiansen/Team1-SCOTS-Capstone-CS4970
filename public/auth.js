@@ -31,7 +31,19 @@
     firebase.auth().onAuthStateChanged(firebaseUser => {
         if(firebaseUser) 
         {
-            window.location = "userdashboard.html";
+            firebaseUser.getIdTokenResult().then(idTokenResult => {
+                firebaseUser.admin = idTokenResult.claims.admin;
+                if (firebaseUser.admin)
+                {
+                    console.log(firebaseUser.admin);
+                    window.location = "rPortal.html";
+                }
+                else 
+                {
+                    console.log(firebaseUser.admin);
+                    window.location = "userdashboard.html";
+                }
+            });
         }
     });
 }());
