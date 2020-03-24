@@ -1,21 +1,5 @@
 
-import {createAssignment, createSession, getAllSessionsForUser, getAssignmentsForUser} from "./Data.js";
-
-/*const firebaseConfig = {
-    apiKey: "AIzaSyDDadfEqiZEovi1FrCu_6BS78CsQttkp9E",
-    authDomain: "scots-capstone.firebaseapp.com",
-    databaseURL: "https://scots-capstone.firebaseio.com",
-    projectId: "scots-capstone",
-    storageBucket: "scots-capstone.appspot.com",
-    messagingSenderId: "699046472990",
-    appId: "1:699046472990:web:4b62279ece6940359a2d0f",
-    measurementId: "G-F619W4DX2K"
-  };
-
-  firebase.initializeApp(firebaseConfig); */
-
-  //var firestore = firebase.firestore();
-  //const docRef = firestore.doc("sessions/session");
+import {createAssignment, createSession, getAllSessionsForUser, getAssignmentsForUser, getUsers} from "./Data.js";
 
   const status = document.querySelector("#status");
   const inputBox = document.querySelector("#myText");
@@ -53,8 +37,10 @@ import {createAssignment, createSession, getAllSessionsForUser, getAssignmentsFo
         console.log("assignments ", assignments);
     }); */
 
-    let data = getAssignmentsForUser("vkvd7hlKXEOJSxSnn0pe2CJ5OXE3")
-    console.log("my assignment stuff ", data);
+    //let data = getAssignmentsForUser("vkvd7hlKXEOJSxSnn0pe2CJ5OXE3")
+    //console.log("my assignment stuff ", data);
+    let data = getUsers();
+    console.log(data);
   })
 
 

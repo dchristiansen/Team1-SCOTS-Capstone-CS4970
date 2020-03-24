@@ -75,7 +75,7 @@ function getAllSessionsForUser(userID){
             returnData.push(
                 {
                     id: doc.id,
-                    data: doc.data()
+                    data: doc.data() //Parse out tap data
                 }
             );
         });
@@ -93,8 +93,24 @@ function getAllSessionsForUser(userID){
 } */
 
 function getUsers(){
-    
+    var users = firestore.collection("users");
+    var returnData = [];
+
+    let ret = users.get()
+    .then(function(querySnapshot) {
+        querySnapshot.forEach(function(doc){
+            //console.log(doc.id, "=>", doc.data());
+            returnData.push({
+                id: doc.id,
+                data: doc.data()})    
+        });
+        return returnData;
+    }).catch(function(error) {
+        console.log("Error getting users: ", error);
+    })
+    return returnData;
 }
+
 function createAssignment(assignmentLabel, bpm, soundOn, soundOff, cycles, feedback, userIDs ){
     let assignments = firestore.collection("assignments");
     let docData = {
@@ -135,4 +151,4 @@ function getAssignmentsForUser(userID){
     return returnData;
 }
 
-export {createAssignment, createSession, getAllSessionsForUser, getAssignmentsForUser}
+export {createAssignment, createSession, getAllSessionsForUser, getAssignmentsForUser, getUsers}
