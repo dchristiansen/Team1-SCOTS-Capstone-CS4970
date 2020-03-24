@@ -23,7 +23,7 @@ export default class CircleBehaviour extends Base.Behavior {
     }
 
     pulse() {
-        if(Input.keys[' ']) {
+        if(Input.keys[' '] || Input.touch) {
             this.circle.radius = 90;
             let delta = this.tapHandler.tapDown();
 
@@ -42,7 +42,7 @@ export default class CircleBehaviour extends Base.Behavior {
             }
         } 
 
-        if (!Input.keys[' ']){
+        if (!Input.keys[' '] && !Input.touch){
             this.circle.radius = 100;
             this.circle.fill = "white";
             this.tapHandler.tapUp();
