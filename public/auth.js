@@ -1,17 +1,5 @@
-(function() {
-    var firebaseConfig = {
-    apiKey: "AIzaSyDDadfEqiZEovi1FrCu_6BS78CsQttkp9E",
-    authDomain: "scots-capstone.firebaseapp.com",
-    databaseURL: "https://scots-capstone.firebaseio.com",
-    projectId: "scots-capstone",
-    storageBucket: "scots-capstone.appspot.com",
-    messagingSenderId: "699046472990",
-    appId: "1:699046472990:web:4b62279ece6940359a2d0f",
-    measurementId: "G-F619W4DX2K"
-    }; //pull out to a config file
-    
-    firebase.initializeApp(firebaseConfig);
-    
+
+(function() {  
     const usernameField = document.getElementById('Uname');
     const passwordField = document.getElementById('password');
     const btnLogin = document.getElementById('btnLogin');

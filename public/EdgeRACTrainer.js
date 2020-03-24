@@ -13,12 +13,33 @@ let feedback = sessionStorage.getItem("feedback");
 
 document.body.addEventListener('keydown', keydown);
 document.body.addEventListener('keyup', keyup);
+document.body.addEventListener('touchstart', touchstart);
+document.body.addEventListener('touchend', touchend);
 
 let Input = Engine.Base.Input;
 let pressed = false;
 
+function touchstart(event){
+    if(Input.touch != true)
+        Input.touchdown = true;
+    Input.touch = true;
+
+    if(!pressed) {
+        pressed = true;
+        pulse();
+    }
+}
+
+function touchend(event){
+    if(Input.touch != false)
+        Input.touchup = true;
+    Input.touch = false;
+
+    pressed = false;
+    pulse();
+}
+
 function keydown(event) {
-    event.stopPropagation();
     if(Input.keys[event.key] != true)
         Input.down[event.key] = true;
     Input.keys[event.key] = true;
@@ -54,7 +75,7 @@ function playGame() {
    
     //console.log(bpm + " " + timeWSound + " " + timeWOSound + " " + cycles + " " + feedback);
 
-    setInterval(gameLoop, 33);
+    setInterval(gameLoop, 33); //what does the magic number 33 mean?
 }
 
 function gameLoop() {

@@ -5,12 +5,14 @@ let duration = sessionStorage.getItem('timeWOSound');
 let bpm = sessionStorage.getItem('bpm');
 
 data = JSON.parse(data);
-console.log(score);
 
 let chartArray = [];
 data.forEach(tap => {
-    chartArray.push({x: tap.beat/1000, y: tap.delta})
+    let beat = Math.round(tap.beat/10)/100;
+    let delta = Math.round(tap.delta);
+    chartArray.push({x: (beat)*tap.cycleNumber, y: delta})
 });
+console.log(chartArray);
 
 let yMax = 30000/bpm;
 let yMin = yMax * -1;

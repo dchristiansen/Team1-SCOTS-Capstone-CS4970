@@ -16,13 +16,13 @@ export default class PlayScene extends Engine.Base.Scene{
         let ScoreCalculator = new GameBehaviours.ScoreCalculator();
         gameObject.addComponent(ScoreCalculator);
 
-        let Timer = new GameBehaviours.Timer(bpm, timeWSound, timeWOSound, cycles, feedback);
+        let Timer = new GameBehaviours.Timer(bpm, timeWSound, timeWOSound, cycles);
         gameObject.addComponent(Timer);
 
         let TapHandler = new GameBehaviours.TapHandler(bpm);
         gameObject.addComponent(TapHandler);
 
-        let CircleBehaviour = new GameBehaviours.CircleBehaviour();
+        let CircleBehaviour = new GameBehaviours.CircleBehaviour(feedback);
         gameObject.addComponent(CircleBehaviour);
 
         this.children.push(gameObject);
