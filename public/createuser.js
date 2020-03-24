@@ -13,6 +13,10 @@
         const createUser = firebase.functions().httpsCallable('createUser');
         createUser({email: createdUsername, password: createdPassword}).then(result => {
             console.log(result);
+            alert(result.data.message);
+        }).catch(function(error) {
+            console.log(error);
+            alert(error.message);
         });
     });
 

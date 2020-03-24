@@ -23,7 +23,6 @@
         <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
         <ul class="right hide-on-med-and-down">
           <li><a href="createuser.html">Create User</a></li>
-          <li><a href="#">Research Portal</a></li>
           <li><a href="#">About</a></li>
           <li><a href="#">Contact</a></li>
         </ul>
@@ -104,12 +103,24 @@
    </div>
   </div>
 
-  <form class="col s12 width=50% font-size=50% admin-action">
-    <input type="email" id="admin-email" class="white-text"/>
-    <button id="btnMakeAdmin" class="btn btn-small pink darken-3 waves effect">Make Admin</button>
-  </form>
+  <div class="container">
+      <form class="col s12 width=50% font-size=50% admin-action">
+        <div class="row">
+          <div class="input-field col s6">
+            <input type="email" id="admin-email" class="white-text"/>
+            <label class="active white-text" for="admin-email">Enter a user to make an admin</label>
+          </div>
+        </div>
+        <div class="row">
+          <button id="btnMakeAdmin" class="btn btn-small pink darken-3 waves effect">Make Admin</button>
+        </div>
+      </form>
 
-  <button id="btnLogout" class="btn btn-small pink darken-3 waves effect">Log Out</button>
+    <div class="row">
+      <button id="btnLogout" class="btn btn-small pink darken-3 waves effect">Log Out</button>
+    </div>
+  </div>
+
   <script src="rPortal.js"></script>
 
     <script

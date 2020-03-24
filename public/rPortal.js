@@ -17,6 +17,14 @@
         const addAdminRole = firebase.functions().httpsCallable('addAdminRole');
         addAdminRole({email: adminEmail}).then(result => {
             console.log(result);
+            if (result.data.errorInfo == null)
+            {
+                alert(result.data.message);
+            }
+            else
+            {
+                alert(result.data.errorInfo.message);
+            }
         });
     });
 

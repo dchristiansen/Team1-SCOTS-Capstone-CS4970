@@ -12,7 +12,8 @@ exports.addAdminRole = functions.https.onCall((data, context) => {
         });
     }).then(() => {
         return {
-            message: 'Success! ${data.email} has been made an admin'
+            // message: 'Success! ${data.email} has been made an admin'
+            message: 'Success! The user has been made an admin'
         }
     }).catch(err => {
         return err;
@@ -38,7 +39,8 @@ exports.createUser = functions.https.onCall(async (data, context) => {
         };
 
         const userRecord = await admin.auth().createUser(newUser);
-        return {result: 'Success! ${data.email} has been created'}
+        //return {result: 'Success! ${data.email} has been created'}
+        return {message: 'Success! The user has been created'}
     } catch (error) {
         if (error.type === 'UnauthenticatedError') {
             throw new functions.https.HttpsError('unauthenticated', error.message);
@@ -48,16 +50,4 @@ exports.createUser = functions.https.onCall(async (data, context) => {
             throw new functions.https.HttpsError('internal', error.message);
         }
     }
-    
-    
-    
-    
-    return admin.auth().createUser({
-        email: data.email,
-        password: data.password
-    }).then(function(userReord) {
-        console.log("Successfully created new user: ", userRecord.email);
-    }).catch(function(error) {
-        console.log("Error creating new user: ", error)
-    });
 });
