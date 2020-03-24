@@ -12,7 +12,7 @@ export default class TapHandler extends Base.Behavior {
     tapInfo;
     timer;
     tapDataSoundOff = [];
-    tapDataSoundOn = [];
+    tapDataTotal = [];
 
     constructor(bpm) {
         super();
@@ -46,12 +46,9 @@ export default class TapHandler extends Base.Behavior {
         let currentTime = date.getTime()
         this.tapInfo.releaseTime = currentTime - this.startTime;
         this.tapInfo.updateDuration();
-        if (this.timer.soundOn) {
-            this.tapDataSoundOn.push(this.tapInfo);
-        } else {
-            if(!this.timer.gameOver)
-                this.tapDataSoundOff.push(this.tapInfo);
-        }
+        if(!this.timer.soundOn && !this.timer.gameOver)
+            this.tapDataSoundOff.push(this.tapInfo);
+        this.tapDataTotal.push(this.tapInfo);
         console.log(this.tapInfo);
     }
 }
