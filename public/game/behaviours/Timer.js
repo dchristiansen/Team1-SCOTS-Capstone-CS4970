@@ -80,7 +80,7 @@ export default class Timer extends Base.Behavior {
                 if(!this.gameOver) {
                     this.gameOver = true;
                     let userId = sessionStorage.getItem('uid');
-                    let assignmentId = null; //sessionStorage.getItem('aid');
+                    let assignmentId = sessionStorage.getItem('aid');
                     let stringTapVersion = JSON.parse(JSON.stringify(this.tapHandler.tapDataTotal));
                     firebase.auth().onAuthStateChanged(firebaseUser => {
                         if(firebaseUser) {

@@ -57,3 +57,5 @@ score = Math.round(score*100)/100;
 
 
 scoreString.innerHTML = "Score: " + score + "%";
+
+//sessionStorage.clear();
