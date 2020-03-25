@@ -23,15 +23,14 @@ firebase.auth().onAuthStateChanged(async function(user) {
         //primary key. Otherwise, save autId into sessionStorage
         sessionStorage.setItem('uid', authId);
 
+        //Get all assignments for the current user
         let assignmentsArray = await getAssignmentsForUser(authId);
-        console.log(assignmentsArray.dataArray);
+        //console.log(assignmentsArray.dataArray);
 
-        let newHtml="";
-
+        //For each assignment fetched, add the corresponding row
         assignmentsArray.dataArray.forEach(assignment => {
             let tr = document.createElement('tr');
             tr.innerHtml = "<tr>";
-            //newHtml += "<tr>";
             tr.innerHTML += "<td>" + assignment.data.assignmentLabel + "</td>";
             tr.innerHTML += "<td>" + assignment.data.parameters.bpm + "</td>";
             tr.innerHTML += "<td>" + assignment.data.parameters.soundOnTime + "</td>";
@@ -43,21 +42,24 @@ firebase.auth().onAuthStateChanged(async function(user) {
             }
             tr.innerHTML += "<td>" + assignment.data.parameters.cycles + "</td>";
             tr.innerHTML += "</tr>";
+
+            //Set the parameter attribute to the values within the table
             tr.setAttribute('data-parameters', assignment.data.assignmentLabel + "," + assignment.data.parameters.bpm + "," + assignment.data.parameters.soundOnTime + ","
             + assignment.data.parameters.soundOffTime + "," + assignment.data.parameters.feedback + "," + assignment.data.parameters.cycles);
+
+            //Append the row to the table
             assignmentTable.appendChild(tr);
         });
 
-        //assignmentTable.innerHTML += newHtml;
     } else {
         // No user is signed in.
     }
 });
 
 $("#tablebody").on("click", "tr", function(){
-    console.log($(this).data('parameters'));
+    //console.log($(this).data('parameters'));
+    //Get the parameters in the form of an array
     let params = $(this).data('parameters').split(",");
-    console.log(params);
 
     let assignment = params[0];
     let bpm = params[1];
@@ -66,6 +68,7 @@ $("#tablebody").on("click", "tr", function(){
     let cycles = params[5];
     let feedback = params[4];
 
+    //Set all the parameters in sessionStorage
     sessionStorage.setItem('aid', assignment);
     sessionStorage.setItem("bpm",bpm);
     sessionStorage.setItem("timeWSound",timeWSound);
@@ -73,8 +76,10 @@ $("#tablebody").on("click", "tr", function(){
     sessionStorage.setItem("timeWOSound",timeWOSound);
     sessionStorage.setItem("feedback",feedback);
 
+    //Jump to start page
     window.location = "start.html";
 });
+
 $("td > a").on("click", function(e){
     e.stopPropagation();
 });
