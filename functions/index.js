@@ -39,6 +39,17 @@ exports.createUser = functions.https.onCall(async (data, context) => {
         };
 
         const userRecord = await admin.auth().createUser(newUser);
+
+        const userRecord = await admin.auth().createUser(newUser);
+        const userUID = userRecord.uid;
+        const userID = data.email.split("@")[0];
+
+        const dbRecord = {
+            userID: userID,
+            changePassword: false
+        };
+        
+        await admin.firestore().collection("users").doc(userUID).set(dbRecord);
         //return {result: 'Success! ${data.email} has been created'}
         return {message: 'Success! The user has been created'}
     } catch (error) {
