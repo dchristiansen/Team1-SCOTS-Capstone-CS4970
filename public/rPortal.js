@@ -13,7 +13,7 @@ var url = "userData.html"
 function populateTable(data, table){
     data.forEach(function(object) {
         var tr = document.createElement('tr');
-        tr.innerHTML = '<td>' + object.user_id + '</td>' +
+        tr.innerHTML = '<td id="uid">' + object.user_id + '</td>' +
         '<td>' + object.most_recent_session + '</td>';
         tr.setAttribute('data-href', url);
         table.appendChild(tr);
@@ -25,6 +25,26 @@ function populateTable(data, table){
 let table = document.querySelector("#tablebody");
 let data = fetchData();
 populateTable(data, table);
+
+function myFunction(){
+var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("search");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("tablebody");
+  tr = table.getElementsByTagName("tr");
+
+  for (i = 0; i < tr.length; i++) {
+      td = tr[i].getElementsByTagName("td")[0];
+      if (td) {
+        txtValue = td.textContent || td.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          tr[i].style.display = "";
+        } else {
+          tr[i].style.display = "none";
+        }
+      }
+    }
+  }
 
 $('*[data-href]').on("click",function(){
   window.location = $(this).data('href');
