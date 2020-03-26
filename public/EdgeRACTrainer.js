@@ -1,7 +1,6 @@
 import Scenes from "./game/Scenes.js"
 import SceneManager from "./game/SceneManager.js"
 import Engine from "./engine/Engine.js"
-import Scene from "./engine/base/Scene.js"
 
 let playScene;
 
@@ -13,8 +12,8 @@ let feedback = sessionStorage.getItem("feedback");
 
 document.body.addEventListener('keydown', keydown);
 document.body.addEventListener('keyup', keyup);
-document.body.addEventListener('touchstart', touchstart);
-document.body.addEventListener('touchend', touchend);
+window.addEventListener('touchstart', touchstart);
+window.addEventListener('touchend', touchend);
 
 let Input = Engine.Base.Input;
 let pressed = false;
