@@ -13,6 +13,8 @@ export default class TapHandler extends Base.Behavior {
     timer;
     tapDataSoundOff = [];
     tapDataTotal = [];
+    currentCycle = 1;
+
 
     constructor(bpm) {
         super();
@@ -35,7 +37,7 @@ export default class TapHandler extends Base.Behavior {
         if (timing > this.beatTime / 2) {
             timing = timing - this.beatTime;
         }
-        this.tapInfo = new TapInfo(currentTime - this.startTime - timing, this.beatTime, currentTime - this.startTime, "none", currentTime - this.startTime - this.lastTap, this.soundOn, this.side);
+        this.tapInfo = new TapInfo(currentTime - this.startTime - timing, this.beatTime, currentTime - this.startTime, "none", currentTime - this.startTime - this.lastTap, this.soundOn, this.side, this.currentCycle);
         this.lastTap = currentTime - this.startTime;
 
         return this.tapInfo.delta;

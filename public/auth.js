@@ -1,27 +1,12 @@
-//import firebase from './config.js';
 
-(function() {
-    /*
-    var firebaseConfig = {
-        apiKey: config.firebase.apiKey,
-        authDomain: config.firebase.authDomain,
-        databaseUrl: config.firebase.databaseUrl,
-        projectId: config.firebase.projectId,
-        storageBucket: config.firebase.storageBucket,
-        messagingSenderId: config.firebase.messagingSenderId,
-        appId: config.firebase.appId,
-        measurementId: config.firebase.measurementId
-    };
-    firebase.initializeApp(firebaseConfig);
-    */
-    
+(function() {  
     const usernameField = document.getElementById('Uname');
     const passwordField = document.getElementById('password');
     const btnLogin = document.getElementById('btnLogin');
     const btnRegister = document.getElementById('btnRegister');
 
     
-    btnRegister.addEventListener('click', e => {
+    /* btnRegister.addEventListener('click', e => {
         const username = usernameField.value;
         const password = passwordField.value;
         const auth = firebase.auth();
@@ -31,7 +16,7 @@
             alert(errorMessage);
         })
 
-    }); 
+    }); */
     
     btnLogin.addEventListener('click', e => {
         const username = usernameField.value;
@@ -46,7 +31,19 @@
     firebase.auth().onAuthStateChanged(firebaseUser => {
         if(firebaseUser) 
         {
-            window.location = "userdashboard.html";
+            firebaseUser.getIdTokenResult().then(idTokenResult => {
+                firebaseUser.admin = idTokenResult.claims.admin;
+                if (firebaseUser.admin)
+                {
+                    console.log(firebaseUser.admin);
+                    window.location = "rPortal.html";
+                }
+                else 
+                {
+                    console.log(firebaseUser.admin);
+                    window.location = "userdashboard.html";
+                }
+            });
         }
     });
 }());

@@ -1,21 +1,5 @@
 
-import {createAssignment, createSession, getAllSessionsForUser, getAssignmentsForUser} from "./Data.js";
-
-/*const firebaseConfig = {
-    apiKey: "AIzaSyDDadfEqiZEovi1FrCu_6BS78CsQttkp9E",
-    authDomain: "scots-capstone.firebaseapp.com",
-    databaseURL: "https://scots-capstone.firebaseio.com",
-    projectId: "scots-capstone",
-    storageBucket: "scots-capstone.appspot.com",
-    messagingSenderId: "699046472990",
-    appId: "1:699046472990:web:4b62279ece6940359a2d0f",
-    measurementId: "G-F619W4DX2K"
-  };
-
-  firebase.initializeApp(firebaseConfig); */
-
-  //var firestore = firebase.firestore();
-  //const docRef = firestore.doc("sessions/session");
+import {createAssignment, createSession, getAllSessionsForUser, getAssignmentsForUser, getUsers} from "./Data.js";
 
   const status = document.querySelector("#status");
   const inputBox = document.querySelector("#myText");
@@ -23,38 +7,38 @@ import {createAssignment, createSession, getAllSessionsForUser, getAssignmentsFo
   const insertAssign = document.querySelector("#insertAssign");
   const getSession = document.querySelector("#getSession");
   const getAssign = document.querySelector("#getAssignment");
+  const getUser = document.querySelector("#getUser");
 
+  getSession.addEventListener("click", async function(){
+    var user = firebase.auth().currentUser;
+    console.log(user);
+  
+    let data = await getAllSessionsForUser("vkvd7hlKXEOJSxSnn0pe2CJ5OXE3");
+    console.log("Client session data ", data);
+    //something odd here where doesnt print out each element...due to size?
+    data.dataArray.forEach(obj =>{
+      console.log("client session element " + obj);
+    });
+    //You can still acess elements tho
+    console.log("First element ", data.dataArray[0]);
 
- /*  saveButton.addEventListener("click", function(){
-      const textToSave = inputBox.value;
-      console.log("Saving to firebase");
-      docRef.set({
-          hotDogStatus: textToSave
-      }).then(function(){
-          console.log("Status saved");
-      }).catch(function (error){
-          console.log("Error ", error);
-      });
-  }) */
-
-  getSession.addEventListener("click", function(){
-      var user = firebase.auth().currentUser;
-      console.log(user);
-    /* let data = getAllSessionsForUser("vkvd7hlKXEOJSxSnn0pe2CJ5OXE3").then(function(sessions){
-        console.log("sessions ", sessions);
-    }); */
-    let data = getAllSessionsForUser("vkvd7hlKXEOJSxSnn0pe2CJ5OXE3")
-    console.log("my session stuff ", data);
   })
 
-  //I guess we can access the return data either way
-  getAssign.addEventListener("click", function(){
-   /* let data = getAssignmentsForUser("vkvd7hlKXEOJSxSnn0pe2CJ5OXE3").then(function(assignments){
-        console.log("assignments ", assignments);
-    }); */
+  getAssign.addEventListener("click", async function(){
+    let data = await getAssignmentsForUser("vkvd7hlKXEOJSxSnn0pe2CJ5OXE3");
+    console.log("Client assignment data ", data);
+    data.dataArray.forEach(obj =>{
+      console.log("client assignment element ", obj);
+    })
+    
+  })
 
-    let data = getAssignmentsForUser("vkvd7hlKXEOJSxSnn0pe2CJ5OXE3")
-    console.log("my assignment stuff ", data);
+  getUser.addEventListener("click", async function(){
+    let data = await getUsers();
+    console.log("Client user data ", data);
+    data.dataArray.forEach(obj =>{
+      console.log("client user element ", obj);
+    })
   })
 
 
@@ -70,7 +54,7 @@ insertAssign.addEventListener("click", function(){
     console.log("Created Assignment");
 });
 
-  insertSession.addEventListener("click", function(){
+insertSession.addEventListener("click", function(){
     let tapData = [{
         beat: 0,
         delta: -26,
@@ -118,32 +102,5 @@ insertAssign.addEventListener("click", function(){
          "vkvd7hlKXEOJSxSnn0pe2CJ5OXE3",
          tapData
      );
-     //console.log(ret);
-  })
-
-
-  //Grab updated docunment in realtime
-/*   getRealTimeUpdates = function() {
-      docRef.onSnapshot(function (doc) {
-        if(doc && doc.exists){
-            const myData = doc.data();
-            status.innerText = "Status: " + myData.hotDogStatus;
-        }
-      })
-  } */
-
-  //getRealTimeUpdates();
-
-/*
-beat: 600
-prevBeat: 0
-nextBeat: 1200
-pressTime: 574
-releaseTime: 691
-duration: 117
-delta: -26
-nextDelta: -626
-prevDelta: 574
-timeSinceLast: 574
-soundOn: true
-side: 0 */
+     
+});
