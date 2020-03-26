@@ -1,6 +1,7 @@
 import Base from "../../engine/Base.js"
 import ScoreCalculator from "./ScoreCalculator.js"
 import TapHandler from "./TapHandler.js"
+import { createSession } from "../../Data.js"
 
 
 export default class Timer extends Base.Behavior {
@@ -99,10 +100,21 @@ export default class Timer extends Base.Behavior {
                 if(!this.gameOver) {
                     //If we are on the last cycle
                     if(this.currentCycle == this.cycles) {
-                        this.gameOver = true;
-                        sessionStorage.setItem('score', this.scoreCalculator.calculateScore(this.tapHandler.tapDataSoundOff, this.beatTime, this.noSoundPhaseTime, this.cycles));
-                        sessionStorage.setItem('data', JSON.stringify(this.tapHandler.tapDataSoundOff));
-                        document.location.href = "./results.html";
+                      this.gameOver = true;
+                      let userId = sessionStorage.getItem('uid');
+                      let assignmentId = sessionStorage.getItem('aid');
+                      let stringTapVersion = JSON.parse(JSON.stringify(this.tapHandler.tapDataTotal));
+                      firebase.auth().onAuthStateChanged(firebaseUser => {
+                          if(firebaseUser) {
+                              console.log(stringTapVersion);
+                              let sesh = createSession(assignmentId, 60000/this.beatTime, this.soundPhaseTime, this.noSoundPhaseTime, this.cycles, this.feedback, firebaseUser.uid, stringTapVersion);
+                              console.log(sesh);
+                          }
+                      });
+                      sessionStorage.setItem('totalTapArray', JSON.stringify(this.tapHandler.tapDataTotal));
+                      sessionStorage.setItem('score', this.scoreCalculator.calculateScore(this.tapHandler.tapDataSoundOff, this.beatTime, this.noSoundPhaseTime));
+                      sessionStorage.setItem('data', JSON.stringify(this.tapHandler.tapDataSoundOff));
+                      document.location.href = "./results.html";
                     } else {
                         //Reset everything for the next cycle
                         console.log("Resetting");

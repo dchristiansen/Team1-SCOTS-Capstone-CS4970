@@ -3,8 +3,14 @@ let score = sessionStorage.getItem('score');
 let data = sessionStorage.getItem('data');
 let duration = sessionStorage.getItem('timeWOSound');
 let bpm = sessionStorage.getItem('bpm');
+let userId = sessionStorage.getItem('uid');
+let total = sessionStorage.getItem('totalTapArray');
 
 data = JSON.parse(data);
+
+console.log(userId);
+
+console.log(total);
 
 let chartArray = [];
 data.forEach(tap => {
@@ -53,3 +59,5 @@ score = Math.round(score*100)/100;
 
 
 scoreString.innerHTML = "Score: " + score + "%";
+
+//sessionStorage.clear();
