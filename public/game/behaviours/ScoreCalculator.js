@@ -7,10 +7,8 @@ export default class ScoreCalculator extends Base.Behavior{
         let misses = 0;
         let score = phaseTime;
 
-
         data.forEach(tap => {
             let currentBeat = tap.beat;
-
             //New beat
             if(currentBeat != lastBeat) {
                 //New beat hit
