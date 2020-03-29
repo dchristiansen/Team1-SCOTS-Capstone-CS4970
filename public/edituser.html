@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!--Import Google Icon Font-->
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <!--Import materialize.css-->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+        <link rel="stylesheet" href="param.css">
+        <script src="/__/firebase/7.9.2/firebase-app.js"></script>
+        <script src="/__/firebase/7.9.2/firebase-auth.js"></script>
+        <script src="/__/firebase/7.9.2/firebase-firestore.js"></script>
+        <script src="/__/firebase/7.9.2/firebase-functions.js"></script>
+        <script defer src="/__/firebase/init.js"></script>
+        <!--Let browser know website is optimized for mobile-->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <title>Scots | Edit User</title>
+    </head>
+    <body class="grey darken-4">
+        <nav>
+            <div class="nav-wrapper blue darken-2">
+                <a href="#!" class="brand-logo">Scots</a>
+                <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+                <ul class="right hide-on-med-and-down">
+                    <li><a href="userdashboard.html">User Dashboard</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <ul class="sidenav" id="mobile-demo">
+            <li><a href="userdashboard.html">User Dashboard</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Contact</a></li>
+        </ul>
+
+        <br><br>
+        <div class="container">
+            <h2 class="white-text">Edit User</h2>
+            <div class="row">
+                <div class="input-field col s6 offset-s2">
+                    <input type="password" id="password" class="white-text">
+                    <label class="active white-text" for="password">New Password</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s6 offset-s2">
+                    <input type="password" id="confirmPassword" class="white-text" onkeyup='check();'>
+                    <label class="active white-text" for="confirmPassword">Confirm Password</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s6 offset-s2">
+                    <span id="confirmMessage"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s6 offset-s2">
+                    <button id="btnChangePassword" disabled="true" class="btn btn-large pink darken-2 waves-effect"><i class="material-icons right">chevron_right</i>Change Password</button>
+                </div>
+            </div>
+            <script>
+                var check = function() {
+                    if (document.getElementById('password').value ==
+                        document.getElementById('confirmPassword').value) {
+                        document.getElementById('confirmMessage').style.color = 'green';
+                        document.getElementById('confirmMessage').innerHTML = 'Password confirmed';
+                        document.getElementById('btnChangePassword').disabled = false;
+                    } else {
+                        document.getElementById('confirmMessage').style.color = 'red';
+                        document.getElementById('confirmMessage').innerHTML = 'Passwords must match';
+                        document.getElementById('btnChangePassword').disabled = true;
+                    }
+                }
+            </script>
+            <script src="edituser.js"></script>
+        </div>
+    </body>
+</html>

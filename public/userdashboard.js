@@ -5,7 +5,7 @@
     const btnLogout = document.getElementById("btnLogout");
 
     const functions = firebase.functions();
-
+    
     btnLogout.addEventListener("click", e => {
         firebase.auth().signOut().then(function() {
             window.location = "index.html";
@@ -23,7 +23,7 @@
             //primary key. Otherwise, save autId into sessionStorage
             sessionStorage.setItem('uid', authId);
         } else {
-          // No user is signed in.
+            console.log("No user is signed in");
         }
     });
     
