@@ -31,8 +31,8 @@ function createSession(assignmentID, bpm, soundOn, soundOff, cycles, feedback, u
         //TODO: What is the userID, is it the document reference in the users table?
         //TODO check if user exists...
         //Uncomment when user creation is ready
-    //let userRef = firestore.collection("users").doc(userID);
-    //batch.update(userRef, {"latestSessionTime": docData.sessionTime})
+    let userRef = firestore.collection("users").doc(userID);
+    batch.update(userRef, {"latestSessionTime": docData.sessionTime})
 
     //Commit the batch
    return batch.commit().then(function(){
@@ -42,6 +42,36 @@ function createSession(assignmentID, bpm, soundOn, soundOff, cycles, feedback, u
     });
 }
 
+async function getSession(sessionID){
+    
+    var sessionData = {};
+    async function getSessionData(sessionID){
+        var returnData = {id: null};
+        var docRef = firestore.collection("sessions").doc(sessionID);
+        let promise = await docRef.get();
+        
+        if(promise.doc.exists){
+            returnData = {
+                id: promise.doc.id,
+                data: promise.doc.data()
+            }
+        }else{
+            throw error("Requested session does not exist!");
+        }
+        
+        return returnData;
+    }
+
+    try {
+        sessionsData = await getSessionData(sessionID);
+    } catch(err){
+        console.log("Error getting sessions ", err);
+    } finally{
+          console.log("returning data to client...", sessionsData);
+          return sessionsData;
+    }
+    
+}
 //Retrieves all sessions based on passed userID
 //Returns a JSON object containing an array
 //TODO: Figure out order, by timestamp?
@@ -173,4 +203,4 @@ async function getAssignmentsForUser(userID){
     }
 }
 
-export {createAssignment, createSession, getAllSessionsForUser, getAssignmentsForUser, getUsers}
+export {createAssignment, createSession, getAllSessionsForUser, getAssignmentsForUser, getUsers, getSession}
