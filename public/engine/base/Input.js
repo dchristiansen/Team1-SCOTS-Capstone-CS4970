@@ -27,7 +27,11 @@ export default class Input{
     static frameMouseButtonsDown = [];  
     static frameMouseButtonsUp = [];
     
-
+    static touch = false;
+    static touchdown = false;
+    static touchup = false;
+    static frametouchdown = false;
+    static frametouchup = false;
     
     static swapUpDownArrays(){
         this.frameDown = this.down;
@@ -39,6 +43,11 @@ export default class Input{
         this.frameMouseButtonsUp = this.mouseButtonsUp;
         this.mouseButtonsDown = [];
         this.mouseButtonsUp = [];
+
+        this.frametouchdown = this.touchdown;
+        this.frametouchup = this.touchup;
+        this.touchdown = false;
+        this.touchup = false;
     }
 
     //---------------------------------------------------

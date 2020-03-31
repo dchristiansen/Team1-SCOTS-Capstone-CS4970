@@ -1,37 +1,10 @@
-//import firebase from './config.js';
 
-(function() {
-    /*
-    var firebaseConfig = {
-        apiKey: config.firebase.apiKey,
-        authDomain: config.firebase.authDomain,
-        databaseUrl: config.firebase.databaseUrl,
-        projectId: config.firebase.projectId,
-        storageBucket: config.firebase.storageBucket,
-        messagingSenderId: config.firebase.messagingSenderId,
-        appId: config.firebase.appId,
-        measurementId: config.firebase.measurementId
-    };
-    firebase.initializeApp(firebaseConfig);
-    */
-    
+(function() {  
     const usernameField = document.getElementById('Uname');
     const passwordField = document.getElementById('password');
     const btnLogin = document.getElementById('btnLogin');
-    const btnRegister = document.getElementById('btnRegister');
-
     
-    btnRegister.addEventListener('click', e => {
-        const username = usernameField.value;
-        const password = passwordField.value;
-        const auth = firebase.auth();
-
-        auth.createUserWithEmailAndPassword(username,password).catch(function(error) {
-            var errorMessage = error.message;
-            alert(errorMessage);
-        })
-
-    }); 
+    var firestore = firebase.firestore();
     
     btnLogin.addEventListener('click', e => {
         const username = usernameField.value;
@@ -46,7 +19,33 @@
     firebase.auth().onAuthStateChanged(firebaseUser => {
         if(firebaseUser) 
         {
-            window.location = "userdashboard.html";
+            firebaseUser.getIdTokenResult().then(idTokenResult => {
+                firebaseUser.admin = idTokenResult.claims.admin;
+                if (firebaseUser.admin)
+                {
+                    window.location = "rPortal.html";
+                }
+                else 
+                {
+                    firestore.collection('users').doc(firebaseUser.uid).get().then(function(doc) {
+                        if(doc.exists) {
+                            if(!doc.data().changePassword)
+                            {
+                                alert("You have not changed your password since you were first registered. Please change your password before proceeding.");
+                                window.location = "edituser.html";
+                            }
+                            else
+                            {
+                                window.location = "userdashboard.html";
+                            }
+                        }
+                        else {
+                            alert("The user has not been registered in the database.");
+                            //window.location = "userdashboard.html";
+                        }
+                    })
+                }
+            });
         }
     });
 }());

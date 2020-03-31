@@ -1,26 +1,59 @@
-function fetchData(){ //TODO: hook this up to a database call
-    let data = [];
-    for (let i = 0; i < 50; i++){
-        let date = new Date(new Date() - Math.floor(Math.random() * 2500000000));
-        let user = {user_id: i, most_recent_session: date}
-        data.push(user);
-    }
-    return data;
-}
+import { getUsers } from "./Data.js";
 
-var url = "userData.html"
+const btnLogout = document.getElementById("btnLogout");
 
-function populateTable(data, table){
-    data.forEach(function(object) {
-        var tr = document.createElement('tr');
-        tr.innerHTML = '<td id="uid">' + object.user_id + '</td>' +
-        '<td>' + object.most_recent_session + '</td>';
-        tr.setAttribute('data-href', url);
+const adminForm = document.querySelector(".admin-action");
+//const functions = firebase.functions();
+btnLogout.addEventListener("click", e => {
+    firebase.auth().signOut().then(function () {
+        window.location = "index.html";
+    }).catch(function (error) {
+        console.log(error);
+    });
+});
+
+adminForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const adminEmail = document.getElementById('admin-email').value;
+    const addAdminRole = firebase.functions().httpsCallable('addAdminRole');
+    addAdminRole({ email: adminEmail }).then(result => {
+        console.log(result);
+        if (result.data.errorInfo == null) {
+            alert(result.data.message);
+        }
+        else {
+            alert(result.data.errorInfo.message);
+        }
+    });
+});
+
+
+       // tr.setAttribute('data-href', url);
+async function populateTable() {
+    let table = document.querySelector("#tablebody");
+    let usersCall = await getUsers();
+    let userData = usersCall.dataArray;
+    userData.forEach(function (obj) {
+        let tr = document.createElement('tr');
+        let td_id = document.createElement('td');
+        let a = document.createElement('a');
+        let td_ses = document.createElement('td');
+        let latestSessionTime = obj.data.latestSessionTime;
+        if (latestSessionTime) {
+            latestSessionTime = latestSessionTime.seconds * 1000;
+            latestSessionTime = new Date(latestSessionTime);
+        } else {
+            latestSessionTime = "N/A";
+        }
+        td_ses.innerHTML = latestSessionTime;
+        a.innerHTML = obj.data.userID;
+        a.href = './user.html?id=' + obj.data.userID;
+        td_id.appendChild(a);
+        tr.appendChild(td_id);
+        tr.appendChild(td_ses);
         table.appendChild(tr);
     });
 }
-
-
 
 let table = document.querySelector("#tablebody");
 let data = fetchData();
@@ -53,3 +86,6 @@ $('*[data-href]').on("click",function(){
 $("td > a").on("click",function(e){
   e.stopPropagation();
 });;
+
+populateTable();
+

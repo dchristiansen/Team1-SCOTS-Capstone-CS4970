@@ -1,7 +1,6 @@
 import Scenes from "./game/Scenes.js"
 import SceneManager from "./game/SceneManager.js"
 import Engine from "./engine/Engine.js"
-import Scene from "./engine/base/Scene.js"
 
 let playScene;
 
@@ -13,12 +12,33 @@ let feedback = sessionStorage.getItem("feedback");
 
 document.body.addEventListener('keydown', keydown);
 document.body.addEventListener('keyup', keyup);
+window.addEventListener('touchstart', touchstart);
+window.addEventListener('touchend', touchend);
 
 let Input = Engine.Base.Input;
 let pressed = false;
 
+function touchstart(event){
+    if(Input.touch != true)
+        Input.touchdown = true;
+    Input.touch = true;
+
+    if(!pressed) {
+        pressed = true;
+        pulse();
+    }
+}
+
+function touchend(event){
+    if(Input.touch != false)
+        Input.touchup = true;
+    Input.touch = false;
+
+    pressed = false;
+    pulse();
+}
+
 function keydown(event) {
-    event.stopPropagation();
     if(Input.keys[event.key] != true)
         Input.down[event.key] = true;
     Input.keys[event.key] = true;

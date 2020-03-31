@@ -6,6 +6,13 @@ import TapHandler from "./TapHandler.js";
 export default class CircleBehaviour extends Base.Behavior {
     circle;
     tapHandler;
+    feedback;
+
+    constructor(feedback) {
+        super();
+        this.feedback = feedback;
+    }
+
     start() {
         this.circle = this.gameObject.getComponent(CircleComponent);
         this.tapHandler = this.gameObject.getComponent(TapHandler);
@@ -16,24 +23,26 @@ export default class CircleBehaviour extends Base.Behavior {
     }
 
     pulse() {
-        if(Input.keys[' ']) {
+        if(Input.keys[' '] || Input.touch) {
             this.circle.radius = 90;
             let delta = this.tapHandler.tapDown();
 
-            if (this.tapHandler.timer.soundOn) {
-                if (Math.abs(delta) < this.tapHandler.beatTime / 6) {
-                    this.circle.fill = "green";
-                }
-                else if (Math.abs(delta) < this.tapHandler.beatTime * 2 / 6) {
-                    this.circle.fill = "yellow"
-                }
-                else {
-                    this.circle.fill = "red";
+            if(this.feedback == "true") {
+                if (this.tapHandler.timer.soundOn) {
+                    if (Math.abs(delta) < this.tapHandler.beatTime / 6) {
+                        this.circle.fill = "green";
+                    }
+                    else if (Math.abs(delta) < this.tapHandler.beatTime * 2 / 6) {
+                        this.circle.fill = "yellow"
+                    }
+                    else {
+                        this.circle.fill = "red";
+                    }
                 }
             }
         } 
 
-        if (!Input.keys[' ']){
+        if (!Input.keys[' '] && !Input.touch){
             this.circle.radius = 100;
             this.circle.fill = "white";
             this.tapHandler.tapUp();
