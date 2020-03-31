@@ -59,6 +59,17 @@
                     <button id="btnChangePassword" disabled="true" class="btn btn-large pink darken-2 waves-effect"><i class="material-icons right">chevron_right</i>Change Password</button>
                 </div>
             </div>
+            <script
+              src="https://code.jquery.com/jquery-3.4.1.min.js"
+              integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+              crossorigin="anonymous"></script>
+            <!--JavaScript at end of body for optimized loading-->
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+            <script>
+            $(document).ready(function(){
+                $('.sidenav').sidenav();
+              });
+            </script>
             <script>
                 var check = function() {
                     if (document.getElementById('password').value ==
