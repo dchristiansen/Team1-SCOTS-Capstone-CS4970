@@ -27,9 +27,6 @@ adminForm.addEventListener('submit', (e) => {
     });
 });
 
-
-
-
 async function populateTable() {
     let table = document.querySelector("#tablebody");
     let usersCall = await getUsers();
