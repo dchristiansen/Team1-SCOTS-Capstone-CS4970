@@ -5,3 +5,14 @@
 .switch label input[type=checkbox]:checked+.lever:after {
   background-color: #ad1457;
 }
+
+/* label focus color */
+    .input-field input[type=text]:focus + label, .materialize-textarea:focus:not([readonly]) + label {
+     color: #ad1457 !important;
+    }
+
+/* label underline focus color */
+    .input-field input[type=text]:focus, .materialize-textarea:focus:not([readonly]) {
+     border-bottom: 1px solid #c2185b !important;
+     box-shadow: 0 1px 0 0 #c2185b  !important;
+    }
