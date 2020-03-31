@@ -28,7 +28,8 @@ adminForm.addEventListener('submit', (e) => {
 });
 
 
-       // tr.setAttribute('data-href', url);
+
+
 async function populateTable() {
     let table = document.querySelector("#tablebody");
     let usersCall = await getUsers();
@@ -36,7 +37,7 @@ async function populateTable() {
     userData.forEach(function (obj) {
         let tr = document.createElement('tr');
         let td_id = document.createElement('td');
-        let a = document.createElement('a');
+      //  let a = document.createElement('a');
         let td_ses = document.createElement('td');
         let latestSessionTime = obj.data.latestSessionTime;
         if (latestSessionTime) {
@@ -46,46 +47,45 @@ async function populateTable() {
             latestSessionTime = "N/A";
         }
         td_ses.innerHTML = latestSessionTime;
-        a.innerHTML = obj.data.userID;
-        a.href = './user.html?id=' + obj.data.userID;
-        td_id.appendChild(a);
+        let url = './userData.html?id=' + obj.data.userID;
+        tr.setAttribute('data-href', url);
+
+      //a.innerHTML = obj.data.userID;
+      // a.href = './userData.html?id=' + obj.data.userID;
+        td_id.innerHTML = obj.data.userID;
         tr.appendChild(td_id);
         tr.appendChild(td_ses);
         table.appendChild(tr);
     });
 }
 
-let table = document.querySelector("#tablebody");
-let data = fetchData();
-populateTable(data, table);
+$(document).ready(function(){
+  $('#search').on('keyup', function(){
+    var input, filter, table, tr, td, i, txtValue;
+      input = document.getElementById("search");
+      filter = input.value.toUpperCase();
+      table = document.getElementById("tablebody");
+      tr = table.getElementsByTagName("tr");
 
-function myFunction(){
-var input, filter, table, tr, td, i, txtValue;
-  input = document.getElementById("search");
-  filter = input.value.toUpperCase();
-  table = document.getElementById("tablebody");
-  tr = table.getElementsByTagName("tr");
-
-  for (i = 0; i < tr.length; i++) {
-      td = tr[i].getElementsByTagName("td")[0];
-      if (td) {
-        txtValue = td.textContent || td.innerText;
-        if (txtValue.toUpperCase().indexOf(filter) > -1) {
-          tr[i].style.display = "";
-        } else {
-          tr[i].style.display = "none";
+      for (i = 0; i < tr.length; i++) {
+          td = tr[i].getElementsByTagName("td")[0];
+          if (td) {
+            txtValue = td.textContent || td.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+              tr[i].style.display = "";
+            } else {
+              tr[i].style.display = "none";
+            }
+          }
         }
-      }
-    }
-  }
-
-$('*[data-href]').on("click",function(){
-  window.location = $(this).data('href');
-  return false;
+  });
 });
-$("td > a").on("click",function(e){
-  e.stopPropagation();
-});;
+
+
+$(document).ready(function (){
+  $(document.body).on("click", "tr[data-href]", function (){
+    window.location.href = this.dataset.href;
+  })
+});
 
 populateTable();
-
