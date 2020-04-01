@@ -114,7 +114,7 @@ export default class Timer extends Base.Behavior {
                       sessionStorage.setItem('totalTapArray', JSON.stringify(this.tapHandler.tapDataTotal));
                       sessionStorage.setItem('score', this.scoreCalculator.calculateScore(this.tapHandler.tapDataSoundOff, this.beatTime, this.noSoundPhaseTime, this.cycles));
                       sessionStorage.setItem('data', JSON.stringify(this.tapHandler.tapDataSoundOff));
-                      //document.location.href = "./results.html";
+                      document.location.href = "./results.html";
                     } else {
                         //Reset everything for the next cycle
                         console.log("Resetting");
