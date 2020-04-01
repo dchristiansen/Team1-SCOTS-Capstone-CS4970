@@ -95,5 +95,35 @@ function pulse() {
     SceneManager.currentScene.pulse();
 }
 
+function checkToPlayGame() {
+    let readyToPlay = true;
+
+    if(!sessionStorage.getItem("bpm")){
+        readyToPlay = false;
+    }else if(!sessionStorage.getItem("timeWSound")){
+        readyToPlay = false;
+    }else if(!sessionStorage.getItem("timeWOSound")){
+        readyToPlay = false;
+    }else if(!sessionStorage.getItem("cycles")){
+        readyToPlay = false;
+    }else if(!sessionStorage.getItem("feedback")){
+        readyToPlay = false;
+    }
+
+    if(readyToPlay) {
+        playGame();
+    } else {
+        let location = "parameters.html";
+        firebase.auth().onAuthStateChanged(user => {
+            if(user){
+                location = "userdashboard.html";
+            }
+        });
+
+        window.alert("No parameters selected, returning to parameter select");
+        window.location = location;
+    }
+}
+
 let button = document.querySelector("#startButton");
-button.onclick = playGame;
+button.onclick = checkToPlayGame;
