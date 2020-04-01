@@ -4,6 +4,7 @@ function setParams() {
   var cycles = document.getElementById("cycles").value;
   var timeWOSound = document.getElementById("timeWOSound").value;
   var feedback = document.getElementById("feedback").checked;
+  sessionStorage.clear();
   sessionStorage.setItem("aid", null);
   sessionStorage.setItem("bpm",bpm);
   sessionStorage.setItem("timeWSound",timeWSound);

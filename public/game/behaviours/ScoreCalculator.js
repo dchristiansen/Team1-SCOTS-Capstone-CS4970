@@ -56,7 +56,7 @@ export default class ScoreCalculator extends Base.Behavior{
         let missPenalty = misses * beatTime;
         console.log("Miss Penalty: " + missPenalty + ", with " + misses + " misses");
         score -= missPenalty;
-        score /= (phaseTime * cycles);
+        score /= ((phaseTime * cycles) + (0.5 * beatTime));
 
         if(score < 0) {
             score = 0;
