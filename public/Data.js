@@ -50,10 +50,10 @@ async function getSession(sessionID){
         var docRef = firestore.collection("sessions").doc(sessionID);
         let promise = await docRef.get();
         
-        if(promise.doc.exists){
+        if(promise.exists){
             returnData = {
-                id: promise.doc.id,
-                data: promise.doc.data()
+                id: promise.id,
+                data: promise.data()
             }
         }else{
             throw error("Requested session does not exist!");
@@ -125,7 +125,7 @@ async function getUsers(){
         var returnData = {
             dataArray: []
         }
-        let promise = await users.get();
+        let promise = await users.orderBy("userID").get();
         for (const user of promise.docs){
             returnData.dataArray.push(
                 {
