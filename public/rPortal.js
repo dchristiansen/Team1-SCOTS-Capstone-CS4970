@@ -34,7 +34,6 @@ async function populateTable() {
     userData.forEach(function (obj) {
         let tr = document.createElement('tr');
         let td_id = document.createElement('td');
-      //  let a = document.createElement('a');
         let td_ses = document.createElement('td');
         let latestSessionTime = obj.data.latestSessionTime;
         if (latestSessionTime) {
@@ -44,11 +43,8 @@ async function populateTable() {
             latestSessionTime = "N/A";
         }
         td_ses.innerHTML = latestSessionTime;
-        let url = './userData.html?id=' + obj.data.userID;
+        let url = './userData.html?id=' + obj.id;
         tr.setAttribute('data-href', url);
-
-      //a.innerHTML = obj.data.userID;
-      // a.href = './userData.html?id=' + obj.data.userID;
         td_id.innerHTML = obj.data.userID;
         tr.appendChild(td_id);
         tr.appendChild(td_ses);

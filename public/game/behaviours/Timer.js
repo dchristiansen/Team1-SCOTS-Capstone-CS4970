@@ -5,6 +5,7 @@ import { createSession } from "../../Data.js"
 
 
 export default class Timer extends Base.Behavior {
+    bpm;
     currentTime;
     startTime = -1;
     beatTime;
@@ -25,6 +26,7 @@ export default class Timer extends Base.Behavior {
 
     constructor(bpm, soundPhaseTime, noSoundPhaseTime, cycles) {
         super();
+        this.bpm = bpm;
         this.beatTime = 60000/bpm;
         this.soundPhaseTime = soundPhaseTime*1000;
         this.noSoundPhaseTime = noSoundPhaseTime*1000;
@@ -107,7 +109,7 @@ export default class Timer extends Base.Behavior {
                       firebase.auth().onAuthStateChanged(firebaseUser => {
                           if(firebaseUser) {
                               console.log(stringTapVersion);
-                              let sesh = createSession(assignmentId, 60000/this.beatTime, this.soundPhaseTime, this.noSoundPhaseTime, this.cycles, this.feedback, firebaseUser.uid, stringTapVersion);
+                              let sesh = createSession(assignmentId, this.bpm, this.soundPhaseTime, this.noSoundPhaseTime, this.cycles, this.feedback, firebaseUser.uid, stringTapVersion);
                               console.log(sesh);
                           }
                       });

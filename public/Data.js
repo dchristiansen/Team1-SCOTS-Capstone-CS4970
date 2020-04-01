@@ -50,10 +50,10 @@ async function getSession(sessionID){
         var docRef = firestore.collection("sessions").doc(sessionID);
         let promise = await docRef.get();
         
-        if(promise.doc.exists){
+        if(promise.exists){
             returnData = {
-                id: promise.doc.id,
-                data: promise.doc.data()
+                id: promise.id,
+                data: promise.data()
             }
         }else{
             throw error("Requested session does not exist!");
@@ -113,7 +113,36 @@ async function getAllSessionsForUser(userID){
           return sessionsArray;
     }
 }
+async function getUser(userID){
+    
+    var userData = {};
+    async function getUserData(userID){
+        var returnData = {id: null};
+        var docRef = firestore.collection("users").doc(userID);
+        let promise = await docRef.get();
+        
+        if(promise.exists){
+            returnData = {
+                id: promise.id,
+                data: promise.data()
+            }
+        }else{
+            throw error("Requested user does not exist!");
+        }
+        
+        return returnData;
+    }
 
+    try {
+        userData = await getUserData(userID);
+    } catch(err){
+        console.log("Error getting user ", err);
+    } finally{
+          console.log("returning data to client...", userData);
+          return userData;
+    }
+    
+}
 //Gets All Users in users table
 //Returns a JSON object containing an array
 async function getUsers(){
@@ -203,4 +232,4 @@ async function getAssignmentsForUser(userID){
     }
 }
 
-export {createAssignment, createSession, getAllSessionsForUser, getAssignmentsForUser, getUsers, getSession}
+export {createAssignment, createSession, getAllSessionsForUser, getAssignmentsForUser, getUsers, getSession, getUser}
