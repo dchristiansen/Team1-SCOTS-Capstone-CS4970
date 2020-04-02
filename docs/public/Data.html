@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>Data.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="..\docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>Data.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-meta">'use strict'</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>TODO: Research more robust methods of querying firebase. Develop standard responses to ‘client’</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> firestore = firebase.firestore();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Creates new session upon completion of game. Stores tap objects as an array of maps
+TODO: Add data validation for existing user? can also do with db rules</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">createSession</span>(<span class="hljs-params">assignmentID, bpm, soundOn, soundOff, cycles, feedback, userID, tapData</span>)</span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Create a batch</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> batch = firestore.batch();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Build the new session document</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> sessions = firestore.collection(<span class="hljs-string">'sessions'</span>);
+    <span class="hljs-keyword">let</span> newSessionRef = sessions.doc()
+    <span class="hljs-keyword">let</span> docData = {
+        <span class="hljs-attr">assignmentID</span>: assignmentID,
+        <span class="hljs-attr">parameters</span>: {
+            <span class="hljs-attr">bpm</span>: bpm,
+            <span class="hljs-attr">soundOnTime</span>: soundOn,
+            <span class="hljs-attr">soundOffTime</span>: soundOff,
+            <span class="hljs-attr">cycles</span>: cycles,
+            <span class="hljs-attr">feedback</span>: feedback,
+        },
+        <span class="hljs-attr">userID</span>: userID,
+        <span class="hljs-attr">sessionTime</span>: firebase.firestore.Timestamp.now(),
+        <span class="hljs-attr">taps</span>: tapData
+    };
+    batch.set(newSessionRef, docData);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Also update the latest session time in the users/<userID> document
+TODO: What is the userID, is it the document reference in the users table?
+TODO check if user exists…
+Uncomment when user creation is ready</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> userRef = firestore.collection(<span class="hljs-string">"users"</span>).doc(userID);
+    batch.update(userRef, {<span class="hljs-string">"latestSessionTime"</span>: docData.sessionTime})</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>Commit the batch</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>   <span class="hljs-keyword">return</span> batch.commit().then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"New Session successfully written! "</span>, newSessionRef.id);
+    }).catch(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">error</span>)</span>{
+        <span class="hljs-built_in">console</span>.error(<span class="hljs-string">"Error when adding new session: "</span>, error);
+    });
+}
+
+<span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getSession</span>(<span class="hljs-params">sessionID</span>)</span>{
+    
+    <span class="hljs-keyword">var</span> sessionData = {};
+    <span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getSessionData</span>(<span class="hljs-params">sessionID</span>)</span>{
+        <span class="hljs-keyword">var</span> returnData = {<span class="hljs-attr">id</span>: <span class="hljs-literal">null</span>};
+        <span class="hljs-keyword">var</span> docRef = firestore.collection(<span class="hljs-string">"sessions"</span>).doc(sessionID);
+        <span class="hljs-keyword">let</span> promise = <span class="hljs-keyword">await</span> docRef.get();
+        
+        <span class="hljs-keyword">if</span>(promise.exists){
+            returnData = {
+                <span class="hljs-attr">id</span>: promise.id,
+                <span class="hljs-attr">data</span>: promise.data()
+            }
+        }<span class="hljs-keyword">else</span>{
+            <span class="hljs-keyword">throw</span> error(<span class="hljs-string">"Requested session does not exist!"</span>);
+        }
+        
+        <span class="hljs-keyword">return</span> returnData;
+    }
+
+    <span class="hljs-keyword">try</span> {
+        sessionsData = <span class="hljs-keyword">await</span> getSessionData(sessionID);
+    } <span class="hljs-keyword">catch</span>(err){
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Error getting sessions "</span>, err);
+    } <span class="hljs-keyword">finally</span>{
+          <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"returning data to client..."</span>, sessionsData);
+          <span class="hljs-keyword">return</span> sessionsData;
+    }
+    
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Retrieves all sessions based on passed userID
+Returns a JSON object containing an array
+TODO: Figure out order, by timestamp?</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getAllSessionsForUser</span>(<span class="hljs-params">userID</span>)</span>{
+
+    <span class="hljs-keyword">var</span> sessionsArray = {<span class="hljs-attr">dataArray</span>: <span class="hljs-literal">null</span>};
+
+    <span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getSessionData</span>(<span class="hljs-params">userID</span>)</span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Return data as an array of maps, where each item contains the docID and session data
+We can change this to return a custom object later</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">var</span> returnData = {
+            <span class="hljs-attr">dataArray</span>: []
+        }
+
+        <span class="hljs-keyword">var</span> sessions = firestore.collection(<span class="hljs-string">"sessions"</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>IMPORTANT
+we can implement pagination later on to perform batched reads
+I am implementing a limit so we don’t run into pricing issues</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">var</span> query = sessions.where(<span class="hljs-string">"userID"</span>, <span class="hljs-string">"=="</span>, userID).limit(<span class="hljs-number">20</span>);
+
+        <span class="hljs-keyword">let</span> promise = <span class="hljs-keyword">await</span> query.get();
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> sess <span class="hljs-keyword">of</span> promise.docs){
+            returnData.dataArray.push(
+                {
+                    <span class="hljs-attr">id</span>: sess.id,
+                    <span class="hljs-attr">data</span>: sess.data()
+                }
+            );
+        }
+        <span class="hljs-keyword">return</span> returnData;
+    }
+
+    <span class="hljs-keyword">try</span> {
+        sessionsArray = <span class="hljs-keyword">await</span> getSessionData(userID);
+    } <span class="hljs-keyword">catch</span>(err){
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Error getting sessions "</span>, err);
+    } <span class="hljs-keyword">finally</span>{
+          <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"returning data to client..."</span>, sessionsArray);
+          <span class="hljs-keyword">return</span> sessionsArray;
+    }
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>Gets All Users in users table
+Returns a JSON object containing an array</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getUsers</span>(<span class="hljs-params"></span>)</span>{
+
+    <span class="hljs-keyword">var</span> usersArray = {<span class="hljs-attr">dataArray</span>: <span class="hljs-literal">null</span>};
+
+    <span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getUserData</span>(<span class="hljs-params"></span>)</span>{
+        <span class="hljs-keyword">var</span> users = firestore.collection(<span class="hljs-string">"users"</span>);
+        <span class="hljs-keyword">var</span> returnData = {
+            <span class="hljs-attr">dataArray</span>: []
+        }
+        <span class="hljs-keyword">let</span> promise = <span class="hljs-keyword">await</span> users.orderBy(<span class="hljs-string">"userID"</span>).get();
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> user <span class="hljs-keyword">of</span> promise.docs){
+            returnData.dataArray.push(
+                {
+                    <span class="hljs-attr">id</span>: user.id,
+                    <span class="hljs-attr">data</span>: user.data()
+                }
+            );
+        }
+        <span class="hljs-keyword">return</span> returnData;
+    }
+
+    <span class="hljs-keyword">try</span> {
+        usersArray = <span class="hljs-keyword">await</span> getUserData();
+      }<span class="hljs-keyword">catch</span>(err){
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Error getting users "</span>, err);
+      }<span class="hljs-keyword">finally</span>{
+          <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"returning data to client..."</span>, usersArray);
+          <span class="hljs-keyword">return</span> usersArray;
+      }
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>Creates an Assignment
+Only a Researcher should be able to add assignment</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">createAssignment</span>(<span class="hljs-params">assignmentLabel, bpm, soundOn, soundOff, cycles, feedback, userIDs </span>)</span>{
+    <span class="hljs-keyword">let</span> assignments = firestore.collection(<span class="hljs-string">"assignments"</span>);
+    <span class="hljs-keyword">let</span> docData = {
+        <span class="hljs-attr">assignmentLabel</span>: assignmentLabel,
+        <span class="hljs-attr">parameters</span>: {
+            <span class="hljs-attr">bpm</span>: bpm,
+            <span class="hljs-attr">soundOnTime</span>: soundOn,
+            <span class="hljs-attr">soundOffTime</span>: soundOff,
+            <span class="hljs-attr">cycles</span>: cycles,
+            <span class="hljs-attr">feedback</span>: feedback,
+        },
+        <span class="hljs-attr">userIDs</span>: userIDs,
+    };
+    assignments.add(docData).then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"New Assignment successfully written!"</span>);
+    });
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>Gets All Assignments for a User
+Returns a JSON object containing an array</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getAssignmentsForUser</span>(<span class="hljs-params">userID</span>)</span>{
+
+    <span class="hljs-keyword">var</span> assignmentsArray = {<span class="hljs-attr">dataArray</span>: <span class="hljs-literal">null</span>};
+
+    <span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getAssignmentData</span>(<span class="hljs-params">userID</span>)</span>{
+        <span class="hljs-keyword">var</span> returnData = {
+            <span class="hljs-attr">dataArray</span>: []
+        }
+        <span class="hljs-keyword">var</span> assignments = firestore.collection(<span class="hljs-string">"assignments"</span>);
+        <span class="hljs-keyword">var</span> query = assignments.where(<span class="hljs-string">"userIDs"</span>, <span class="hljs-string">"array-contains"</span>, userID).limit(<span class="hljs-number">20</span>);
+
+        <span class="hljs-keyword">let</span> promise = <span class="hljs-keyword">await</span> query.get();
+
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> assign <span class="hljs-keyword">of</span> promise.docs){
+            returnData.dataArray.push(
+                {
+                    <span class="hljs-attr">id</span>: assign.id,
+                    <span class="hljs-attr">data</span>: assign.data()
+                }
+            );
+        }
+        <span class="hljs-keyword">return</span> returnData;
+    }
+
+    <span class="hljs-keyword">try</span> {
+        assignmentsArray = <span class="hljs-keyword">await</span> getAssignmentData(userID);
+    } <span class="hljs-keyword">catch</span>(err){
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Error getting assignments "</span>, err);
+    } <span class="hljs-keyword">finally</span>{
+          <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"returning data to client..."</span>, assignmentsArray);
+          <span class="hljs-keyword">return</span> assignmentsArray;
+    }
+}
+
+<span class="hljs-keyword">export</span> {createAssignment, createSession, getAllSessionsForUser, getAssignmentsForUser, getUsers, getSession}</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>
