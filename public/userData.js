@@ -42,15 +42,12 @@ async function populateTable(userid) {
         let label = document.createElement('label');
         let checkbox = document.createElement('input');
         let span = document.createElement('span');
-        //span.innerHTML= "Test";
         checkbox.type = "checkbox";
-        //checkbox.checked = true;
         label.appendChild(checkbox);
         label.appendChild(span);
         //td_checkbox.appendChild(span);
         td_checkbox.appendChild(label);
         tr.appendChild(td_checkbox);
-
         table.appendChild(tr);
     });
 
@@ -59,8 +56,16 @@ async function populateTable(userid) {
 
 
 
-
 let params = new URLSearchParams(location.search);
 let userid = params.get('id');
 setHeader(userid);
 populateTable(userid);
+
+$(document).ready(function(){
+  $("#select").click(function() {
+    let checked = !$(this).data('checked');
+        $('input:checkbox').prop('checked', checked);
+        $(this).val(checked ? 'uncheck all' : 'check all' )
+        $(this).data('checked', checked);
+  });
+});
