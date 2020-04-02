@@ -38,9 +38,27 @@ async function populateTable(userid) {
         td_params.innerHTML = parameters.bpm + " BPM, " + parameters.soundOnTime + " On, " + parameters.soundOffTime + " Off, " + parameters.cycles + " Cycles, Feedback " + fbt;
         tr.appendChild(td_params);
 
+        let td_checkbox = document.createElement('td');
+        let label = document.createElement('label');
+        let checkbox = document.createElement('input');
+        let span = document.createElement('span');
+        //span.innerHTML= "Test";
+        checkbox.type = "checkbox";
+        //checkbox.checked = true;
+        label.appendChild(checkbox);
+        label.appendChild(span);
+        //td_checkbox.appendChild(span);
+        td_checkbox.appendChild(label);
+        tr.appendChild(td_checkbox);
+
         table.appendChild(tr);
     });
+
+    // TODO: Create button to select
 }
+
+
+
 
 let params = new URLSearchParams(location.search);
 let userid = params.get('id');
