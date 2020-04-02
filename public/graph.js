@@ -38,6 +38,8 @@ let yMin = yMax * -1;
 
 //Calculate the green, yellow, and red line positions based off of the bpm
 let beatTime = 60000/bpm;
+//Ensure that the graph extends to include the final beat, since we actually have a half beat extra
+lastBeat += 0.5*(beatTime/1000);
 let greenY = beatTime/6;
 let yellowY = beatTime * 2 / 6;
 let greenZonePos = [{x: 0, y: greenY}, {x: lastBeat, y: greenY}];
@@ -142,6 +144,11 @@ let myChart = new Chart(ctx, {
                     min: yMin,
                     max: yMax
                 }
+            }],
+            xAxes: [{
+                ticks: {
+                    max: lastBeat
+                }
             }]
         }, 
         legend: {
@@ -163,4 +170,14 @@ score = Math.round(score*100)/100;
 
 scoreString.innerHTML = "Score: " + score + "%";
 
-//sessionStorage.clear();
+
+function resetToParamSelect() {
+    location = "parameters.html";
+    firebase.auth().onAuthStateChanged(async function(user) {
+        if(user) {
+            location = "userdashboard.html";
+        }
+    });
+    window.location = location;
+}
+
