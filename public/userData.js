@@ -49,6 +49,8 @@ async function populateTable(userid) {
         td_checkbox.appendChild(label);
         tr.appendChild(td_checkbox);
         table.appendChild(tr);
+        let selectBtn = document.querySelector("#select");
+        selectBtn.classList.remove("disabled");
     });
 
     // TODO: Create button to select
