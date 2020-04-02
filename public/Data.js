@@ -1,9 +1,25 @@
+//File: Data.js
+//Description: Contains all the functions that interact with cloud firestore
+//Includes functions for creating sessions and assignments, and reading users, sessions, and assignments
+//TODO: Research more robust methods of querying firebase(pagination). Develop standard error responses to 'client'
 'use strict';
-//TODO: Research more robust methods of querying firebase. Develop standard responses to 'client'
+
 var firestore = firebase.firestore();
 
-//Creates new session upon completion of game. Stores tap objects as an array of maps
-//TODO: Add data validation for existing user? can also do with db rules
+//Function: createSession
+//Input: string assignmentID: the label of assignment that launched this session. Value is 'Custom Session' if not launched from assignment
+//       int bpm: beats per minute
+//       int soundOn: time in seconds of game phase where sound was on
+//       int soundOff: int,time in seconds of game phase where sound was off
+//       int cycles: the amount of times the game cycled. 1 cycle = soundOn + soundOff, 2 cycles = soundOn + soundOff + soundOn + soundOff, etc
+//       boolean feedback: true if feedback was enabled, false if not
+//       string userID: the userID of the user who completed the session
+//       array of TapObjects tapData: the array containing each TapObject in the session
+//
+//Output: returns the promise object
+//
+//Description: Creates new session upon completion of game. Stores tap objects as an array of TapObjects
+//Also updates the user document with the latest session time
 function createSession(assignmentID, bpm, soundOn, soundOff, cycles, feedback, userID, tapData){
 
     // Create a batch
@@ -28,9 +44,6 @@ function createSession(assignmentID, bpm, soundOn, soundOff, cycles, feedback, u
     batch.set(newSessionRef, docData);
 
     //Also update the latest session time in the users/<userID> document
-        //TODO: What is the userID, is it the document reference in the users table?
-        //TODO check if user exists...
-        //Uncomment when user creation is ready
     let userRef = firestore.collection("users").doc(userID);
     batch.update(userRef, {"latestSessionTime": docData.sessionTime})
 
@@ -42,9 +55,16 @@ function createSession(assignmentID, bpm, soundOn, soundOff, cycles, feedback, u
     });
 }
 
+//Function: getSession
+//Input: string sessionID, the id of the requested session document
+//
+//Output: returns sessionData, {id: the id of the session document, data: the contents of the session document}
+//
+//Description: Returns the requested session document
 async function getSession(sessionID){
     
     var sessionData = {};
+    //performs the actual firestore query
     async function getSessionData(sessionID){
         var returnData = {id: null};
         var docRef = firestore.collection("sessions").doc(sessionID);
@@ -58,10 +78,10 @@ async function getSession(sessionID){
         }else{
             throw error("Requested session does not exist!");
         }
-        
         return returnData;
     }
 
+    //Calls getSessionData, handles any errors that may occur, returns sessionsData before exit
     try {
         sessionsData = await getSessionData(sessionID);
     } catch(err){
@@ -72,14 +92,19 @@ async function getSession(sessionID){
     }
     
 }
-//Retrieves all sessions based on passed userID
-//Returns a JSON object containing an array
-//TODO: Figure out order, by timestamp?
+
+//Function: getAllSessionsForUser
+//Input: string userID, the id of the user tied to the desired sessions
+//
+//Output: returns sessionsArray, {dataArray: [{id: the id of the session document, data: the contents of the session document}, {...}, {...}]}
+//
+//Description: Gets all sessions tied to passed userID, returns them in an object containing an array of sessions
 async function getAllSessionsForUser(userID){
 
     var sessionsArray = {dataArray: null};
 
     async function getSessionData(userID){
+
         //Return data as an array of maps, where each item contains the docID and session data
         //We can change this to return a custom object later
         var returnData = {
@@ -113,6 +138,13 @@ async function getAllSessionsForUser(userID){
           return sessionsArray;
     }
 }
+
+//Function: getUser
+//Input: string userID, the id of the requested user
+//
+//Output: returns userData = {id: user doc id, data: user doc data}
+//
+//Description: Returns the user document of the requested user
 async function getUser(userID){
     
     var userData = {};
@@ -143,8 +175,13 @@ async function getUser(userID){
     }
     
 }
-//Gets All Users in users table
-//Returns a JSON object containing an array
+//Function: getUsers
+//Input: none
+//
+//Output: returns usersArray = {dataArray:[{id: user doc id, data: user doc data},{...},{...}]}
+//
+//Description: Returns all the users in the users collection
+//TODO: Implement limit? Paginate data?
 async function getUsers(){
 
     var usersArray = {dataArray: null};
@@ -176,8 +213,20 @@ async function getUsers(){
       }
 }
 
-//Creates an Assignment
-//Only a Researcher should be able to add assignment
+//Function: createAssignment
+//Input: string assignmentLabel: the name of the assignment
+//       int bpm: beats per minute
+//       int soundOn: time in seconds of game phase where sound was on
+//       int soundOff: int,time in seconds of game phase where sound was off
+//       int cycles: the amount of times the game cycled. 1 cycle = soundOn + soundOff, 2 cycles = soundOn + soundOff + soundOn + soundOff, etc
+//       boolean feedback: true if feedback was enabled, false if not
+//       string array userIDs: the list of users that are assigned this assignment
+//       
+//
+//Output: none
+//
+//Description: Creates new assignment for listed users based off of passed parameters
+//TODO: Add error handling
 function createAssignment(assignmentLabel, bpm, soundOn, soundOff, cycles, feedback, userIDs ){
     let assignments = firestore.collection("assignments");
     let docData = {
@@ -196,8 +245,13 @@ function createAssignment(assignmentLabel, bpm, soundOn, soundOff, cycles, feedb
     });
 }
 
-//Gets All Assignments for a User
-//Returns a JSON object containing an array
+//Function: getAssignmentsForUser
+//Input: string userID, id of user that is tied to requested assignments
+//
+//Output: returns assignmentsArray = {dataArray:[{id: assignment doc id, data: assignment doc data},{...},{...}]}
+//
+//Description: Returns all the assignments for the passed userID
+//TODO: Pagination?
 async function getAssignmentsForUser(userID){
 
     var assignmentsArray = {dataArray: null};
