@@ -154,7 +154,7 @@ async function getUsers(){
         var returnData = {
             dataArray: []
         }
-        let promise = await users.get();
+        let promise = await users.orderBy("userID").get();
         for (const user of promise.docs){
             returnData.dataArray.push(
                 {
