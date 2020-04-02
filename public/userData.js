@@ -30,7 +30,7 @@ async function populateTable(userid) {
         let td_params = document.createElement('td');
         let parameters = obj.data.parameters;
         let fbt = "";
-        if (parameters.feedback == "True"){
+        if (parameters.feedback == "true"){
             fbt = "On"
         } else {
             fbt = "Off"
