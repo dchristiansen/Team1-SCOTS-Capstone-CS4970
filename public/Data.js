@@ -86,7 +86,7 @@ async function getAllSessionsForUser(userID){
             dataArray: []
         }
 
-        var sessions = firestore.collection("sessions");
+        var sessions = firestore.collection("sessions").orderBy("sessionTime");
         //IMPORTANT
         //we can implement pagination later on to perform batched reads
         //I am implementing a limit so we don't run into pricing issues
@@ -206,7 +206,7 @@ async function getAssignmentsForUser(userID){
         var returnData = {
             dataArray: []
         }
-        var assignments = firestore.collection("assignments");
+        var assignments = firestore.collection("assignments").orderBy("assignmentLabel");
         var query = assignments.where("userIDs", "array-contains", userID).limit(20);
 
         let promise = await query.get();
