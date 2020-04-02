@@ -1,24 +1,35 @@
 //File: Data.js
-//Description: Contains all the functions that interact with cloud firestore
-//Includes functions for creating sessions and assignments, and reading users, sessions, and assignments
+
+//Description: Contains all the functions that interact with cloud firestore.
+
+//Includes functions for creating sessions and assignments, and reading users, sessions, and assignments.
+
 //TODO: Research more robust methods of querying firebase(pagination). Develop standard error responses to 'client'
 'use strict';
 
 var firestore = firebase.firestore();
 
 //Function: createSession
+
 //Input: string assignmentID: the label of assignment that launched this session. Value is 'Custom Session' if not launched from assignment
+
 //       int bpm: beats per minute
+
 //       int soundOn: time in seconds of game phase where sound was on
+
 //       int soundOff: int,time in seconds of game phase where sound was off
+
 //       int cycles: the amount of times the game cycled. 1 cycle = soundOn + soundOff, 2 cycles = soundOn + soundOff + soundOn + soundOff, etc
+
 //       boolean feedback: true if feedback was enabled, false if not
+
 //       string userID: the userID of the user who completed the session
+
 //       array of TapObjects tapData: the array containing each TapObject in the session
-//
+
 //Output: returns the promise object
-//
-//Description: Creates new session upon completion of game. Stores tap objects as an array of TapObjects
+
+//Description: Creates new session upon completion of game. Stores tap objects as an array of TapObjects. 
 //Also updates the user document with the latest session time
 function createSession(assignmentID, bpm, soundOn, soundOff, cycles, feedback, userID, tapData){
 
@@ -56,10 +67,11 @@ function createSession(assignmentID, bpm, soundOn, soundOff, cycles, feedback, u
 }
 
 //Function: getSession
+
 //Input: string sessionID, the id of the requested session document
-//
+
 //Output: returns sessionData, {id: the id of the session document, data: the contents of the session document}
-//
+
 //Description: Returns the requested session document
 async function getSession(sessionID){
     
@@ -94,10 +106,11 @@ async function getSession(sessionID){
 }
 
 //Function: getAllSessionsForUser
+
 //Input: string userID, the id of the user tied to the desired sessions
-//
+
 //Output: returns sessionsArray, {dataArray: [{id: the id of the session document, data: the contents of the session document}, {...}, {...}]}
-//
+
 //Description: Gets all sessions tied to passed userID, returns them in an object containing an array of sessions
 async function getAllSessionsForUser(userID){
 
@@ -140,10 +153,11 @@ async function getAllSessionsForUser(userID){
 }
 
 //Function: getUser
+
 //Input: string userID, the id of the requested user
-//
+
 //Output: returns userData = {id: user doc id, data: user doc data}
-//
+
 //Description: Returns the user document of the requested user
 async function getUser(userID){
     
@@ -176,11 +190,13 @@ async function getUser(userID){
     
 }
 //Function: getUsers
+
 //Input: none
-//
+
 //Output: returns usersArray = {dataArray:[{id: user doc id, data: user doc data},{...},{...}]}
-//
+
 //Description: Returns all the users in the users collection
+
 //TODO: Implement limit? Paginate data?
 async function getUsers(){
 
@@ -214,18 +230,25 @@ async function getUsers(){
 }
 
 //Function: createAssignment
+
 //Input: string assignmentLabel: the name of the assignment
+
 //       int bpm: beats per minute
+
 //       int soundOn: time in seconds of game phase where sound was on
+
 //       int soundOff: int,time in seconds of game phase where sound was off
+
 //       int cycles: the amount of times the game cycled. 1 cycle = soundOn + soundOff, 2 cycles = soundOn + soundOff + soundOn + soundOff, etc
+
 //       boolean feedback: true if feedback was enabled, false if not
+
 //       string array userIDs: the list of users that are assigned this assignment
-//       
-//
+
 //Output: none
-//
+
 //Description: Creates new assignment for listed users based off of passed parameters
+
 //TODO: Add error handling
 function createAssignment(assignmentLabel, bpm, soundOn, soundOff, cycles, feedback, userIDs ){
     let assignments = firestore.collection("assignments");
@@ -246,11 +269,13 @@ function createAssignment(assignmentLabel, bpm, soundOn, soundOff, cycles, feedb
 }
 
 //Function: getAssignmentsForUser
+
 //Input: string userID, id of user that is tied to requested assignments
-//
+
 //Output: returns assignmentsArray = {dataArray:[{id: assignment doc id, data: assignment doc data},{...},{...}]}
-//
+
 //Description: Returns all the assignments for the passed userID
+
 //TODO: Pagination?
 async function getAssignmentsForUser(userID){
 
