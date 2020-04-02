@@ -103,13 +103,15 @@ export default class Timer extends Base.Behavior {
                     //If we are on the last cycle
                     if(this.currentCycle == this.cycles) {
                       this.gameOver = true;
-                      let userId = sessionStorage.getItem('uid');
+                      let feedback = sessionStorage.getItem('feedback');
                       let assignmentId = sessionStorage.getItem('aid');
                       let stringTapVersion = JSON.parse(JSON.stringify(this.tapHandler.tapDataTotal));
                       firebase.auth().onAuthStateChanged(firebaseUser => {
                           if(firebaseUser) {
                               console.log(stringTapVersion);
-                              let sesh = createSession(assignmentId, this.bpm, this.soundPhaseTime, this.noSoundPhaseTime, this.cycles, this.feedback, firebaseUser.uid, stringTapVersion);
+
+                              let sesh = createSession(assignmentId, this.bpm, this.soundPhaseTime, this.noSoundPhaseTime, this.cycles, feedback, firebaseUser.uid, stringTapVersion);
+
                               console.log(sesh);
                           }
                       });
