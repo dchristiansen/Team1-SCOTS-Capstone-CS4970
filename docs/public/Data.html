@@ -27,16 +27,9 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              <p>File: Data.js
-Description: Contains all the functions that interact with cloud firestore
-Includes functions for creating sessions and assignments, and reading users, sessions, and assignments
-TODO: Research more robust methods of querying firebase(pagination). Develop standard error responses to ‘client’</p>
+              <p>File: Data.js</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-meta">'use strict'</span>;
-
-<span class="hljs-keyword">var</span> firestore = firebase.firestore();</pre></div></div>
             
         </li>
         
@@ -47,22 +40,9 @@ TODO: Research more robust methods of querying firebase(pagination). Develop sta
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p>Function: createSession
-Input: string assignmentID: the label of assignment that launched this session. Value is ‘Custom Session’ if not launched from assignment
-      int bpm: beats per minute
-      int soundOn: time in seconds of game phase where sound was on
-      int soundOff: int,time in seconds of game phase where sound was off
-      int cycles: the amount of times the game cycled. 1 cycle = soundOn + soundOff, 2 cycles = soundOn + soundOff + soundOn + soundOff, etc
-      boolean feedback: true if feedback was enabled, false if not
-      string userID: the userID of the user who completed the session
-      array of TapObjects tapData: the array containing each TapObject in the session</p>
-<p>Output: returns the promise object</p>
-<p>Description: Creates new session upon completion of game. Stores tap objects as an array of TapObjects
-Also updates the user document with the latest session time</p>
+              <p>Description: Contains all the functions that interact with cloud firestore.</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">createSession</span>(<span class="hljs-params">assignmentID, bpm, soundOn, soundOff, cycles, feedback, userID, tapData</span>)</span>{</pre></div></div>
             
         </li>
         
@@ -73,11 +53,9 @@ Also updates the user document with the latest session time</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>Create a batch</p>
+              <p>Includes functions for creating sessions and assignments, and reading users, sessions, and assignments.</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> batch = firestore.batch();</pre></div></div>
             
         </li>
         
@@ -87,6 +65,177 @@ Also updates the user document with the latest session time</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>TODO: Research more robust methods of querying firebase(pagination). Develop standard error responses to ‘client’</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-meta">'use strict'</span>;
+
+<span class="hljs-keyword">var</span> firestore = firebase.firestore();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Function: createSession</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Input: string assignmentID: the label of assignment that launched this session. Value is ‘Custom Session’ if not launched from assignment</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <pre><code>  int bpm: beats per minute</code></pre>
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <pre><code>  int soundOn: time <span class="hljs-keyword">in</span> seconds <span class="hljs-keyword">of</span> game phase where sound was on</code></pre>
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <pre><code>  int soundOff: int,time <span class="hljs-keyword">in</span> seconds <span class="hljs-keyword">of</span> game phase where sound was off</code></pre>
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <pre><code>  int cycles: the amount <span class="hljs-keyword">of</span> times the game cycled. <span class="hljs-number">1</span> cycle = soundOn + soundOff, <span class="hljs-number">2</span> cycles = soundOn + soundOff + soundOn + soundOff, etc</code></pre>
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <pre><code>  boolean feedback: <span class="hljs-literal">true</span> <span class="hljs-keyword">if</span> feedback was enabled, <span class="hljs-literal">false</span> <span class="hljs-keyword">if</span> not</code></pre>
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <pre><code>  string userID: the userID <span class="hljs-keyword">of</span> the user who completed the session</code></pre>
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <pre><code>  array <span class="hljs-keyword">of</span> TapObjects tapData: the array containing each TapObject <span class="hljs-keyword">in</span> the session</code></pre>
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>Output: returns the promise object</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>Description: Creates new session upon completion of game. Stores tap objects as an array of TapObjects. 
+Also updates the user document with the latest session time</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">createSession</span>(<span class="hljs-params">assignmentID, bpm, soundOn, soundOff, cycles, feedback, userID, tapData</span>)</span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>Create a batch</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> batch = firestore.batch();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
               <p>Build the new session document</p>
 
@@ -112,11 +261,11 @@ Also updates the user document with the latest session time</p>
         </li>
         
         
-        <li id="section-5">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
               <p>Also update the latest session time in the users/<userID> document</p>
 
@@ -128,11 +277,11 @@ Also updates the user document with the latest session time</p>
         </li>
         
         
-        <li id="section-6">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <p>Commit the batch</p>
 
@@ -148,16 +297,52 @@ Also updates the user document with the latest session time</p>
         </li>
         
         
-        <li id="section-7">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
-              <p>Function: getSession
-Input: string sessionID, the id of the requested session document</p>
-<p>Output: returns sessionData, {id: the id of the session document, data: the contents of the session document}</p>
-<p>Description: Returns the requested session document</p>
+              <p>Function: getSession</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p>Input: string sessionID, the id of the requested session document</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>Output: returns sessionData, {id: the id of the session document, data: the contents of the session document}</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <p>Description: Returns the requested session document</p>
 
             </div>
             
@@ -168,11 +353,11 @@ Input: string sessionID, the id of the requested session document</p>
         </li>
         
         
-        <li id="section-8">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <p>performs the actual firestore query</p>
 
@@ -197,11 +382,11 @@ Input: string sessionID, the id of the requested session document</p>
         </li>
         
         
-        <li id="section-9">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <p>Calls getSessionData, handles any errors that may occur, returns sessionsData before exit</p>
 
@@ -221,16 +406,52 @@ Input: string sessionID, the id of the requested session document</p>
         </li>
         
         
-        <li id="section-10">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
-              <p>Function: getAllSessionsForUser
-Input: string userID, the id of the user tied to the desired sessions</p>
-<p>Output: returns sessionsArray, {dataArray: [{id: the id of the session document, data: the contents of the session document}, {…}, {…}]}</p>
-<p>Description: Gets all sessions tied to passed userID, returns them in an object containing an array of sessions</p>
+              <p>Function: getAllSessionsForUser</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <p>Input: string userID, the id of the user tied to the desired sessions</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              <p>Output: returns sessionsArray, {dataArray: [{id: the id of the session document, data: the contents of the session document}, {…}, {…}]}</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-29">&#182;</a>
+              </div>
+              <p>Description: Gets all sessions tied to passed userID, returns them in an object containing an array of sessions</p>
 
             </div>
             
@@ -243,11 +464,11 @@ Input: string userID, the id of the user tied to the desired sessions</p>
         </li>
         
         
-        <li id="section-11">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
               <p>Return data as an array of maps, where each item contains the docID and session data
 We can change this to return a custom object later</p>
@@ -263,11 +484,11 @@ We can change this to return a custom object later</p>
         </li>
         
         
-        <li id="section-12">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
               <p>IMPORTANT
 we can implement pagination later on to perform batched reads
@@ -302,16 +523,52 @@ I am implementing a limit so we don’t run into pricing issues</p>
         </li>
         
         
-        <li id="section-13">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+                <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
-              <p>Function: getUser
-Input: string userID, the id of the requested user</p>
-<p>Output: returns userData = {id: user doc id, data: user doc data}</p>
-<p>Description: Returns the user document of the requested user</p>
+              <p>Function: getUser</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-33">&#182;</a>
+              </div>
+              <p>Input: string userID, the id of the requested user</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-34">&#182;</a>
+              </div>
+              <p>Output: returns userData = {id: user doc id, data: user doc data}</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-35">&#182;</a>
+              </div>
+              <p>Description: Returns the user document of the requested user</p>
 
             </div>
             
@@ -349,17 +606,65 @@ Input: string userID, the id of the requested user</p>
         </li>
         
         
-        <li id="section-14">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+                <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
-              <p>Function: getUsers
-Input: none</p>
-<p>Output: returns usersArray = {dataArray:[{id: user doc id, data: user doc data},{…},{…}]}</p>
-<p>Description: Returns all the users in the users collection
-TODO: Implement limit? Paginate data?</p>
+              <p>Function: getUsers</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-37">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-37">&#182;</a>
+              </div>
+              <p>Input: none</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-38">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-38">&#182;</a>
+              </div>
+              <p>Output: returns usersArray = {dataArray:[{id: user doc id, data: user doc data},{…},{…}]}</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-39">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-39">&#182;</a>
+              </div>
+              <p>Description: Returns all the users in the users collection</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-40">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-40">&#182;</a>
+              </div>
+              <p>TODO: Implement limit? Paginate data?</p>
 
             </div>
             
@@ -397,23 +702,137 @@ TODO: Implement limit? Paginate data?</p>
         </li>
         
         
-        <li id="section-15">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-41">&#182;</a>
               </div>
-              <p>Function: createAssignment
-Input: string assignmentLabel: the name of the assignment
-      int bpm: beats per minute
-      int soundOn: time in seconds of game phase where sound was on
-      int soundOff: int,time in seconds of game phase where sound was off
-      int cycles: the amount of times the game cycled. 1 cycle = soundOn + soundOff, 2 cycles = soundOn + soundOff + soundOn + soundOff, etc
-      boolean feedback: true if feedback was enabled, false if not
-      string array userIDs: the list of users that are assigned this assignment</p>
-<p>Output: none</p>
-<p>Description: Creates new assignment for listed users based off of passed parameters
-TODO: Add error handling</p>
+              <p>Function: createAssignment</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-42">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-42">&#182;</a>
+              </div>
+              <p>Input: string assignmentLabel: the name of the assignment</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-43">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-43">&#182;</a>
+              </div>
+              <pre><code>  int bpm: beats per minute</code></pre>
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-44">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-44">&#182;</a>
+              </div>
+              <pre><code>  int soundOn: time <span class="hljs-keyword">in</span> seconds <span class="hljs-keyword">of</span> game phase where sound was on</code></pre>
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-45">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-45">&#182;</a>
+              </div>
+              <pre><code>  int soundOff: int,time <span class="hljs-keyword">in</span> seconds <span class="hljs-keyword">of</span> game phase where sound was off</code></pre>
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-46">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-46">&#182;</a>
+              </div>
+              <pre><code>  int cycles: the amount <span class="hljs-keyword">of</span> times the game cycled. <span class="hljs-number">1</span> cycle = soundOn + soundOff, <span class="hljs-number">2</span> cycles = soundOn + soundOff + soundOn + soundOff, etc</code></pre>
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-47">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-47">&#182;</a>
+              </div>
+              <pre><code>  boolean feedback: <span class="hljs-literal">true</span> <span class="hljs-keyword">if</span> feedback was enabled, <span class="hljs-literal">false</span> <span class="hljs-keyword">if</span> not</code></pre>
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-48">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-48">&#182;</a>
+              </div>
+              <pre><code>  string array userIDs: the list <span class="hljs-keyword">of</span> users that are assigned <span class="hljs-keyword">this</span> assignment</code></pre>
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-49">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-49">&#182;</a>
+              </div>
+              <p>Output: none</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-50">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-50">&#182;</a>
+              </div>
+              <p>Description: Creates new assignment for listed users based off of passed parameters</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-51">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-51">&#182;</a>
+              </div>
+              <p>TODO: Add error handling</p>
 
             </div>
             
@@ -438,17 +857,65 @@ TODO: Add error handling</p>
         </li>
         
         
-        <li id="section-16">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-52">&#182;</a>
               </div>
-              <p>Function: getAssignmentsForUser
-Input: string userID, id of user that is tied to requested assignments</p>
-<p>Output: returns assignmentsArray = {dataArray:[{id: assignment doc id, data: assignment doc data},{…},{…}]}</p>
-<p>Description: Returns all the assignments for the passed userID
-TODO: Pagination?</p>
+              <p>Function: getAssignmentsForUser</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-53">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-53">&#182;</a>
+              </div>
+              <p>Input: string userID, id of user that is tied to requested assignments</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-54">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-54">&#182;</a>
+              </div>
+              <p>Output: returns assignmentsArray = {dataArray:[{id: assignment doc id, data: assignment doc data},{…},{…}]}</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-55">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-55">&#182;</a>
+              </div>
+              <p>Description: Returns all the assignments for the passed userID</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-56">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-56">&#182;</a>
+              </div>
+              <p>TODO: Pagination?</p>
 
             </div>
             
