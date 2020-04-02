@@ -10,7 +10,7 @@
 
   <!--Let browser know website is optimized for mobile-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Scots | Parameter</title>
+  <title>Scots | Session Assignment</title>
 </head>
 
 <body class="grey darken-4">
@@ -35,13 +35,19 @@
   </ul>
 
   <div class="container">
-    <h2 class="white-text">Parameter Select</h2>
+    <h2 class="white-text">User Assignment Parameter Select</h2>
 
     <form class="col s6" action="./start.html">
       <div class="row">
+        <div class="input-field col s6">
+          <input  id="assigment_name" type="text" class="validate white-text">
+          <label for="assigment_name" class="white-text">Assignment Name</label>
+        </div>
+      </div>
+      <div class="row">
         <p class="range-field white-text col s3">
           BPM
-          <input type="number" id="BPM" name="BPM" class="white-text tooltipped" data-position="left"  data-tooltip="Beats Per Minute" value="100" min="30" max="1200" />
+        <input type="number" id="BPM" name="BPM" class="white-text tooltipped" data-position="left"  data-tooltip="Beats Per Minute" value="100" min="30" max="1200" />
         </p>
         <p class="range-field white-text col s3">
           Time with sound
@@ -68,7 +74,7 @@
         </label>
       </div>
       <div class="col">
-        <button onclick="setParams()" class="btn btn-small  pink darken-3 waves-effect">Start Game</button>
+        <button onclick="" class="btn btn-small  pink darken-3 waves-effect">Set Assignment</button>
         </div>
       </div>
     </form>
@@ -85,7 +91,6 @@
       $('.sidenav').sidenav();
       $('.tooltipped').tooltip();
     });
-
   </script>
   <script src="param.js"></script>
 </body>

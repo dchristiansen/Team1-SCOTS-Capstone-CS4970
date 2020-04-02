@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+  <html>
+    <head>
+      <!--Import Google Icon Font-->
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      <!--Import materialize.css-->
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+        <link rel="stylesheet" href="start.css">
+        <script src="/__/firebase/7.9.2/firebase-app.js"></script>
+        <script src="/__/firebase/7.9.2/firebase-auth.js"></script>
+        <script src="/__/firebase/7.9.2/firebase-firestore.js"></script>
+        <script src="/__/firebase/7.9.2/firebase-functions.js"></script>
+        <script defer src="/__/firebase/init.js"></script>
+      <!--Let browser know website is optimized for mobile-->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+      <title>Scots | User Data</title>
+    </head>
+
+    <body class="grey darken-4">
+      <nav>
+        <div class="nav-wrapper blue darken-2">
+        <a href="#!" class="brand-logo">Scots</a>
+        <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+        <ul class="right hide-on-med-and-down">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="rPortal.html">Research Portal</a></li>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+  </nav>
+
+    <ul class="sidenav" id="mobile-demo">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="#">Research Portal</a></li>
+      <li><a href="#">About</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+
+
+  <div class="container">
+
+    <h1 class="white-text" id="useridheader">User ID:</h1>
+    <a class="waves-effect waves-light btn-large pink darken-4 col offset-s10"><i class="material-icons left">file_download</i>Download All</a>
+    <table class="white-text pink darken-3 centered" style="margin-top:3%">
+      <thead>
+        <tr>
+            <th>Session Name</th>
+            <th>Session Time</th>
+            <th>Parameters</th>
+            <th>Select</th>
+        </tr>
+      </thead>
+      <tbody id="tablebody">
+      </tbody>
+    </table>
+
+  </div>
+
+    <script src="userData.js" type="module"></script>
+    <script
+      src="https://code.jquery.com/jquery-3.4.1.min.js"
+      integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+      crossorigin="anonymous"></script>
+      <!--JavaScript at end of body for optimized loading-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+      <script>
+      $(document).ready(function(){
+          $('.sidenav').sidenav();
+        });
+      </script>
+
+    </body>
+  </html>

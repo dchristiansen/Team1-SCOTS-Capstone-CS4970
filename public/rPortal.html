@@ -16,6 +16,12 @@
       <title>Scots | Researcher</title>
     </head>
 
+    <style>
+      tr[data-href] {
+        cursor: pointer;
+      }
+    </style>
+
     <body class="grey darken-4">
       <nav>
         <div class="nav-wrapper blue darken-2">
@@ -36,7 +42,13 @@
       <li><a href="#">Contact</a></li>
     </ul>
 
-  <div class="container ">
+  <div class="container">
+      <div class="row">
+      <div class="col s4 offset-s8">
+      <input type="text" id="search" style="margin-top:8%"  class="white-text" placeholder="Search User Id...">
+      </div>
+      </div>
+
       <table class="highlight white-text pink darken-3 centered" style="margin-top:3%">
         <thead>
           <tr>
