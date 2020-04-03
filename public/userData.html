@@ -39,9 +39,10 @@
   <div class="container">
 
     <h1 class="white-text" id="useridheader">User ID:</h1>
-    <a class="waves-effect waves-light btn-large pink darken-4 col offset-s10"><i class="material-icons left">file_download</i>Download All</a>
+    <button id="downloadbutton"class="waves-effect btn-large pink darken-3"><i class="material-icons left">file_download</i>Download</button>
+    <button class="waves-effect btn-large pink darken-3 disabled" id="select" style="margin-left: 1%">Select/Deselect All</button>
     <table class="white-text pink darken-3 centered" style="margin-top:3%">
-      <thead>
+      <thead id="test">
         <tr>
             <th>Session Name</th>
             <th>Session Time</th>
@@ -56,6 +57,8 @@
   </div>
 
     <script src="userData.js" type="module"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.3.0/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.js"></script>
     <script
       src="https://code.jquery.com/jquery-3.4.1.min.js"
       integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
