@@ -26,6 +26,14 @@ btnChangePassword.addEventListener("click", e => {
     });
 });
 
+firebase.auth().onAuthStateChanged(user => {
+    if(!user)
+    {
+        console.log("You are not signed in.");
+        window.location = "index.html";
+    }
+});
+
 window.onbeforeunload = function() {
     return true;
 };

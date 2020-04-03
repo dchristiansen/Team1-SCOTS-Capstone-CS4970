@@ -12,6 +12,29 @@ btnLogout.addEventListener("click", e => {
     });
 });
 
+firebase.auth().onAuthStateChanged(user => {
+  if(user)
+  {
+    user.getIdTokenResult().then(idTokenResult => {
+      user.admin = idTokenResult.claims.admin;
+      if(user.admin)
+      {
+        populateTable();
+      }
+      else
+      {
+        alert("You are not an admin.");
+        window.location = "userdashboard.html";
+      }
+    });
+  }
+  else
+  {
+    console.log("You are not signed in.");
+    window.location = "index.html";
+  }
+});
+
 adminForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const adminEmail = document.getElementById('admin-email').value;
@@ -80,5 +103,3 @@ $(document).ready(function (){
     window.location.href = this.dataset.href;
   })
 });
-
-populateTable();

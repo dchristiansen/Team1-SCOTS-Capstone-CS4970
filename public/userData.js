@@ -93,6 +93,7 @@ function download() {
     }
 }
 
+
 function formatCSV(session) {
     let parameters = session.parameters;
     let taps = session.taps
@@ -111,13 +112,34 @@ function formatCSV(session) {
     return csvContent;
 }
 
-let button = document.querySelector("#downloadbutton");
-button.onclick = download;
-let sessionData;
-let params = new URLSearchParams(location.search);
-let userid = params.get('id');
-setHeader(userid);
-populateTable(userid);
+firebase.auth().onAuthStateChanged(user => {
+    if(user)
+    {
+        user.getIdTokenResult().then(idTokenResult => {
+            user.admin = idTokenResult.claims.admin;
+            if(user.admin)
+            {
+                let button = document.querySelector("#downloadbutton");
+                button.onclick = download;
+                let sessionData;
+                let params = new URLSearchParams(location.search);
+                let userid = params.get('id');
+                setHeader(userid);
+                populateTable(userid);
+            }
+            else
+            {
+                alert("You are not an admin.");
+                window.location = "userdashboard.html";
+            }
+        });
+    }
+    else
+    {
+        console.log("You are not signed in.");
+        window.location = "index.html";
+    }
+});
 
 $(document).ready(function () {
     $("#select").click(function () {
