@@ -86,7 +86,7 @@ function download() {
 
         }
         zip.generateAsync({ type: "blob" }).then(function (blob) {
-            saveAs(blob, "sessions.zip");
+            window.saveAs(blob, "sessions.zip");
         }, function (err) {
             jQuery("#blob").text(err);
         });
