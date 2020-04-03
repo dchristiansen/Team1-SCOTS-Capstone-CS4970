@@ -54,6 +54,7 @@ firebase.auth().onAuthStateChanged(async function(user) {
     } else {
         // No user is signed in.
       console.log("No user is signed in");
+      window.location = "parameters.html";
     }
 });
 
@@ -70,6 +71,7 @@ $("#tablebody").on("click", "tr", function(){
     let feedback = params[4];
 
     //Set all the parameters in sessionStorage
+    sessionStorage.clear();
     sessionStorage.setItem('aid', assignment);
     sessionStorage.setItem("bpm",bpm);
     sessionStorage.setItem("timeWSound",timeWSound);
