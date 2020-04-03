@@ -57,7 +57,29 @@ async function populateTable(userid) {
     // TODO: Create button to select
 }
 
-
+firebase.auth().onAuthStateChanged(user => {
+    if(user)
+    {
+        user.getIdTokenResult().then(idTokenResult => {
+            user.admin = idTokenResult.claims.admin;
+            if(user.admin)
+            {
+                setHeader(userid);
+                populateTable(userid);
+            }
+            else
+            {
+                alert("You are not an admin.");
+                window.location = "userdashboard.html";
+            }
+        });
+    }
+    else
+    {
+        console.log("You are not signed in.");
+        window.location = "index.html";
+    }
+});
 
 
 let params = new URLSearchParams(location.search);
