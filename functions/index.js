@@ -16,6 +16,10 @@ exports.addAdminRole = functions.https.onCall((data, context) => {
     }
 
     return admin.auth().getUserByEmail(data.email).then(user => {
+        let docRef = admin.firestore().collection("users").doc(user.uid);
+        docRef.delete().then(() => {
+            console.log("Document successfully deleted.");
+        });
         return admin.auth().setCustomUserClaims(user.uid, {
             admin: true
         });
