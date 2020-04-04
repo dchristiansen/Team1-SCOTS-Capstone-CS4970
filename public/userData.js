@@ -30,7 +30,7 @@ async function populateTable(userid) {
         let td_params = document.createElement('td');
         let parameters = obj.data.parameters;
         let fbt = "";
-      
+
         if (parameters.feedback == "true"){
 
             fbt = "On"
@@ -111,7 +111,7 @@ function formatCSV(session) {
     let csvContent = data.map(e => e.join(",")).join("\n");
     return csvContent;
 }
-
+    let sessionData;
 firebase.auth().onAuthStateChanged(user => {
     if(user)
     {
@@ -121,7 +121,7 @@ firebase.auth().onAuthStateChanged(user => {
             {
                 let button = document.querySelector("#downloadbutton");
                 button.onclick = download;
-                let sessionData;
+
                 let params = new URLSearchParams(location.search);
                 let userid = params.get('id');
                 setHeader(userid);
