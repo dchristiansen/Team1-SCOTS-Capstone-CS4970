@@ -55,6 +55,6 @@ firebase.auth().onAuthStateChanged(user => {
     else
     {
         console.log("You are not signed in.");
-        window.location("index.html");
+        window.location = "index.html";
     }
 });
