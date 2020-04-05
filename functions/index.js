@@ -45,6 +45,33 @@ exports.addAdminRole = functions.https.onCall((data, context) => {
     });
 });
 
+exports.changeUserPassword = functions.https.onCall(async(data, context) => {
+    try {
+        
+        // If the user is not authenticated, return an error message
+        if(!context.auth)
+        {
+            return {message: "The user is not authenticated."};
+        }
+
+        // If the user is not an admin, return an error message
+        if(!context.auth.token.admin)
+        {
+            return {message: "Only admin users can change other users' passwords."};
+        }
+
+        admin.auth().updateUser(data.uid, {
+            password: data.password
+        });
+
+        return {message: "Successfully updated user password."};
+    }
+    catch (error)
+    {
+        return {message: error.message};
+    }
+});
+
 /*
     createUser
     params: data, context
