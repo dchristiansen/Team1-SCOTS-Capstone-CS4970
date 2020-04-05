@@ -36,7 +36,22 @@ async function populateTable() {
       td_assignName.innerHTML = obj.data.assignmentLabel;
       let url = './editAssignment.html?id=' + obj.id;
       aTr.setAttribute('data-href', url);
+
+      let td_params = document.createElement('td');
+      let parameters = obj.data.parameters;
+      let fbt = "";
+      if(parameters.feedback)
+      {
+        fbt = "On";
+      }
+      else
+      {
+        fbt = "Off";
+      }
+      td_params.innerHTML = parameters.bpm + " BPM, " + parameters.soundOnTime + " On, " + parameters.soundOffTime + " Off, " + parameters.cycles + " Cycles, Feedback: " + fbt;
+
       aTr.appendChild(td_assignName);
+      aTr.appendChild(td_params);
       assignmentTable.appendChild(aTr);
     });
 
