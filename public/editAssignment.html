@@ -80,6 +80,23 @@
     </div>
   </div>
 
+  <div class="container">
+    <h3 class="white-text">Users</h3>
+    <button id="btnAssignToUsers" class="waves-effect btn-large pink darken-3">Assign to Selected Users</button>
+    <table class="highlight white-text pink darken-3 centered" style="margin-top:3%">
+      <thead>
+        <tr>
+          <th>User ID</th>
+          <th>Last Session</th>
+          <th>Select</th>
+        </tr>
+      </thead>
+      <tbody id="tablebody">
+      </tbody>
+    </table>
+  </div>
+
+  <script src="editAssignment.js" type="module"></script>
   <script
     src="https://code.jquery.com/jquery-3.4.1.min.js"
     integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
@@ -92,7 +109,7 @@
       $('.tooltipped').tooltip();
     });
   </script>
-  <script src="editAssignment.js"></script>
+  
 </body>
 
 </html>

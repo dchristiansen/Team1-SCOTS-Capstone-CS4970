@@ -1,7 +1,46 @@
-const firestore = firebase.firestore();
+import { getUsers } from "./Data.js";
+
+var firestore = firebase.firestore();
 const btnSetAssignment = document.getElementById("btnSetAssignment");
+const btnAssignToUsers = document.getElementById("btnAssignToUsers");
+
+btnAssignToUsers.addEventListener("click", e => {
+    let checkboxes = $("#tablebody input:checked");
+    if (checkboxes.length == 0)
+    {
+        alert("Please select at least one user to assign");
+    }
+    else
+    {
+        checkboxes = $("#tablebody input");
+        for(let i = 0; i < userData.length; i++)
+        {
+            if(checkboxes[i].checked)
+            {
+                let assignTo = userData[i].id;
+                if (!assignedUIDs.includes(assignTo))
+                {
+                    assignedUIDs.push(assignTo);
+                }
+            }
+        }
+
+        let params = new URLSearchParams(location.search);
+        let assignmentId = params.get('id');
+        var assignmentDoc = firestore.collection("assignments").doc(assignmentId)
+
+        assignmentDoc.update({
+            userIDs: assignedUIDs
+        }).then(function() {
+            alert("Assigned users successfully updated.");
+        }).catch(function(error) {
+            console.error(error);
+        });
+    }
+});
 
 btnSetAssignment.addEventListener("click", e => {
+
     var assignmentLabel = document.getElementById("assignment_name").value;
     var bpm = document.getElementById("BPM").value;
     var timeWSound = document.getElementById("timeWSound").value;
@@ -26,7 +65,7 @@ btnSetAssignment.addEventListener("click", e => {
         assignmentLabel: assignmentLabel,
         parameters: parameters
     }).then(function() {
-        console.log("Document successfully updated.");
+        alert("Assignment successfully updated.");
     }).catch(function(error) {
         console.error(error);
     });
@@ -37,15 +76,18 @@ async function setHeader(assignmentId) {
     header.innerHTML = "Assignment: " + assignmentId;
 }
 
+let assignedUIDs = [];
 async function populateParameters(assignmentId) {
 
     var assignmentDoc = await firestore.collection("assignments").doc(assignmentId);
 
-    assignmentDoc.get().then(function(doc) {
+    await assignmentDoc.get().then(function(doc) {
         if(doc.exists)
         {
             var assignmentLabel = doc.data().assignmentLabel;
             var parameters = doc.data().parameters;
+
+            assignedUIDs = doc.data().userIDs;
 
             document.getElementById("assignment_name").value = assignmentLabel;
             document.getElementById("BPM").value = parameters.bpm;
@@ -53,15 +95,51 @@ async function populateParameters(assignmentId) {
             document.getElementById("timeWOSound").value = parameters.soundOffTime;
             document.getElementById("cycles").value = parameters.cycles;
             
-            console.log(parameters.feedback);
             if (!parameters.feedback)
             {
-                console.log("in here");
                 document.getElementById("feedback").removeAttribute("checked");
             }
         }
-    })
+    });
+}
+let userData;
+async function populateUserTable()
+{
+    let table = document.querySelector("#tablebody");
+    let usersCall = await getUsers();
+    userData = usersCall.dataArray;
+    userData.forEach(function(obj) {
+        let tr = document.createElement('tr');
+        let td_id = document.createElement('td');
+        let td_ses = document.createElement('td');
 
+        let latestSessionTime = obj.data.latestSessionTime;
+        if(latestSessionTime)
+        {
+            latestSessionTime = latestSessionTime.seconds * 1000;
+            latestSessionTime = new Date(latestSessionTime);
+        }
+        else
+        {
+            latestSessionTime = "N/A";
+        }
+        td_ses.innerHTML = latestSessionTime;
+        td_id.innerHTML = obj.data.userID;
+        
+        tr.appendChild(td_id);
+        tr.appendChild(td_ses);
+
+        let td_checkbox = document.createElement('td');
+        let label = document.createElement('label');
+        let checkbox = document.createElement('input');
+        let span = document.createElement('span');
+        checkbox.type = "checkbox";
+        label.appendChild(checkbox);
+        label.appendChild(span);
+        td_checkbox.appendChild(label);
+        tr.appendChild(td_checkbox);
+        table.appendChild(tr);
+    });
 }
 
 firebase.auth().onAuthStateChanged(user => {
@@ -71,10 +149,12 @@ firebase.auth().onAuthStateChanged(user => {
             user.admin = idTokenResult.claims.admin;
             if(user.admin)
             {
+                //document.getElementById("btnSetAssignment").onclick = updateAssignment;
                 let params = new URLSearchParams(location.search);
                 let assignmentId = params.get('id');
                 setHeader(assignmentId);
                 populateParameters(assignmentId);
+                populateUserTable();
             }
             else
             {
