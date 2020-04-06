@@ -1,6 +1,8 @@
 import { getAllSessionsForUser } from "./Data.js";
 import { getUser } from "./Data.js";
 
+const accountRecoveryForm = document.querySelector(".admin-action");
+
 async function setHeader(userid) {
     let header = document.querySelector("#useridheader");
     let usercall = await getUser(userid);
@@ -119,11 +121,12 @@ firebase.auth().onAuthStateChanged(user => {
             user.admin = idTokenResult.claims.admin;
             if(user.admin)
             {
-                let button = document.querySelector("#downloadbutton");
-                button.onclick = download;
-
+                let downloadButton = document.querySelector("#downloadbutton");
+                downloadButton.onclick = download;
+ 
                 let params = new URLSearchParams(location.search);
                 let userid = params.get('id');
+
                 setHeader(userid);
                 populateTable(userid);
             }
@@ -148,4 +151,22 @@ $(document).ready(function () {
         $(this).val(checked ? 'uncheck all' : 'check all')
         $(this).data('checked', checked);
     });
+});
+
+accountRecoveryForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const confirmPassword = document.getElementById("confirmPassword").value;
+    let params = new URLSearchParams(location.search);
+    let userid = params.get('id');
+
+    const changeUserPassword = firebase.functions().httpsCallable('changeUserPassword');
+    changeUserPassword({uid: userid, password: confirmPassword}).then(result => {
+        console.log(result);
+        alert(result.data.message)
+    }).catch(function(error) {
+        console.log(error);
+        alert(error.message);
+    })
+
 });
