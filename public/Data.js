@@ -4,7 +4,7 @@
 
 //Includes functions for creating sessions and assignments, and reading users, sessions, and assignments.
 
-//TODO: Research more robust methods of querying firebase(pagination). Develop standard error responses to 'client'
+//TODO: Research more robust methods of querying firebase(pagination).
 'use strict';
 
 var firestore = firebase.firestore();
