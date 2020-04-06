@@ -1,4 +1,36 @@
 const firestore = firebase.firestore();
+const btnSetAssignment = document.getElementById("btnSetAssignment");
+
+btnSetAssignment.addEventListener("click", e => {
+    var assignmentLabel = document.getElementById("assignment_name").value;
+    var bpm = document.getElementById("BPM").value;
+    var timeWSound = document.getElementById("timeWSound").value;
+    var cycles = document.getElementById("cycles").value;
+    var timeWOSound = document.getElementById("timeWOSound").value;
+    var feedback = document.getElementById("feedback").checked;
+
+    let params = new URLSearchParams(location.search);
+    let assignmentId = params.get('id');
+
+    var parameters = {
+        bpm: bpm,
+        cycles: cycles,
+        feedback: feedback,
+        soundOffTime: timeWOSound,
+        soundOnTime: timeWSound
+    };
+
+    var assignmentDoc = firestore.collection("assignments").doc(assignmentId);
+
+    assignmentDoc.update({
+        assignmentLabel: assignmentLabel,
+        parameters: parameters
+    }).then(function() {
+        console.log("Document successfully updated.");
+    }).catch(function(error) {
+        console.error(error);
+    });
+});
 
 async function setHeader(assignmentId) {
     let header = document.querySelector("#assignmentidheader");
@@ -6,7 +38,6 @@ async function setHeader(assignmentId) {
 }
 
 async function populateParameters(assignmentId) {
-    var firestore = firebase.firestore();
 
     var assignmentDoc = await firestore.collection("assignments").doc(assignmentId);
 
