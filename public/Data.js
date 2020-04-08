@@ -29,7 +29,7 @@ var firestore = firebase.firestore();
 
 //Output: returns the promise object
 
-//Description: Creates new session upon completion of game. Stores tap objects as an array of TapObjects. 
+//Description: Creates new session upon completion of game. Stores tap objects as an array of TapObjects.
 //Also updates the user document with the latest session time
 function createSession(assignmentID, bpm, soundOn, soundOff, cycles, feedback, userID, tapData){
 
@@ -74,14 +74,14 @@ function createSession(assignmentID, bpm, soundOn, soundOff, cycles, feedback, u
 
 //Description: Returns the requested session document
 async function getSession(sessionID){
-    
+
     var sessionData = {};
     //performs the actual firestore query
     async function getSessionData(sessionID){
         var returnData = {id: null};
         var docRef = firestore.collection("sessions").doc(sessionID);
         let promise = await docRef.get();
-        
+
         if(promise.exists){
             returnData = {
                 id: promise.id,
@@ -102,7 +102,7 @@ async function getSession(sessionID){
           console.log("returning data to client...", sessionsData);
           return sessionsData;
     }
-    
+
 }
 
 //Function: getAllSessionsForUser
@@ -160,13 +160,13 @@ async function getAllSessionsForUser(userID){
 
 //Description: Returns the user document of the requested user
 async function getUser(userID){
-    
+
     var userData = {};
     async function getUserData(userID){
         var returnData = {id: null};
         var docRef = firestore.collection("users").doc(userID);
         let promise = await docRef.get();
-        
+
         if(promise.exists){
             returnData = {
                 id: promise.id,
@@ -175,7 +175,7 @@ async function getUser(userID){
         }else{
             throw error("Requested user does not exist!");
         }
-        
+
         return returnData;
     }
 
@@ -187,7 +187,7 @@ async function getUser(userID){
           console.log("returning data to client...", userData);
           return userData;
     }
-    
+
 }
 //Function: getUsers
 
@@ -314,4 +314,38 @@ async function getAssignmentsForUser(userID){
     }
 }
 
-export {createAssignment, createSession, getAllSessionsForUser, getAssignmentsForUser, getUsers, getSession, getUser}
+async function getAllAssignments(){
+  var assignmentsArray = {dataArray: null};
+
+  async function getAssignmentData(){
+      var returnData = {
+          dataArray: []
+      }
+      var assignments = firestore.collection("assignments").orderBy("assignmentLabel").limit(20);
+
+      let promise = await assignments.get();
+
+      for (const assign of promise.docs){
+          returnData.dataArray.push(
+              {
+                  id: assign.id,
+                  data: assign.data()
+              }
+          );
+      }
+      return returnData;
+  }
+
+  try {
+      assignmentsArray = await getAssignmentData();
+  } catch(err){
+      console.log("Error getting assignments ", err);
+  } finally{
+        console.log("returning data to client...", assignmentsArray);
+        return assignmentsArray;
+  }
+
+}
+
+
+export {createAssignment, createSession, getAllSessionsForUser, getAssignmentsForUser, getUsers, getSession, getUser, getAllAssignments}

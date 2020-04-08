@@ -13,7 +13,7 @@
       <script defer src="/__/firebase/init.js"></script>
       <!--Let browser know website is optimized for mobile-->
       <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-      <title>Scots | Researcher</title>
+      <title>Scots | User Assignment</title>
     </head>
 
     <style>
@@ -25,12 +25,10 @@
     <body class="grey darken-4">
       <nav>
         <div class="nav-wrapper blue darken-2">
-        <a href="#!" class="brand-logo">Scots</a>
+        <a href="#" class="brand-logo">Scots</a>
         <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
         <ul class="right hide-on-med-and-down">
-          <li><a href="assignments.html">View Assignments</a></li>
-          <li><a href="createassignment.html">Create Assignment</a></li>
-          <li><a href="createuser.html">Create User</a></li>
+          <li><a href="rPortal.html">Researcher Portal</a></li>
           <li><a href="#">About</a></li>
           <li><a href="#">Contact</a></li>
         </ul>
@@ -38,33 +36,29 @@
   </nav>
 
     <ul class="sidenav" id="mobile-demo">
-      <li><a href="assignments.html">View Assignments</a></li>
-      <li><a href="createassignment.html">Create Assignment</a></li>
-      <li><a href="createuser.html">Create User</a></li>
+      <li><a href="rPortal.html">Researcher Portal</a></li>
       <li><a href="#">About</a></li>
       <li><a href="#">Contact</a></li>
     </ul>
 
   <div class="container">
-      <h1 class="white-text">Researcher Portal</h1>
-      <h3 class="white-text">View Users</h3>
-      <div class="row">
-      <div class="col s4 offset-s8">
-      <input type="text" id="search" style="margin-top:8%"  class="white-text" placeholder="Search User Id...">
-      </div>
+    <h3 class="white-text">View Assignments</h3>
+    <div class="row">
+        <input type="text" id="searchAssignment" style="margin-top:8%"  class="white-text" placeholder="Search Assignments...">
       </div>
 
-      <table class="highlight white-text pink darken-3 centered" style="margin-top:3%">
+        <div class="col s6">
+      <table class="highlight white-text blue darken-4 centered" style="margin-top:3%">
         <thead>
           <tr>
-              <th>User ID</th>
-              <th>Last Session</th>
+              <th>Assignment</th>
+              <th>Parameters</th>
           </tr>
         </thead>
-        <tbody id="tablebody">
+        <tbody id="assignmentTableBody">
         </tbody>
       </table>
-
+        </div>
 
     <div class="row">
       <div class="col offset-s4">
@@ -79,27 +73,11 @@
      </ul>
      </div>
    </div>
-  </div>
+   </div>
 
-  <div class="container">
-      <form class="col s12 width=50% font-size=50% admin-action">
-        <div class="row">
-          <div class="input-field col s6">
-            <input type="email" id="admin-email" class="white-text"/>
-            <label class="active white-text" for="admin-email">Enter a user to make an admin</label>
-          </div>
-        </div>
-        <div class="row">
-          <button id="btnMakeAdmin" class="btn btn-small pink darken-3 waves effect">Make Admin</button>
-        </div>
-      </form>
 
-    <div class="row">
-      <button id="btnLogout" class="btn btn-small pink darken-3 waves effect">Log Out</button>
-    </div>
-  </div>
 
-  <script src="rPortal.js" type="module"></script>
+  <script src="assignments.js" type="module"></script>
     <script
       src="https://code.jquery.com/jquery-3.4.1.min.js"
       integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
