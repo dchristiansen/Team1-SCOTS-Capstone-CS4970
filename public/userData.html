@@ -30,7 +30,7 @@
   </nav>
 
     <ul class="sidenav" id="mobile-demo">
-      <li><a href="#">Research Portal</a></li>
+      <li><a href="rPortal.html">Research Portal</a></li>
       <li><a href="#">About</a></li>
       <li><a href="#">Contact</a></li>
     </ul>
@@ -39,6 +39,47 @@
   <div class="container">
 
     <h1 class="white-text" id="useridheader">User ID:</h1>
+    <h3 class="white-text">Account Recovery</h2>
+    <form class="col s6 width=50% font-size=50% admin-action">
+      <div class="row">
+        <div class="input-field col s6 offset-s2">
+            <input type="password" id="password" class="white-text">
+            <label class="active white-text" for="password">New Password</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s6 offset-s2">
+            <input type="password" id="confirmPassword" class="white-text" onkeyup='check();'>
+            <label class="active white-text" for="confirmPassword">Confirm Password</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s6 offset-s2">
+            <span id="confirmMessage"></span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s6 offset-s2">
+            <button id="btnChangePassword" disabled="true" class="btn btn-large pink darken-2 waves-effect" style="margin-left: 1%"><i class="material-icons right">chevron_right</i>Change Password</button>
+        </div>
+      </div>
+      <script>
+        var check = function() {
+            if (document.getElementById('password').value ==
+                document.getElementById('confirmPassword').value) {
+                document.getElementById('confirmMessage').style.color = 'green';
+                document.getElementById('confirmMessage').innerHTML = 'Password confirmed';
+                document.getElementById('btnChangePassword').disabled = false;
+            } else {
+                document.getElementById('confirmMessage').style.color = 'red';
+                document.getElementById('confirmMessage').innerHTML = 'Passwords must match';
+                document.getElementById('btnChangePassword').disabled = true;
+            }
+        }
+      </script>
+    </form>
+
+    <h3 class="white-text">User Sessions</h1>
     <button id="downloadbutton"class="waves-effect btn-large pink darken-3"><i class="material-icons left">file_download</i>Download</button>
     <button class="waves-effect btn-large pink darken-3 disabled" id="select" style="margin-left: 1%">Select/Deselect All</button>
     <table class="white-text pink darken-3 centered" style="margin-top:3%">

@@ -264,7 +264,10 @@ function createAssignment(assignmentLabel, bpm, soundOn, soundOff, cycles, feedb
         userIDs: userIDs,
     };
     assignments.add(docData).then(function(){
-        console.log("New Assignment successfully written!");
+        alert("New Assignment successfully written!");
+    }).catch(function(error) {
+        alert("Unable to write new Assignment");
+        console.log(error);
     });
 }
 
