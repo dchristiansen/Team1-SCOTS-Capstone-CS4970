@@ -7,9 +7,16 @@ Rhythmic Auditory Cueing (RAC) is a form of rehabilitation that utilizes a recur
 
 This is where RAC Trainer comes into play. Similar to how a metronome helps a musician stay on tempo, rhythmic stimulation or RAC provides an effective approach to improving gait parameters. RAC Trainer is an online game that allows users to visit a website and conduct interval RAC training from the comfort of their own homes.
 
+## Researcher Functionality
+
+As a researcher with administrative privileges on the application, you can login to a researcher account and will be able to view all research subjects under your care through the researcher portal. The researcher can create additinal users to accomodate additional subjects from the application, as well as recover/change their password in case they forget. In the event that more researchers need to be added to the project with administrative privileges, an existing researcher can login and simply input the username of another existing user and make them an administrator to the web application. This will grant a user access to the researcher portal.
+
+Researchers can also view and download raw session data from individual users in the form of a csv file. This data contains all pertinent information regarding the taps that were made during a session including the time of the beat, the time of the tap, the asynchrony between the beat and tap, and more. The data in the csv file closely models what the researchers use currently in the lab. In addition to users playing their own custom sessions, researchers will also be able to create assignments and assign training to their subjects. 
+
 ## User Functionality
 
-From the user's perspective, a user can visit the website, register or login to an account, choose the parameters for your rhythm training session, and then play the game. When finished, a score for accuracy will be displayed to the screen.
+From the research subject perspective, a user will be able to login to their profile with the credentials given to them by the researcher overseeing them. Along with being able to play the game with their own custom parameters, subjects will also be able to see the training assignments that have been assigned to them by their researcher. When the user completes the assignment, the tap data is stored in the database and a score is displayed to the user.
+
 
 [Click here to visit the web application](https://ractrainer.firebaseapp.com/)
 
