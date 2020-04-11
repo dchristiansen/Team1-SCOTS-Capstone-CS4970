@@ -72,6 +72,30 @@ exports.changeUserPassword = functions.https.onCall(async(data, context) => {
     }
 });
 
+exports.deleteUser = functions.https.onCall((data, context) => {
+    try {
+        
+        // If the user is not authentication, return an error message
+        if(!context.auth) {
+            return {message: "The user is not authenticated."};
+        }
+
+        // If the user is not an admin, return an error message
+        if(!context.auth.token.admin) {
+            return {message: "Only admin users can delete users."};
+        }
+
+        admin.auth().deleteUser(data.uid);
+
+        let userDoc = admin.firestore().collection("users").doc(data.uid);
+        userDoc.delete();
+
+        return {message: "Successfully deleted user"};
+    } catch(error) {
+        return {message: error.message};
+    }
+});
+
 /*
     createUser
     params: data, context

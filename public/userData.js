@@ -1,7 +1,8 @@
 import { getAllSessionsForUser } from "./Data.js";
 import { getUser } from "./Data.js";
 
-const accountRecoveryForm = document.querySelector(".admin-action");
+const accountRecoveryForm = document.querySelector(".admin-recovery");
+const deleteUserForm = document.querySelector(".admin-delete-user");
 
 async function setHeader(userid) {
     let header = document.querySelector("#useridheader");
@@ -168,5 +169,21 @@ accountRecoveryForm.addEventListener('submit', (e) => {
         console.log(error);
         alert(error.message);
     })
-
 });
+
+deleteUserForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    let params = new URLSearchParams(location.search);
+    let userid = params.get('id');
+
+    const deleteUser = firebase.functions().httpsCallable('deleteUser');
+    deleteUser({uid: userid}).then(result => {
+        console.log(result);
+        alert(result.data.message);
+    }).catch(function(error) {
+        console.log(error);
+        alert(error.message);
+    })
+
+})
