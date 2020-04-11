@@ -72,7 +72,7 @@ exports.changeUserPassword = functions.https.onCall(async(data, context) => {
     }
 });
 
-exports.deleteUser = functions.https.onCall((data, context) => {
+exports.deleteUser = functions.https.onCall(async(data, context) => {
     try {
         
         // If the user is not authentication, return an error message
@@ -85,10 +85,20 @@ exports.deleteUser = functions.https.onCall((data, context) => {
             return {message: "Only admin users can delete users."};
         }
 
+        
         admin.auth().deleteUser(data.uid);
+        
+        let userDoc = await admin.firestore().collection("users").doc(data.uid);
+        await userDoc.delete();
+        
 
-        let userDoc = admin.firestore().collection("users").doc(data.uid);
-        userDoc.delete();
+        let query = await admin.firestore().collection("sessions").where("userID", "==", data.uid)
+        await query.get().then(querySnapshot => {
+            querySnapshot.forEach(documentSnapshot => {
+                let documentRef = admin.firestore().collection("sessions").doc(documentSnapshot.id);
+                documentRef.delete();
+            });
+        });
 
         return {message: "Successfully deleted user"};
     } catch(error) {
