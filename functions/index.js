@@ -45,6 +45,12 @@ exports.addAdminRole = functions.https.onCall((data, context) => {
     });
 });
 
+/*
+    changeUserPassword
+    params: uid, password
+    Takes in a uid and password and changes the password
+    corresponding users password
+*/
 exports.changeUserPassword = functions.https.onCall(async(data, context) => {
     try {
         
@@ -72,6 +78,11 @@ exports.changeUserPassword = functions.https.onCall(async(data, context) => {
     }
 });
 
+/*
+    deleteUser
+    param: uid
+    Deletes a user based on the passed in uid
+*/
 exports.deleteUser = functions.https.onCall(async(data, context) => {
     try {
         
@@ -85,13 +96,14 @@ exports.deleteUser = functions.https.onCall(async(data, context) => {
             return {message: "Only admin users can delete users."};
         }
 
+        // Delete the user from firebase auth
+        await admin.auth().deleteUser(data.uid);
         
-        admin.auth().deleteUser(data.uid);
-        
+        // Delete the user from users document
         let userDoc = await admin.firestore().collection("users").doc(data.uid);
         await userDoc.delete();
         
-
+        // Delete the sessions created by the user
         let query = await admin.firestore().collection("sessions").where("userID", "==", data.uid)
         await query.get().then(querySnapshot => {
             querySnapshot.forEach(documentSnapshot => {
