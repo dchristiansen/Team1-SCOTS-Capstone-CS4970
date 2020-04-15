@@ -172,12 +172,14 @@ scoreString.innerHTML = "Score: " + score + "%";
 
 
 function resetToParamSelect() {
-    location = "parameters.html";
-    firebase.auth().onAuthStateChanged(async function(user) {
+    console.log("resetting");
+    firebase.auth().onAuthStateChanged(function(user) {
         if(user) {
-            location = "userdashboard.html";
+            console.log("user logged in, going to dashboard");
+            window.location = "userdashboard.html";
+        } else {
+            window.location = "parameters.html";
         }
     });
-    window.location = location;
 }
 
