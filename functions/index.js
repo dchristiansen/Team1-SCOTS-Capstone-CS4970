@@ -9,7 +9,7 @@ admin.initializeApp();
     Takes in a user email, and admin user context
     and adds the admin role to the passed in user
 */
-exports.addAdminRole = functions.https.onCall((data, context) => {
+exports.addAdminRole = functions.https.onCall(async(data, context) => {
     // If a user is not authenticated, return an error message
     if (!context.auth)
     {
@@ -23,12 +23,32 @@ exports.addAdminRole = functions.https.onCall((data, context) => {
     }
 
     // Get the email of the user that you want to make an admin
-    return admin.auth().getUserByEmail(data.email).then(user => {
+    return admin.auth().getUserByEmail(data.email).then(async (user) => {
         // Delete that user's record from the database
-        let docRef = admin.firestore().collection("users").doc(user.uid);
-        docRef.delete().then(() => {
-            console.log("Document successfully deleted.");
+        let docRef = await admin.firestore().collection("users").doc(user.uid);
+        await docRef.delete();
+
+        // Delete the sessions created by the user
+        let sessionQuery = await admin.firestore().collection("sessions").where("userID", "==", user.uid)
+        await sessionQuery.get().then(querySnapshot => {
+            querySnapshot.forEach(documentSnapshot => {
+                let documentRef = admin.firestore().collection("sessions").doc(documentSnapshot.id);
+                documentRef.delete();
+            });
         });
+
+        // Remove the user from each assignment record that the user was assigned to
+        let assignmentQuery = await admin.firestore().collection("assignments").where("userIDs", "array-contains", user.uid);
+        let assignmentPromise = await assignmentQuery.get();
+        for(const assignmentDoc of assignmentPromise.docs) {
+            let assignedUIDs = await assignmentDoc.data().userIDs;
+            await assignedUIDs.splice( assignedUIDs.indexOf(data.uid), 1 );
+            let assignmentRef = admin.firestore().collection("assignments").doc(assignmentDoc.id);
+            
+            await assignmentRef.update({
+                userIDs: assignedUIDs
+            });
+        }
 
         // Set their custom claim to admin: true
         return admin.auth().setCustomUserClaims(user.uid, {
