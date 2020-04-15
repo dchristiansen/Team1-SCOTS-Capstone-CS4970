@@ -15,6 +15,7 @@ export default class TextComponent extends Base.Component{
         ctx.save();
         ctx.fillStyle = this.fill;
         ctx.font = this.font;
+        ctx.translate(-ctx.measureText(this.text).width/2, 0);
         ctx.fillText(this.text,0,0);
         ctx.restore();
     }

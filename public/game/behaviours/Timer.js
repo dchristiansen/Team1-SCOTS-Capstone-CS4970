@@ -27,7 +27,7 @@ export default class Timer extends Base.Behavior {
     constructor(bpm, soundPhaseTime, noSoundPhaseTime, cycles) {
         super();
         this.bpm = bpm;
-        this.beatTime = 60000 / bpm;
+        this.beatTime = Math.round(60000 / bpm);
         this.soundPhaseTime = soundPhaseTime * 1000;
         this.noSoundPhaseTime = noSoundPhaseTime * 1000;
         this.cycles = cycles;
@@ -70,7 +70,9 @@ export default class Timer extends Base.Behavior {
                 console.log("Increasing volume to " + newVolume);
                 this.beatSound.volume = newVolume;
             }
-            this.beatSound.play();
+            if (this.beatSound.volume > 0){
+                this.beatSound.play();
+            }
         }
         this.mostRecentBeat = new Date().getTime();
     }
