@@ -95,7 +95,7 @@ exports.deleteUser = functions.https.onCall(async(data, context) => {
         if(!context.auth.token.admin) {
             return {message: "Only admin users can delete users."};
         }
-
+        
         // Delete the user from firebase auth
         await admin.auth().deleteUser(data.uid);
         
@@ -104,13 +104,28 @@ exports.deleteUser = functions.https.onCall(async(data, context) => {
         await userDoc.delete();
         
         // Delete the sessions created by the user
-        let query = await admin.firestore().collection("sessions").where("userID", "==", data.uid)
-        await query.get().then(querySnapshot => {
+        let sessionQuery = await admin.firestore().collection("sessions").where("userID", "==", data.uid)
+        await sessionQuery.get().then(querySnapshot => {
             querySnapshot.forEach(documentSnapshot => {
                 let documentRef = admin.firestore().collection("sessions").doc(documentSnapshot.id);
                 documentRef.delete();
             });
         });
+        
+
+        // Remove the user from each assignment record that the user was assigned to
+        let assignmentQuery = await admin.firestore().collection("assignments").where("userIDs", "array-contains", data.uid);
+        let assignmentPromise = await assignmentQuery.get();
+        for(const assignmentDoc of assignmentPromise.docs) {
+            let assignedUIDs = await assignmentDoc.data().userIDs;
+            await assignedUIDs.splice( assignedUIDs.indexOf(data.uid), 1 );
+            let assignmentRef = admin.firestore().collection("assignments").doc(assignmentDoc.id);
+            
+            await assignmentRef.update({
+                userIDs: assignedUIDs
+            });
+        }
+
 
         return {message: "Successfully deleted user"};
     } catch(error) {
