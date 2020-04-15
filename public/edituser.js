@@ -13,6 +13,7 @@ btnChangePassword.addEventListener("click", e => {
                 firestore.collection('users').doc(user.uid).update({changePassword:true}).then(function() {
                     console.log("Document successfully updated");
                     alert("Password changed successfully.");
+                    window.location = "userdashboard.html";
                 }).catch(function(error) {
                     console.error("Error updating document: ", error);
                 });
@@ -33,7 +34,3 @@ firebase.auth().onAuthStateChanged(user => {
         window.location = "index.html";
     }
 });
-
-window.onbeforeunload = function() {
-    return true;
-};
