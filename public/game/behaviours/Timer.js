@@ -118,6 +118,11 @@ export default class Timer extends Base.Behavior {
                                 sessionStorage.setItem('score', ref.scoreCalculator.calculateScore(ref.tapHandler.tapDataSoundOff, ref.beatTime, ref.noSoundPhaseTime, ref.cycles));
                                 sessionStorage.setItem('data', JSON.stringify(ref.tapHandler.tapDataSoundOff));
                                 document.location.href = "./results.html";
+                            } else {
+                                sessionStorage.setItem('totalTapArray', JSON.stringify(ref.tapHandler.tapDataTotal));
+                                sessionStorage.setItem('score', ref.scoreCalculator.calculateScore(ref.tapHandler.tapDataSoundOff, ref.beatTime, ref.noSoundPhaseTime, ref.cycles));
+                                sessionStorage.setItem('data', JSON.stringify(ref.tapHandler.tapDataSoundOff));
+                                document.location.href = "./results.html";
                             }
                         });
                     } else {
