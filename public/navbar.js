@@ -27,32 +27,40 @@ firebase.auth().onAuthStateChanged(async function(user) {
         }
     }
 
+    //Grab the navbar element
     let navhtml = document.querySelector("#navbar");
+    //Create the surrounding div
     let div = document.createElement("div");
     div.classList = "nav-wrapper blue darken-2";
 
+    //Create the "logo" element
     let logo = document.createElement("a");
     logo.className = "brand-logo";
     logo.innerText = "Scots";
     logo.href = "#!";
     div.appendChild(logo);
 
+    //Create the a tag that will hold the mobile menu
     let sidenav = document.createElement("a");
     sidenav.className = "sidenav-trigger";
     sidenav.setAttribute("data-target", "mobile-demo");
     sidenav.href="#";
 
+    //Create the menu icon
     let sidenavI = document.createElement("i");
     sidenavI.className = "material-icons";
     sidenavI.innerText = "menu";
     sidenav.appendChild(sidenavI);
     div.appendChild(sidenav);
 
+    //Create the list
     let linkList = document.createElement("ul");
     linkList.classList = "right hide-on-med-and-down";
 
+    //For each link in our link array, create the corresponding link in the navbar
     linkArray.forEach(element => {
         let pathname = "/" + element.link;
+        //Avoid creating a link for the page that we are currently on
         if(window.location.pathname != pathname){
             let listItem = document.createElement("li");
             let itemContents = document.createElement("a");
@@ -63,10 +71,10 @@ firebase.auth().onAuthStateChanged(async function(user) {
         }
     });
 
+    //Append the list to the div
     div.appendChild(linkList);
+    //Append the div to the navbar element
     navhtml.appendChild(div);
-
-    console.log(navhtml);
 });
 
 /*      <div class="nav-wrapper blue darken-2">
