@@ -19,12 +19,16 @@ firebase.auth().onAuthStateChanged(async function(user) {
         //Do the links for a researcher
         if(rPortal) {
             linkArray.push({link: "rPortal.html", text: "Researcher Portal Home"}, {link:"assignments.html", text: "View Assignments"}, 
-            {link:"createassignment.html", text:"Create Assignment"}, {link:"createuser.html", text: "Create User"}, {link: "#", text: "About"}, {link: "#", text: "Contact"});
+            {link:"createassignment.html", text:"Create Assignment"}, {link:"createuser.html", text: "Create User"}, {link: "Logout", text: "Logout"}, {link: "#", text: "About"}, 
+            {link: "#", text: "Contact"});
         } 
         //Do the links for a user
         else {
-            linkArray.push("");
+            linkArray.push({link: "userdashboard.html", text: "User Dashboard"}, {link: "edituser.html", text: "Change User"}, {link: "Logout", text: "Logout"},
+            {link: "#", text: "About"}, {link: "#", text: "Contact"});
         }
+    } else {
+        linkArray.push({link: "index.html", text: "Login"}, {link: "parameters.html", text: "Parameter Select"}, {link: "#", text: "About"}, {link: "#", text: "Contact"});
     }
 
     //Grab the navbar element
@@ -64,7 +68,17 @@ firebase.auth().onAuthStateChanged(async function(user) {
         if(window.location.pathname != pathname){
             let listItem = document.createElement("li");
             let itemContents = document.createElement("a");
-            itemContents.href = element.link;
+            if(element.link = "Logout") {
+                itemContents.addEventListener("click", e => {
+                    firebase.auth().signOut().then(function() {
+                        window.location = "index.html";
+                    }).catch(function (error) {
+                        console.log(error);
+                    });
+                });
+            } else {
+                itemContents.href = element.link;
+            }
             itemContents.innerText = element.text;
             listItem.appendChild(itemContents);
             linkList.appendChild(listItem);
