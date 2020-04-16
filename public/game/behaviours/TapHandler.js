@@ -18,7 +18,7 @@ export default class TapHandler extends Base.Behavior {
 
     constructor(bpm) {
         super();
-        this.beatTime = 60000/bpm;
+        this.beatTime = Math.round(60000/bpm);
     }
 
     start() {

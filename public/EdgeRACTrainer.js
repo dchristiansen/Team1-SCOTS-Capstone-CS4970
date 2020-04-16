@@ -2,6 +2,10 @@ import Scenes from "./game/Scenes.js"
 import SceneManager from "./game/SceneManager.js"
 import Engine from "./engine/Engine.js"
 
+const FRAMES_PER_SECOND = 30;
+const MILLIS_PER_SECOND = 1000;
+const MILLIS_PER_FRAME = MILLIS_PER_SECOND / FRAMES_PER_SECOND;
+
 let playScene;
 
 let bpm = sessionStorage.getItem("bpm");
@@ -69,12 +73,12 @@ function playGame() {
     canv = document.querySelector("#gameCanvas");
     ctx = canv.getContext('2d');
     let button = document.querySelector("#startButton");
+    let instructions = document.querySelector("#instructions");
     canv.classList.remove("hidden");
     button.style.display = "none";
-   
-    //console.log(bpm + " " + timeWSound + " " + timeWOSound + " " + cycles + " " + feedback);
+    instructions.style.display = "none";
 
-    setInterval(gameLoop, 33); //what does the magic number 33 mean?
+    setInterval(gameLoop, MILLIS_PER_FRAME);
 }
 
 function gameLoop() {
