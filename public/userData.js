@@ -181,6 +181,7 @@ deleteUserForm.addEventListener('submit', (e) => {
     deleteUser({uid: userid}).then(result => {
         console.log(result);
         alert(result.data.message);
+        window.location = "rPortal.html";
     }).catch(function(error) {
         console.log(error);
         alert(error.message);
