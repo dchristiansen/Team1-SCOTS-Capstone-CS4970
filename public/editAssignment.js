@@ -108,10 +108,16 @@ btnSetAssignment.addEventListener("click", e => {
 */
 async function setHeader(assignmentId) {
     let header = document.querySelector("#assignmentidheader");
-    header.innerHTML = "Assignment: " + assignmentId;
+    var assignmentDoc = await firestore.collection("assignments").doc(assignmentId);
+    await assignmentDoc.get().then(function(doc) {
+        if(doc.exists)
+        {
+            header.innerHTML = "Assignment: " + doc.data().assignmentLabel;
+        }
+    });
 }
 
-let assignedUIDs = [];
+var assignedUIDs = [];
 
 /*
     populateParameters
@@ -132,8 +138,6 @@ async function populateParameters(assignmentId) {
             // Get fields from the database
             var assignmentLabel = doc.data().assignmentLabel;
             var parameters = doc.data().parameters;
-            assignedUIDs = doc.data().userIDs;
-
             // Set the values of the html document
             document.getElementById("assignment_name").value = assignmentLabel;
             document.getElementById("BPM").value = parameters.bpm;
@@ -156,11 +160,9 @@ async function populateUserTable()
 {
     // Get table from the html document
     let table = document.querySelector("#tablebody");
-
     // Get users
     let usersCall = await getUsers();
     userData = usersCall.dataArray;
-
     // Loop through usersData
     userData.forEach(function(obj) {
         // Create a row entry for each user
@@ -204,7 +206,7 @@ async function populateUserTable()
 }
 
 // Observer for FirebaseAuth
-firebase.auth().onAuthStateChanged(user => {
+firebase.auth().onAuthStateChanged((user) => {
     // If user is logged in
     if(user)
     {
