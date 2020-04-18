@@ -267,6 +267,7 @@ firebase.auth().onAuthStateChanged((user) => {
     }
 });
 
+// Function to select/deselct all checkboxes
 $(document).ready(function() {
     $("#btnSelectAll").click(function() {
         let checked = !$(this).data('checked');
