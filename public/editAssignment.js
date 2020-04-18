@@ -14,49 +14,40 @@ const btnAssignToUsers = document.getElementById("btnAssignToUsers");
 btnAssignToUsers.addEventListener("click", e => {
     // Get checkboxes
     let checkboxes = $("#tablebody input:checked");
+    
+    // Get input of the checkboxes
+    checkboxes = $("#tablebody input");
+    // Loop through userData array which corresponds to the checkboxes
 
-    // If nothing checked
-    if (checkboxes.length == 0)
-    {
-        alert("Please select at least one user to assign");
-    }
-    else
-    {
-        // Get input of the checkboxes
-        checkboxes = $("#tablebody input");
+    var assignedUIDs = [];
 
-        // Loop through userData array which corresponds to the checkboxes
-        for(let i = 0; i < userData.length; i++)
+    for(let i = 0; i < userData.length; i++)
+    {
+        // If a checkbox is checked
+        if(checkboxes[i].checked)
         {
-            // If a checkbox is checked
-            if(checkboxes[i].checked)
-            {
-                // Grab the uid of the ith user in the userData array
-                let assignTo = userData[i].id;
-                // If not already assigned to, push the uid onto the assignedUIDs array
-                if (!assignedUIDs.includes(assignTo))
-                {
-                    assignedUIDs.push(assignTo);
-                }
-            }
+            // Grab the uid of the ith user in the userData array
+            let assignTo = userData[i].id;
+            // Push the uid of the user onto the array
+            assignedUIDs.push(assignTo);
         }
-
-        // Grab doc id of the current assignment
-        let params = new URLSearchParams(location.search);
-        let assignmentId = params.get('id');
-
-        // Assignment document reference
-        var assignmentDoc = firestore.collection("assignments").doc(assignmentId)
-
-        // Update the userIDs array field with assignedUIDs array
-        assignmentDoc.update({
-            userIDs: assignedUIDs
-        }).then(function() {
-            alert("Assigned users successfully updated.");
-        }).catch(function(error) {
-            console.error(error);
-        });
     }
+
+    // Grab doc id of the current assignment
+    let params = new URLSearchParams(location.search);
+    let assignmentId = params.get('id');
+
+    // Assignment document reference
+    var assignmentDoc = firestore.collection("assignments").doc(assignmentId)
+
+    // Update the userIDs array field with assignedUIDs array
+    assignmentDoc.update({
+        userIDs: assignedUIDs
+    }).then(function() {
+        alert("Assigned users successfully updated.");
+    }).catch(function(error) {
+        console.error(error);
+    });
 });
 
 /*
@@ -117,8 +108,6 @@ async function setHeader(assignmentId) {
     });
 }
 
-var assignedUIDs = [];
-
 /*
     populateParameters
     Parameter: assignmentId
@@ -156,8 +145,18 @@ let userData;
     populateUserTable
     Fetch all users and populate the user table
 */
-async function populateUserTable()
+async function populateUserTable(assignmentId)
 {
+    var assignedUIDs = [];
+    var assignmentDoc = await firestore.collection("assignments").doc(assignmentId)
+
+    await assignmentDoc.get().then(function(doc) {
+        if(doc.exists)
+        {
+            assignedUIDs = doc.data().userIDs;
+        }
+    });
+
     // Get table from the html document
     let table = document.querySelector("#tablebody");
     // Get users
@@ -193,6 +192,10 @@ async function populateUserTable()
         let checkbox = document.createElement('input');
         let span = document.createElement('span');
         checkbox.type = "checkbox";
+        if(assignedUIDs.includes(obj.id))
+        {
+            checkbox.checked = true;
+        }
         label.appendChild(checkbox);
         label.appendChild(span);
         td_checkbox.appendChild(label);
@@ -225,7 +228,7 @@ firebase.auth().onAuthStateChanged((user) => {
                 // Populate the parameters with the assignmentId
                 populateParameters(assignmentId);
                 // Populate the userTable
-                populateUserTable();
+                populateUserTable(assignmentId);
             }
             else
             {
