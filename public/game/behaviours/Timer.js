@@ -27,7 +27,7 @@ export default class Timer extends Base.Behavior {
     constructor(bpm, soundPhaseTime, noSoundPhaseTime, cycles) {
         super();
         this.bpm = bpm;
-        this.beatTime = 60000 / bpm;
+        this.beatTime = Math.round(60000 / bpm);
         this.soundPhaseTime = soundPhaseTime * 1000;
         this.noSoundPhaseTime = noSoundPhaseTime * 1000;
         this.cycles = cycles;
@@ -70,7 +70,9 @@ export default class Timer extends Base.Behavior {
                 console.log("Increasing volume to " + newVolume);
                 this.beatSound.volume = newVolume;
             }
-            this.beatSound.play();
+            if (this.beatSound.volume > 0){
+                this.beatSound.play();
+            }
         }
         this.mostRecentBeat = new Date().getTime();
     }
@@ -112,6 +114,11 @@ export default class Timer extends Base.Behavior {
                                 console.log(stringTapVersion);
                                 let sesh = await createSession(assignmentId, ref.bpm, ref.soundPhaseTime, ref.noSoundPhaseTime, ref.cycles, feedback, firebaseUser.uid, stringTapVersion);
                                 console.log(sesh);
+                                sessionStorage.setItem('totalTapArray', JSON.stringify(ref.tapHandler.tapDataTotal));
+                                sessionStorage.setItem('score', ref.scoreCalculator.calculateScore(ref.tapHandler.tapDataSoundOff, ref.beatTime, ref.noSoundPhaseTime, ref.cycles));
+                                sessionStorage.setItem('data', JSON.stringify(ref.tapHandler.tapDataSoundOff));
+                                document.location.href = "./results.html";
+                            } else {
                                 sessionStorage.setItem('totalTapArray', JSON.stringify(ref.tapHandler.tapDataTotal));
                                 sessionStorage.setItem('score', ref.scoreCalculator.calculateScore(ref.tapHandler.tapDataSoundOff, ref.beatTime, ref.noSoundPhaseTime, ref.cycles));
                                 sessionStorage.setItem('data', JSON.stringify(ref.tapHandler.tapDataSoundOff));
