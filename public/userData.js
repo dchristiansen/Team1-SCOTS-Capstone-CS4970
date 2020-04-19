@@ -173,18 +173,19 @@ accountRecoveryForm.addEventListener('submit', (e) => {
 
 deleteUserForm.addEventListener('submit', (e) => {
     e.preventDefault();
+    if(confirm("Are you sure you want to delete this user?"))
+    {
+        let params = new URLSearchParams(location.search);
+        let userid = params.get('id');
 
-    let params = new URLSearchParams(location.search);
-    let userid = params.get('id');
-
-    const deleteUser = firebase.functions().httpsCallable('deleteUser');
-    deleteUser({uid: userid}).then(result => {
-        console.log(result);
-        alert(result.data.message);
-        window.location = "rPortal.html";
-    }).catch(function(error) {
-        console.log(error);
-        alert(error.message);
-    })
-
-})
+        const deleteUser = firebase.functions().httpsCallable('deleteUser');
+        deleteUser({uid: userid}).then(result => {
+            console.log(result);
+            alert(result.data.message);
+            window.location = "rPortal.html";
+        }).catch(function(error) {
+            console.log(error);
+            alert(error.message);
+        })
+    }
+});
