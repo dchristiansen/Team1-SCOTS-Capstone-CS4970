@@ -13,19 +13,22 @@ const btnDeleteAssignment = document.getElementById("btnDeleteAssignment");
     Event listener on the button delete an assignment from the database
 */
 btnDeleteAssignment.addEventListener("click", e => {
-    // Grab doc id of the current assignment
-    let params = new URLSearchParams(location.search);
-    let assignmentId = params.get('id');
+    if(confirm("Are you sure you want to delete this assignment?"))
+    {
+        // Grab doc id of the current assignment
+        let params = new URLSearchParams(location.search);
+        let assignmentId = params.get('id');
 
-    // Grab assignment document and then delete the document
-    var assignmentDoc = firestore.collection("assignments").doc(assignmentId);
-    assignmentDoc.delete().then(function(){
-        alert("Successfully deleted assignment");
-        window.location = "assignments.html";
-    }).catch(function(error) {
-        alert("Error deleting assignment: " + error);
-    })
-})
+        // Grab assignment document and then delete the document
+        var assignmentDoc = firestore.collection("assignments").doc(assignmentId);
+        assignmentDoc.delete().then(function(){
+            alert("Successfully deleted assignment");
+            window.location = "assignments.html";
+        }).catch(function(error) {
+            alert("Error deleting assignment: " + error);
+        });
+    }   
+});
 
 /*
     btnAssignToUsers:
