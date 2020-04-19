@@ -5,6 +5,30 @@ var firestore = firebase.firestore();
 const btnSetAssignment = document.getElementById("btnSetAssignment");
 // Button to assign assignments to users
 const btnAssignToUsers = document.getElementById("btnAssignToUsers");
+// Button to delete assignment
+const btnDeleteAssignment = document.getElementById("btnDeleteAssignment");
+
+/*
+    btnDeleteAssignment:
+    Event listener on the button delete an assignment from the database
+*/
+btnDeleteAssignment.addEventListener("click", e => {
+    if(confirm("Are you sure you want to delete this assignment?"))
+    {
+        // Grab doc id of the current assignment
+        let params = new URLSearchParams(location.search);
+        let assignmentId = params.get('id');
+
+        // Grab assignment document and then delete the document
+        var assignmentDoc = firestore.collection("assignments").doc(assignmentId);
+        assignmentDoc.delete().then(function(){
+            alert("Successfully deleted assignment");
+            window.location = "assignments.html";
+        }).catch(function(error) {
+            alert("Error deleting assignment: " + error);
+        });
+    }   
+});
 
 /*
     btnAssignToUsers:
@@ -14,49 +38,40 @@ const btnAssignToUsers = document.getElementById("btnAssignToUsers");
 btnAssignToUsers.addEventListener("click", e => {
     // Get checkboxes
     let checkboxes = $("#tablebody input:checked");
+    
+    // Get input of the checkboxes
+    checkboxes = $("#tablebody input");
+    // Loop through userData array which corresponds to the checkboxes
 
-    // If nothing checked
-    if (checkboxes.length == 0)
-    {
-        alert("Please select at least one user to assign");
-    }
-    else
-    {
-        // Get input of the checkboxes
-        checkboxes = $("#tablebody input");
+    var assignedUIDs = [];
 
-        // Loop through userData array which corresponds to the checkboxes
-        for(let i = 0; i < userData.length; i++)
+    for(let i = 0; i < userData.length; i++)
+    {
+        // If a checkbox is checked
+        if(checkboxes[i].checked)
         {
-            // If a checkbox is checked
-            if(checkboxes[i].checked)
-            {
-                // Grab the uid of the ith user in the userData array
-                let assignTo = userData[i].id;
-                // If not already assigned to, push the uid onto the assignedUIDs array
-                if (!assignedUIDs.includes(assignTo))
-                {
-                    assignedUIDs.push(assignTo);
-                }
-            }
+            // Grab the uid of the ith user in the userData array
+            let assignTo = userData[i].id;
+            // Push the uid of the user onto the array
+            assignedUIDs.push(assignTo);
         }
-
-        // Grab doc id of the current assignment
-        let params = new URLSearchParams(location.search);
-        let assignmentId = params.get('id');
-
-        // Assignment document reference
-        var assignmentDoc = firestore.collection("assignments").doc(assignmentId)
-
-        // Update the userIDs array field with assignedUIDs array
-        assignmentDoc.update({
-            userIDs: assignedUIDs
-        }).then(function() {
-            alert("Assigned users successfully updated.");
-        }).catch(function(error) {
-            console.error(error);
-        });
     }
+
+    // Grab doc id of the current assignment
+    let params = new URLSearchParams(location.search);
+    let assignmentId = params.get('id');
+
+    // Assignment document reference
+    var assignmentDoc = firestore.collection("assignments").doc(assignmentId)
+
+    // Update the userIDs array field with assignedUIDs array
+    assignmentDoc.update({
+        userIDs: assignedUIDs
+    }).then(function() {
+        alert("Assigned users successfully updated.");
+    }).catch(function(error) {
+        console.error(error);
+    });
 });
 
 /*
@@ -108,10 +123,14 @@ btnSetAssignment.addEventListener("click", e => {
 */
 async function setHeader(assignmentId) {
     let header = document.querySelector("#assignmentidheader");
-    header.innerHTML = "Assignment: " + assignmentId;
+    var assignmentDoc = await firestore.collection("assignments").doc(assignmentId);
+    await assignmentDoc.get().then(function(doc) {
+        if(doc.exists)
+        {
+            header.innerHTML = "Assignment: " + doc.data().assignmentLabel;
+        }
+    });
 }
-
-let assignedUIDs = [];
 
 /*
     populateParameters
@@ -132,8 +151,6 @@ async function populateParameters(assignmentId) {
             // Get fields from the database
             var assignmentLabel = doc.data().assignmentLabel;
             var parameters = doc.data().parameters;
-            assignedUIDs = doc.data().userIDs;
-
             // Set the values of the html document
             document.getElementById("assignment_name").value = assignmentLabel;
             document.getElementById("BPM").value = parameters.bpm;
@@ -152,15 +169,23 @@ let userData;
     populateUserTable
     Fetch all users and populate the user table
 */
-async function populateUserTable()
+async function populateUserTable(assignmentId)
 {
+    var assignedUIDs = [];
+    var assignmentDoc = await firestore.collection("assignments").doc(assignmentId)
+
+    await assignmentDoc.get().then(function(doc) {
+        if(doc.exists)
+        {
+            assignedUIDs = doc.data().userIDs;
+        }
+    });
+
     // Get table from the html document
     let table = document.querySelector("#tablebody");
-
     // Get users
     let usersCall = await getUsers();
     userData = usersCall.dataArray;
-
     // Loop through usersData
     userData.forEach(function(obj) {
         // Create a row entry for each user
@@ -191,6 +216,10 @@ async function populateUserTable()
         let checkbox = document.createElement('input');
         let span = document.createElement('span');
         checkbox.type = "checkbox";
+        if(assignedUIDs.includes(obj.id))
+        {
+            checkbox.checked = true;
+        }
         label.appendChild(checkbox);
         label.appendChild(span);
         td_checkbox.appendChild(label);
@@ -204,7 +233,7 @@ async function populateUserTable()
 }
 
 // Observer for FirebaseAuth
-firebase.auth().onAuthStateChanged(user => {
+firebase.auth().onAuthStateChanged((user) => {
     // If user is logged in
     if(user)
     {
@@ -223,7 +252,7 @@ firebase.auth().onAuthStateChanged(user => {
                 // Populate the parameters with the assignmentId
                 populateParameters(assignmentId);
                 // Populate the userTable
-                populateUserTable();
+                populateUserTable(assignmentId);
             }
             else
             {
@@ -240,3 +269,13 @@ firebase.auth().onAuthStateChanged(user => {
         window.location = "index.html";
     }
 });
+
+// Function to select/deselct all checkboxes
+$(document).ready(function() {
+    $("#btnSelectAll").click(function() {
+        let checked = !$(this).data('checked');
+        $('input:checkbox').prop('checked', checked);
+        $(this).val(checked ? 'uncheck all' : 'check all')
+        $(this).data('checked', checked);
+    })
+})

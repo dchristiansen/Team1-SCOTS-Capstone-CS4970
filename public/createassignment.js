@@ -2,7 +2,8 @@ import { createAssignment } from "./Data.js";
 // Button to trigger insertAssignment function
 var btnSetAssignment = document.getElementById("btnSetAssignment");
 /*
-    inserts assignment into the database
+    insertAssignment:
+    Inserts assignment into the database
 */
 function insertAssignment() {
     // Grab fields from the document
@@ -15,21 +16,27 @@ function insertAssignment() {
 
     var userIDs = [];
 
+    // Call imported createAssignment function to insert assignment into the database
     createAssignment(assignmentName, bpm, timeWSound, timeWOSound, cycles, feedback, userIDs);
 
 }
 btnSetAssignment.onclick = insertAssignment;
 
+// Oberserver for FirebaseAuth
 firebase.auth().onAuthStateChanged(user => {
+    // If user is not logged in, then redirect to the login page
     if(!user) {
         console.log("You are not signed in.");
         window.location = "index.html";
     }
 
+    // If a user is signed in
     if(user)
     {
+        // Get admin token result
         user.getIdTokenResult().then(idTokenResult => {
             user.admin = idTokenResult.claims.admin;
+            // If user is not an admin, redirect to userdashboard
             if(!user.admin)
             {
                 alert("You are not an admin.");
