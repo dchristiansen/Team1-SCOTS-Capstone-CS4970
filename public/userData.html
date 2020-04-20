@@ -31,28 +31,34 @@
   <div class="container">
 
     <h1 class="white-text" id="useridheader">User ID:</h1>
-    <h3 class="white-text">Account Recovery</h2>
-    <form class="col s6 width=50% font-size=50% admin-recovery">
-      <div class="row">
-        <div class="input-field col s6 offset-s2">
-            <input type="password" id="password" class="white-text">
-            <label class="active white-text" for="password">New Password</label>
-        </div>
-      </div>
-      <div class="row">
-        <div class="input-field col s6 offset-s2">
-            <input type="password" id="confirmPassword" class="white-text" onkeyup='check();'>
-            <label class="active white-text" for="confirmPassword">Confirm Password</label>
-        </div>
-      </div>
-      <div class="row">
-        <div class="input-field col s6 offset-s2">
-            <span id="confirmMessage"></span>
-        </div>
-      </div>
-      <div class="row">
-        <div class="input-field col s6 offset-s2">
-            <button id="btnChangePassword" disabled="true" class="btn btn-large pink darken-2 waves-effect" style="margin-left: 1%"><i class="material-icons right">chevron_right</i>Change Password</button>
+     <a class="waves-effect waves-light btn modal-trigger pink darken-2" href="#modal1">Account Recovery</a>
+
+    <div id="modal1" class="modal">
+      <div class="modal-content grey darken-4">
+        <h2 class="white-text">Account Recovery</h2>
+        <form class="col s6 width=50% font-size=50% admin-action">
+          <div class="row">
+            <div class="input-field col s12 m6 l6 offset-m2 offset-l2">
+                <input type="password" id="password" class="white-text">
+                <label class="active white-text" for="password">New Password</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="input-field col s12 m6 l6 offset-m2 offset-l2">
+                <input type="password" id="confirmPassword" class="white-text" onkeyup='check();'>
+                <label class="active white-text" for="confirmPassword">Confirm Password</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="input-field col s6 offset-s2">
+                <span id="confirmMessage"></span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="input-field col s6 offset-s2">
+                <button id="btnChangePassword" disabled="true" class="btn btn-large pink darken-2 waves-effect modal-close" style="margin-left: 1%"><i class="material-icons right">chevron_right</i>Change Password</button>
+            </div>
+          </div>
         </div>
       </div>
       <script>
@@ -111,6 +117,7 @@
       <script>
       $(document).ready(function(){
           $('.sidenav').sidenav();
+           $('.modal').modal();
         });
       </script>
 

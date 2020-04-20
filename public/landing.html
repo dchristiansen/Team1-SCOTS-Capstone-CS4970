@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Import materialize.css-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" href="param.css">
+    <script src="/__/firebase/7.9.2/firebase-app.js"></script>
+    <script src="/__/firebase/7.9.2/firebase-auth.js"></script>
+    <script src="/__/firebase/7.9.2/firebase-firestore.js"></script>
+    <script defer src="/__/firebase/init.js"></script>
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Scots | RAC</title>
+  </head>
+    <body class="grey darken-4">
+    <nav>
+      <div class="nav-wrapper blue darken-2">
+      <a href="#!" class="brand-logo">Scots</a>
+      <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+      <ul class="right hide-on-med-and-down">
+        <li><a href="#">Home</a></li>
+        <li><a href="rPortal.html">Research Portal</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </div>
+</nav>
+
+  <ul class="sidenav" id="mobile-demo">
+    <li><a href="#">Home</a></li>
+    <li><a href="rPortal.html">Research Portal</a></li>
+    <li><a href="#">About</a></li>
+    <li><a href="#">Contact</a></li>
+  </ul>
+
+      <br><br>
+        <div class="container">
+              <h1 class="white-text">Rhythmic Auditory Cueing</h1>
+              <p class="white-text flow-text">Rhythmic Auditory Cueing (RAC) is a form of rehabilitation that utilizes a recurring beat or rhythm to offer an external cue to influence and improve motor skills, espcially gait. However, the notion of extracting a beat and keeping the same rhythm is challenging for humans, especially if the human has a neurological disorder such as Parkinson's Disease. If disruption to the brain's neural networks occur, by accident or by through neurological disorder, it can affect auditory-motor synchronization to a rhythm.</p>
+              <p class="white-text flow-text">This is where RAC Trainer comes into play. Similar to how a metronome helps a musician stay on tempo, rhythmic stimulation or RAC provides an effective approach to improving gait parameters. RAC Trainer is an online game that allows users to visit a website and conduct interval RAC training from the comfort of their own homes.</p>
+
+                <div class="row">
+                  <div class="col offset-4">
+                    <button id="loginBtn" class="btn pink darken-3 waves-effect" onclick="location.href='index.html';" type="button"><i class="material-icons right">person</i>Login</button>
+                  </div>
+
+                  <div class="col offset-s1">
+                    <button id="btnPlay" class="btn pink darken-3 waves-effect" onclick="location.href='parameters.html';" type="button"><i class="material-icons right">chevron_right</i>Play Game</button>
+                  </div>
+        <!-- End of Container -->
+        </div>
+
+        <!--JavaScript at end of body for optimized loading-->
+        <script
+          src="https://code.jquery.com/jquery-3.4.1.min.js"
+          integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+          crossorigin="anonymous"></script>
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+          <script>
+          $(document).ready(function(){
+              $('.sidenav').sidenav();
+            });
+          </script>
+
+  </body>
+</html>
