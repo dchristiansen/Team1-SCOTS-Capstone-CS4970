@@ -19,21 +19,13 @@
 
 <body class="grey darken-4">
   <nav>
-    <div class="nav-wrapper blue darken-2">
-      <a href="#!" class="brand-logo">Scots</a>
+    <div id="navbar" class="nav-wrapper blue darken-2">
+      <a href="#" class="brand-logo">Scots</a>
       <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-      <ul class="right hide-on-med-and-down">
-        <li><a href="rPortal.html">Research Portal</a></li>
-        <li><a href="#">About</a></li>
-        <li><a href="#">Contact</a></li>
-      </ul>
     </div>
   </nav>
 
   <ul class="sidenav" id="mobile-demo">
-    <li><a href="rPortal.html">Research Portal</a></li>
-    <li><a href="#">About</a></li>
-    <li><a href="#">Contact</a></li>
   </ul>
 
   <div class="container">
@@ -75,14 +67,18 @@
       </label>
     </div>
     <div class="col">
-      <button id="btnSetAssignment" class="btn btn-small  pink darken-3 waves-effect">Set Assignment</button>
-      </div>
+      <button id="btnSetAssignment" class="btn btn-small  pink darken-3 waves-effect"><i class="material-icons right">assignment</i>Set Assignment</button>
+    </div>
+    <div class="col">
+      <button id="btnDeleteAssignment" class="btn btn-small pink darken-3 waves-effect4"><i class="material-icons right">delete</i>Delete Assignment</button>
+    </div>
     </div>
   </div>
 
   <div class="container">
     <h3 class="white-text">Users</h3>
-    <button id="btnAssignToUsers" class="waves-effect btn-large pink darken-3">Assign to Selected Users</button>
+    <button id="btnAssignToUsers" class="waves-effect btn-large pink darken-3"><i class="material-icons right">assignment_ind</i>Assign to Selected Users</button>
+    <button id="btnSelectAll" class="waves-effect btn-large pink darken-3" style="margin-left: 1%">Select/Deselct All</button>
     <table class="highlight white-text pink darken-3 centered" style="margin-top:3%">
       <thead>
         <tr>
@@ -96,6 +92,7 @@
     </table>
   </div>
 
+  <script src="navbar.js" type="module"></script>
   <script src="editAssignment.js" type="module"></script>
   <script
     src="https://code.jquery.com/jquery-3.4.1.min.js"
