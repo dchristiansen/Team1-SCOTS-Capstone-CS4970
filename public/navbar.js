@@ -24,7 +24,7 @@ firebase.auth().onAuthStateChanged(async function(user) {
         } 
         //Do the links for a user
         else {
-            linkArray.push({link: "userdashboard.html", text: "User Dashboard"}, {link: "edituser.html", text: "Change User"}, {link: "Logout", text: "Logout"},
+            linkArray.push({link: "userdashboard.html", text: "User Dashboard"}, {link: "edituser.html", text: "Edit User"}, {link: "Logout", text: "Logout"},
             {link: "#", text: "About"}, {link: "#", text: "Contact"});
         }
     } else {
@@ -49,7 +49,7 @@ firebase.auth().onAuthStateChanged(async function(user) {
             let listItem = document.createElement("li");
             let itemContents = document.createElement("a");
             //Add logout functionality to the logout button
-            if(element.link = "Logout") {
+            if(element.link == "Logout") {
                 itemContents.addEventListener("click", e => {
                     firebase.auth().signOut().then(function() {
                         window.location = "index.html";
