@@ -33,29 +33,9 @@ firebase.auth().onAuthStateChanged(async function(user) {
 
     //Grab the navbar element
     let navhtml = document.querySelector("#navbar");
-    //Create the surrounding div
-    let div = document.createElement("div");
-    div.classList = "nav-wrapper blue darken-2";
 
-    //Create the "logo" element
-    let logo = document.createElement("a");
-    logo.className = "brand-logo";
-    logo.innerText = "Scots";
-    logo.href = "#!";
-    div.appendChild(logo);
-
-    //Create the a tag that will hold the mobile menu
-    let sidenav = document.createElement("a");
-    sidenav.className = "sidenav-trigger";
-    sidenav.setAttribute("data-target", "mobile-demo");
-    sidenav.href="#";
-
-    //Create the menu icon
-    let sidenavI = document.createElement("i");
-    sidenavI.className = "material-icons";
-    sidenavI.innerText = "menu";
-    sidenav.appendChild(sidenavI);
-    div.appendChild(sidenav);
+    //Grab the mobile demo list
+    let mobileDemo = document.querySelector("#mobile-demo");
 
     //Create the list
     let linkList = document.createElement("ul");
@@ -68,6 +48,7 @@ firebase.auth().onAuthStateChanged(async function(user) {
         if(window.location.pathname != pathname){
             let listItem = document.createElement("li");
             let itemContents = document.createElement("a");
+            //Add logout functionality to the logout button
             if(element.link = "Logout") {
                 itemContents.addEventListener("click", e => {
                     firebase.auth().signOut().then(function() {
@@ -81,14 +62,16 @@ firebase.auth().onAuthStateChanged(async function(user) {
             }
             itemContents.innerText = element.text;
             listItem.appendChild(itemContents);
+            //Create a copied version of the list item for use in the mobile navmenu
+            let demoItem = listItem.cloneNode(true);
+
+            mobileDemo.appendChild(demoItem);
             linkList.appendChild(listItem);
         }
     });
 
-    //Append the list to the div
-    div.appendChild(linkList);
-    //Append the div to the navbar element
-    navhtml.appendChild(div);
+    //Append the list to the navbar
+    navhtml.appendChild(linkList);
 });
 
 /*      <div class="nav-wrapper blue darken-2">
@@ -102,3 +85,9 @@ firebase.auth().onAuthStateChanged(async function(user) {
                 <li><a href="#">Contact</a></li>
             </ul>
       </div>*/
+
+      /*      <li><a href="assignments.html">View Assignments</a></li>
+      <li><a href="createassignment.html">Create Assignment</a></li>
+      <li><a href="createuser.html">Create User</a></li>
+      <li><a href="#">About</a></li>
+      <li><a href="#">Contact</a></li>*/
