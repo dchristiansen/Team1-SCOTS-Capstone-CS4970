@@ -5,7 +5,7 @@ export default class ScoreCalculator extends Base.Behavior{
         let closestHitDelta = 0;
         let lastBeat = phaseTime;
         let misses = 0;
-        let score = phaseTime;
+        let accuracyScore = phaseTime;
 
         data.forEach(tap => {
             let currentBeat = tap.beat;
@@ -13,8 +13,8 @@ export default class ScoreCalculator extends Base.Behavior{
             if(currentBeat != lastBeat) {
                 //New beat hit
                 if(lastBeat + beatTime == currentBeat) {
-                    //Factor the last beat hit into the score
-                    score -= closestHitDelta;
+                    //Factor the last beat hit into the accuracyScore
+                    accuracyScore -= closestHitDelta;
 
                     closestHitDelta = Math.abs(tap.delta);
                     lastBeat = currentBeat
@@ -50,18 +50,18 @@ export default class ScoreCalculator extends Base.Behavior{
             numMisses = numMisses / beatTime;
             misses += numMisses;
         } else {
-            score -= closestHitDelta;
+            accuracyScore -= closestHitDelta;
         }
 
         let missPenalty = misses * beatTime;
         console.log("Miss Penalty: " + missPenalty + ", with " + misses + " misses");
-        score -= missPenalty;
-        score /= ((phaseTime * cycles) + (0.5 * beatTime));
+        accuracyScore -= missPenalty;
+        accuracyScore /= ((phaseTime * cycles) + (0.5 * beatTime));
 
-        if(score < 0) {
-            score = 0;
+        if(accuracyScore < 0) {
+            accuracyScore = 0;
         }
 
-        return score;
+        return accuracyScore;
     }
 }
