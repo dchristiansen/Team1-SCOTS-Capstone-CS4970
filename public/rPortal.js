@@ -59,13 +59,16 @@ async function populateTable() {
         let td_id = document.createElement('td');
         let td_ses = document.createElement('td');
         let latestSessionTime = obj.data.latestSessionTime;
+        let latestSessionTimeStr = "";
         if (latestSessionTime) {
             latestSessionTime = latestSessionTime.seconds * 1000;
             latestSessionTime = new Date(latestSessionTime);
+            latestSessionTimeStr = latestSessionTime.toLocaleString(navigator.language);
         } else {
             latestSessionTime = "N/A";
+            latestSessionTimeStr = "N/A";
         }
-        td_ses.innerHTML = latestSessionTime;
+        td_ses.innerHTML = latestSessionTimeStr;
         let url = './userData.html?id=' + obj.id;
         tr.setAttribute('data-href', url);
         td_id.innerHTML = obj.data.userID;

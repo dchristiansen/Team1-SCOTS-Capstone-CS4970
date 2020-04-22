@@ -27,7 +27,7 @@ async function populateTable(userid) {
         let sessionTime = obj.data.sessionTime;
         sessionTime = sessionTime.seconds * 1000;
         sessionTime = new Date(sessionTime);
-        td_time.innerHTML = sessionTime;
+        td_time.innerHTML = sessionTime.toLocaleString(navigator.language);
         tr.appendChild(td_time);
 
         let td_params = document.createElement('td');
