@@ -13,7 +13,7 @@
       <script defer src="/__/firebase/init.js"></script>
       <!--Let browser know website is optimized for mobile-->
       <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-      <title>Scots | User Assignment</title>
+      <title>Scots | Researcher</title>
     </head>
 
     <style>
@@ -25,7 +25,7 @@
     <body class="grey darken-4">
       <nav>
         <div id="navbar" class="nav-wrapper blue darken-2">
-          <a href="#" class="brand-logo">Scots</a>
+          <a href="/index.html" class="brand-logo">Scots</a>
           <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
         </div>
       </nav>
@@ -34,23 +34,25 @@
       </ul>
 
   <div class="container">
-    <h3 class="white-text">View Assignments</h3>
-    <div class="row">
-        <input type="text" id="searchAssignment" style="margin-top:8%"  class="white-text" placeholder="Search Assignments...">
+      <h1 class="white-text">Researcher Portal</h1>
+      <h3 class="white-text">View Users</h3>
+      <div class="row">
+      <div class="col s6 m4 l4 offset-m8 offset-l8">
+      <input type="text" id="search" style="margin-top:8%"  class="white-text" placeholder="Search User Id...">
+      </div>
       </div>
 
-        <div class="col s6">
-      <table class="highlight white-text blue darken-4 centered" style="margin-top:3%">
+      <table class="highlight white-text pink darken-3 centered" style="margin-top:3%">
         <thead>
           <tr>
-              <th>Assignment</th>
-              <th>Parameters</th>
+              <th>User ID</th>
+              <th>Last Session</th>
           </tr>
         </thead>
-        <tbody id="assignmentTableBody">
+        <tbody id="tablebody">
         </tbody>
       </table>
-        </div>
+
 
     <div class="row">
       <div class="col offset-s4">
@@ -65,12 +67,28 @@
      </ul>
      </div>
    </div>
-   </div>
+  </div>
 
+  <div class="container">
+      <form class="col s12 width=50% font-size=50% admin-action">
+        <div class="row">
+          <div class="input-field col s6">
+            <input type="email" id="admin-email" class="white-text"/>
+            <label class="active white-text" for="admin-email">Enter a user to make an admin</label>
+          </div>
+        </div>
+        <div class="row">
+          <button id="btnMakeAdmin" class="btn btn-small pink darken-3 waves effect">Make Admin</button>
+        </div>
+      </form>
 
+    <div class="row">
+      <button id="btnLogout" class="btn btn-small pink darken-3 waves effect">Log Out</button>
+    </div>
+  </div>
 
-  <script src="assignments.js" type="module"></script>
-  <script src="navbar.js" type="module"></script>
+  <script src="/researcher/rPortal.js" type="module"></script>
+  <script src="/navbar.js" type="module"></script>
     <script
       src="https://code.jquery.com/jquery-3.4.1.min.js"
       integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="

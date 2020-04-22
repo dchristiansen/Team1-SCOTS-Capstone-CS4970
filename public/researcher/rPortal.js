@@ -1,4 +1,4 @@
-import { getUsers } from "./Data.js";
+import { getUsers } from "/Data.js";
 
 const btnLogout = document.getElementById("btnLogout");
 // Admin form to make a certain user an admin
@@ -10,7 +10,7 @@ const adminForm = document.querySelector(".admin-action");
 */
 btnLogout.addEventListener("click", e => {
     firebase.auth().signOut().then(function () {
-        window.location = "index.html";
+        window.location = "/login.html";
     }).catch(function (error) {
         console.log(error);
     });
@@ -33,7 +33,7 @@ firebase.auth().onAuthStateChanged(user => {
       else
       {
         alert("You are not an admin.");
-        window.location = "userdashboard.html";
+        window.location = "/user/userdashboard.html";
       }
     });
   }
@@ -41,7 +41,7 @@ firebase.auth().onAuthStateChanged(user => {
   else
   {
     console.log("You are not signed in.");
-    window.location = "index.html";
+    window.location = "/login.html";
   }
 });
 
@@ -102,7 +102,7 @@ async function populateTable() {
         td_ses.innerHTML = latestSessionTimeStr;
 
         // Create a link to userData with the user's uid as a paramter
-        let url = './userData.html?id=' + obj.id;
+        let url = '/researcher/users/userData.html?id=' + obj.id;
         tr.setAttribute('data-href', url);
 
         // Put the users ID in the inner html of the column

@@ -39,7 +39,7 @@
                 if (firebaseUser.admin)
                 {
                     // Redirect to researcher portal
-                    window.location = "rPortal.html";
+                    window.location = "/researcher/rPortal.html";
                 }
                 else 
                 {
@@ -51,17 +51,17 @@
                             {
                                 // Alert that the user is being redirected to the edituser
                                 alert("You have not changed your password since you were first registered. Please change your password before proceeding.");
-                                window.location = "edituser.html";
+                                window.location = "/user/edituser.html";
                             }
                             // Else redirect to the userdashboard
                             else
                             {
-                                window.location = "userdashboard.html";
+                                window.location = "/user/userdashboard.html";
                             }
                         }
                         else {
                             alert("The user has not been registered in the database.");
-                            //window.location = "userdashboard.html";
+                            //window.location = "/user/userdashboard.html";
                         }
                     })
                 }

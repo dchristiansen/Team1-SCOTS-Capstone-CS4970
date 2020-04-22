@@ -1,5 +1,5 @@
-import { getAllSessionsForUser } from "./Data.js";
-import { getUser } from "./Data.js";
+import { getAllSessionsForUser } from "../..//Data.js";
+import { getUser } from "../..//Data.js";
 
 // From to recover a user's password
 const accountRecoveryForm = document.querySelector(".admin-recovery");
@@ -190,7 +190,7 @@ firebase.auth().onAuthStateChanged(user => {
             {
                 // Alert that you are not an admin and return to the user dashboard
                 alert("You are not an admin.");
-                window.location = "userdashboard.html";
+                window.location = "/user/userdashboard.html";
             }
         });
     }
@@ -198,7 +198,7 @@ firebase.auth().onAuthStateChanged(user => {
     {
         // Not signed in so redirect to login screen
         console.log("You are not signed in.");
-        window.location = "index.html";
+        window.location = "/login.html";
     }
 });
 
@@ -259,7 +259,7 @@ deleteUserForm.addEventListener('submit', (e) => {
         deleteUser({uid: userid}).then(result => {
             console.log(result);
             alert(result.data.message);
-            window.location = "rPortal.html";
+            window.location = "/researcher/rPortal.html";
         }).catch(function(error) {
             console.log(error);
             alert(error.message);

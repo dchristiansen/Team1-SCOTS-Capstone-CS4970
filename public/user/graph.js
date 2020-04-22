@@ -176,9 +176,9 @@ function resetToParamSelect() {
     firebase.auth().onAuthStateChanged(function(user) {
         if(user) {
             console.log("user logged in, going to dashboard");
-            window.location = "userdashboard.html";
+            window.location = "/user/userdashboard.html";
         } else {
-            window.location = "parameters.html";
+            window.location = "/user/parameters.html";
         }
     });
 }

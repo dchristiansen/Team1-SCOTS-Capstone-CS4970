@@ -18,17 +18,17 @@ firebase.auth().onAuthStateChanged(async function(user) {
     if(loggedIn) {
         //Do the links for a researcher
         if(rPortal) {
-            linkArray.push({link: "rPortal.html", text: "Researcher Portal Home"}, {link:"assignments.html", text: "View Assignments"}, 
-            {link:"createassignment.html", text:"Create Assignment"}, {link:"createuser.html", text: "Create User"}, {link: "Logout", text: "Logout"}, {link: "#", text: "About"}, 
+            linkArray.push({link: "/researcher/rPortal.html", text: "Researcher Portal Home"}, {link:"/researcher/assignments/assignments.html", text: "View Assignments"}, 
+            {link:"/researcher/assignments/createassignment.html", text:"Create Assignment"}, {link:"/researcher/users/createuser.html", text: "Create User"}, {link: "Logout", text: "Logout"}, {link: "#", text: "About"}, 
             {link: "#", text: "Contact"});
         } 
         //Do the links for a user
         else {
-            linkArray.push({link: "userdashboard.html", text: "User Dashboard"}, {link: "edituser.html", text: "Edit User"}, {link: "Logout", text: "Logout"},
+            linkArray.push({link: "/user/userdashboard.html", text: "User Dashboard"}, {link: "/user/edituser.html", text: "Edit User"}, {link: "Logout", text: "Logout"},
             {link: "#", text: "About"}, {link: "#", text: "Contact"});
         }
     } else {
-        linkArray.push({link: "index.html", text: "Login"}, {link: "parameters.html", text: "Parameter Select"}, {link: "#", text: "About"}, {link: "#", text: "Contact"});
+        linkArray.push({link: "/login.html", text: "Login"}, {link: "/user/parameters.html", text: "Parameter Select"}, {link: "#", text: "About"}, {link: "#", text: "Contact"});
     }
 
     //Grab the navbar element
@@ -43,7 +43,7 @@ firebase.auth().onAuthStateChanged(async function(user) {
 
     //For each link in our link array, create the corresponding link in the navbar
     linkArray.forEach(element => {
-        let pathname = "/" + element.link;
+        let pathname = element.link;
         //Avoid creating a link for the page that we are currently on
         if(window.location.pathname != pathname){
             let listItem = document.createElement("li");
@@ -52,7 +52,7 @@ firebase.auth().onAuthStateChanged(async function(user) {
             if(element.link == "Logout") {
                 itemContents.addEventListener("click", e => {
                     firebase.auth().signOut().then(function() {
-                        window.location = "index.html";
+                        window.location = "/login.html";
                     }).catch(function (error) {
                         console.log(error);
                     });
@@ -78,16 +78,16 @@ firebase.auth().onAuthStateChanged(async function(user) {
             <a href="#!" class="brand-logo">Scots</a>
             <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
             <ul class="right hide-on-med-and-down">
-                <li><a href="assignments.html">View Assignments</a></li>
-                <li><a href="createassignment.html">Create Assignment</a></li>
-                <li><a href="createuser.html">Create User</a></li>
+                <li><a href="/researcher/assignments/assignments.html">View Assignments</a></li>
+                <li><a href="/researcher/assignments/createassignment.html">Create Assignment</a></li>
+                <li><a href="/researcher/users/createuser.html">Create User</a></li>
                 <li><a href="#">About</a></li>
                 <li><a href="#">Contact</a></li>
             </ul>
       </div>*/
 
-      /*      <li><a href="assignments.html">View Assignments</a></li>
-      <li><a href="createassignment.html">Create Assignment</a></li>
-      <li><a href="createuser.html">Create User</a></li>
+      /*      <li><a href="/researcher/assignments/assignments.html">View Assignments</a></li>
+      <li><a href="/researcher/assignments/createassignment.html">Create Assignment</a></li>
+      <li><a href="/researcher/users/createuser.html">Create User</a></li>
       <li><a href="#">About</a></li>
       <li><a href="#">Contact</a></li>*/
