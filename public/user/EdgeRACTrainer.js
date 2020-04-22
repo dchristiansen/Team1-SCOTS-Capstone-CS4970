@@ -117,10 +117,10 @@ function checkToPlayGame() {
     if(readyToPlay) {
         playGame();
     } else {
-        let location = "parameters.html";
+        let location = "/user/parameters.html";
         firebase.auth().onAuthStateChanged(user => {
             if(user){
-                location = "userdashboard.html";
+                location = "/user/userdashboard.html";
             }
         });
 

@@ -1,5 +1,5 @@
-import { getUsers } from "./Data.js";
-import { getAllAssignments } from "./Data.js";
+import { getUsers } from "../..//Data.js";
+import { getAllAssignments } from "../..//Data.js";
 
 // Observer for FirebaseAuth
 firebase.auth().onAuthStateChanged(user => {
@@ -19,7 +19,7 @@ firebase.auth().onAuthStateChanged(user => {
       {
         // Alert that user is not an admin and return to userdashboard
         alert("You are not an admin.");
-        window.location = "userdashboard.html";
+        window.location = "/user/userdashboard.html";
       }
     });
   }
@@ -27,7 +27,7 @@ firebase.auth().onAuthStateChanged(user => {
   {
     // Not signed in so redirect to login screen
     console.log("You are not signed in.");
-    window.location = "index.html";
+    window.location = "/login.html";
   }
 });
 
@@ -54,7 +54,7 @@ async function populateTable() {
       td_assignName.innerHTML = obj.data.assignmentLabel;
       
       // Attach a link to the row
-      let url = './editAssignment.html?id=' + obj.id;
+      let url = '/researcher/assignments/editAssignment.html?id=' + obj.id;
       aTr.setAttribute('data-href', url);
 
       // Create a parameters column in the row

@@ -1,7 +1,7 @@
 import Base from "../../engine/Base.js"
 import ScoreCalculator from "./ScoreCalculator.js"
 import TapHandler from "./TapHandler.js"
-import { createSession } from "../../Data.js"
+import { createSession } from "../../..//Data.js"
 
 
 export default class Timer extends Base.Behavior {
@@ -117,12 +117,12 @@ export default class Timer extends Base.Behavior {
                                 sessionStorage.setItem('totalTapArray', JSON.stringify(ref.tapHandler.tapDataTotal));
                                 sessionStorage.setItem('score', ref.scoreCalculator.calculateScore(ref.tapHandler.tapDataSoundOff, ref.beatTime, ref.noSoundPhaseTime, ref.cycles));
                                 sessionStorage.setItem('data', JSON.stringify(ref.tapHandler.tapDataSoundOff));
-                                document.location.href = "./results.html";
+                                document.location.href = "/user/results.html";
                             } else {
                                 sessionStorage.setItem('totalTapArray', JSON.stringify(ref.tapHandler.tapDataTotal));
                                 sessionStorage.setItem('score', ref.scoreCalculator.calculateScore(ref.tapHandler.tapDataSoundOff, ref.beatTime, ref.noSoundPhaseTime, ref.cycles));
                                 sessionStorage.setItem('data', JSON.stringify(ref.tapHandler.tapDataSoundOff));
-                                document.location.href = "./results.html";
+                                document.location.href = "/user/results.html";
                             }
                         });
                     } else {

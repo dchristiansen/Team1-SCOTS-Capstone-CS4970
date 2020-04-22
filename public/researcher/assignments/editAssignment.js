@@ -1,4 +1,4 @@
-import { getUsers } from "./Data.js";
+import { getUsers } from "../..//Data.js";
 
 var firestore = firebase.firestore();
 // Button to set the assignment parameters
@@ -23,7 +23,7 @@ btnDeleteAssignment.addEventListener("click", e => {
         var assignmentDoc = firestore.collection("assignments").doc(assignmentId);
         assignmentDoc.delete().then(function(){
             alert("Successfully deleted assignment");
-            window.location = "assignments.html";
+            window.location = "/researcher/assignments/assignments.html";
         }).catch(function(error) {
             alert("Error deleting assignment: " + error);
         });
@@ -258,7 +258,7 @@ firebase.auth().onAuthStateChanged((user) => {
             {
                 // Alert that user is not admin and return to user dashboard
                 alert("You are not an admin.");
-                window.location = "userdashboard.html";
+                window.location = "/user/userdashboard.html";
             }
         });
     }
@@ -266,7 +266,7 @@ firebase.auth().onAuthStateChanged((user) => {
     {
         // Not signed in so redirect to login screen
         console.log("You are not signed in.");
-        window.location = "index.html";
+        window.location = "/login.html";
     }
 });
 

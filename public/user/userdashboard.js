@@ -1,4 +1,4 @@
-import { getAssignmentsForUser } from "./Data.js"
+import { getAssignmentsForUser } from "/Data.js"
 
 
 const greeting = document.getElementById("greeting");
@@ -8,7 +8,7 @@ const assignmentTable = document.querySelector("#tablebody");
 
 btnLogout.addEventListener("click", e => {
     firebase.auth().signOut().then(function() {
-        window.location = "index.html";
+        window.location = "/login.html";
     }).catch(function(error) {
         console.log(error);
     });
@@ -54,7 +54,7 @@ firebase.auth().onAuthStateChanged(async function(user) {
     } else {
         // No user is signed in.
       console.log("No user is signed in");
-      window.location = "index.html";
+      window.location = "/login.html";
     }
 });
 
@@ -80,7 +80,7 @@ $("#tablebody").on("click", "tr", function(){
     sessionStorage.setItem("feedback",feedback);
 
     //Jump to start page
-    window.location = "start.html";
+    window.location = "/user/start.html";
 });
 
 $("td > a").on("click", function(e){

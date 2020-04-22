@@ -26,7 +26,7 @@ btnChangePassword.addEventListener("click", e => {
                     // Alert the user that the password was changed 
                     // successfully and redirect to the userdashboard
                     alert("Password changed successfully.");
-                    window.location = "userdashboard.html";
+                    window.location = "/user/userdashboard.html";
                 }).catch(function(error) {
                     console.error("Error updating document: ", error);
                 });
@@ -47,6 +47,6 @@ firebase.auth().onAuthStateChanged(user => {
     {
         // Redirect to the login screen
         console.log("You are not signed in.");
-        window.location = "index.html";
+        window.location = "/login.html";
     }
 });

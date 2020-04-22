@@ -1,4 +1,4 @@
-import { createAssignment } from "./Data.js";
+import { createAssignment } from "../..//Data.js";
 // Button to trigger insertAssignment function
 var btnSetAssignment = document.getElementById("btnSetAssignment");
 /*
@@ -27,7 +27,7 @@ firebase.auth().onAuthStateChanged(user => {
     // If user is not logged in, then redirect to the login page
     if(!user) {
         console.log("You are not signed in.");
-        window.location = "index.html";
+        window.location = "/login.html";
     }
 
     // If a user is signed in
@@ -40,7 +40,7 @@ firebase.auth().onAuthStateChanged(user => {
             if(!user.admin)
             {
                 alert("You are not an admin.");
-                window.location = "userdashboard.html";
+                window.location = "/user/userdashboard.html";
             }
         });
     }

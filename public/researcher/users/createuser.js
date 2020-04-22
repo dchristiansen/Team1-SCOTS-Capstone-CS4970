@@ -35,7 +35,7 @@
         if(!user)
         {
             console.log("You are not signed in.");
-            window.location = "index.html";
+            window.location = "/login.html";
         }
 
         // If user is signed in
@@ -48,7 +48,7 @@
                 if(!user.admin)
                 {
                     alert("You are not an admin.");
-                    window.location = "userdashboard.html";
+                    window.location = "/user/userdashboard.html";
                 }
             });
         }
