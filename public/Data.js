@@ -124,7 +124,7 @@ async function getAllSessionsForUser(userID){
             dataArray: []
         }
 
-        var sessions = firestore.collection("sessions").orderBy("sessionTime");
+        var sessions = firestore.collection("sessions").orderBy("sessionTime", "desc");
         //IMPORTANT
         //we can implement pagination later on to perform batched reads
         //I am implementing a limit so we don't run into pricing issues

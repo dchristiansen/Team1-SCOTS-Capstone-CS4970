@@ -89,13 +89,17 @@ async function populateTable() {
 
         // Get the latest session time and put the time in the text of the column
         let latestSessionTime = obj.data.latestSessionTime;
+        let latestSessionTimeStr = "";
         if (latestSessionTime) {
             latestSessionTime = latestSessionTime.seconds * 1000;
             latestSessionTime = new Date(latestSessionTime);
+            latestSessionTimeStr = latestSessionTime.toLocaleString(navigator.language);
         } else {
             latestSessionTime = "N/A";
+            latestSessionTimeStr = "N/A";
         }
-        td_ses.innerHTML = latestSessionTime;
+
+        td_ses.innerHTML = latestSessionTimeStr;
 
         // Create a link to userData with the user's uid as a paramter
         let url = './userData.html?id=' + obj.id;
