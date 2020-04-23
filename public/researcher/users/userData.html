@@ -5,7 +5,7 @@
       <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
       <!--Import materialize.css-->
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-        <link rel="stylesheet" href="start.css">
+        <link rel="stylesheet" href="/spinner.css"/>
         <script src="/__/firebase/7.9.2/firebase-app.js"></script>
         <script src="/__/firebase/7.9.2/firebase-auth.js"></script>
         <script src="/__/firebase/7.9.2/firebase-firestore.js"></script>
@@ -36,7 +36,7 @@
     <div id="modal1" class="modal">
       <div class="modal-content grey darken-4">
         <h2 class="white-text">Account Recovery</h2>
-        <form class="col s6 width=50% font-size=50% admin-action">
+        <form class="col s6 width=50% font-size=50% admin-recovery">
           <div class="row">
             <div class="input-field col s12 m6 l6 offset-m2 offset-l2">
                 <input type="password" id="password" class="white-text">
@@ -59,8 +59,30 @@
                 <button id="btnChangePassword" disabled="true" class="btn btn-large pink darken-2 waves-effect modal-close" style="margin-left: 1%"><i class="material-icons right">chevron_right</i>Change Password</button>
             </div>
           </div>
-        </div>
+        </form>
+        <form class="col s6 width=50% font-size=50% admin-delete-user">
+          <div class="row">
+            <div class="input-field col s6 offset-s2">
+              <button id="btnDeleteUser" style="margin-left: 1%" class="btn btn-large pink darken-2 waves-effect" style="margin-left: 1%"><i class="material-icons right">delete</i>Delete this User</button>
+            </div>
+            <div id="spinner" class="loader" title="2" style="visibility: hidden;">
+              <svg version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                 width="40px" height="40px" viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve">
+              <path fill="#000" d="M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z">
+                <animateTransform attributeType="xml"
+                  attributeName="transform"
+                  type="rotate"
+                  from="0 25 25"
+                  to="360 25 25"
+                  dur="0.6s"
+                  repeatCount="indefinite"/>
+                </path>
+              </svg>
+            </div>
+          </div>
+        </form>
       </div>
+    </div>
       <script>
         var check = function() {
             if (document.getElementById('password').value ==
@@ -75,15 +97,6 @@
             }
         }
       </script>
-    </form>
-
-    <form class="col s6 width=50% font-size=50% admin-delete-user">
-      <div class="row">
-        <div class="input-field col s6 offset-s2">
-          <button id="btnDeleteUser" style="margin-left: 1%" class="btn btn-large pink darken-2 waves-effect" style="margin-left: 1%"><i class="material-icons right">delete</i>Delete this User</button>
-        </div>
-    </div>
-    </form>
 
 
     <h3 class="white-text">User Sessions</h1>

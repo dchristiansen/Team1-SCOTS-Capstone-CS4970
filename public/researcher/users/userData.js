@@ -220,22 +220,27 @@ $(document).ready(function () {
 accountRecoveryForm.addEventListener('submit', (e) => {
     e.preventDefault();
 
-    // Grab confirmed password
-    const confirmPassword = document.getElementById("confirmPassword").value;
-    // Grab userid
-    let params = new URLSearchParams(location.search);
-    let userid = params.get('id');
+    if(confirm("Are you sure you want to change this user's password?"))
+    {
+        document.getElementById("spinner").style.visibility = "visible";
+        // Grab confirmed password
+        const confirmPassword = document.getElementById("confirmPassword").value;
+        // Grab userid
+        let params = new URLSearchParams(location.search);
+        let userid = params.get('id');
 
-    // Grab changeUserPassword function from Firebase
-    const changeUserPassword = firebase.functions().httpsCallable('changeUserPassword');
-    // Change user password, passing in the user id and the confirmed password to the cloud function
-    changeUserPassword({uid: userid, password: confirmPassword}).then(result => {
-        console.log(result);
-        alert(result.data.message)
-    }).catch(function(error) {
-        console.log(error);
-        alert(error.message);
-    })
+        // Grab changeUserPassword function from Firebase
+        const changeUserPassword = firebase.functions().httpsCallable('changeUserPassword');
+        // Change user password, passing in the user id and the confirmed password to the cloud function
+        changeUserPassword({uid: userid, password: confirmPassword}).then(result => {
+            console.log(result);
+            document.getElementById("spinner").style.visibility = "hidden";
+            alert(result.data.message)
+        }).catch(function(error) {
+            console.log(error);
+            alert(error.message);
+        })
+    }   
 });
 
 /*
@@ -249,6 +254,7 @@ deleteUserForm.addEventListener('submit', (e) => {
     // Prompt the user of they are sure if they want to delete the user
     if(confirm("Are you sure you want to delete this user?"))
     {
+        document.getElementById("spinner").style.visibility = "visible";
         // Grab userid
         let params = new URLSearchParams(location.search);
         let userid = params.get('id');
@@ -258,6 +264,7 @@ deleteUserForm.addEventListener('submit', (e) => {
         // Call deleteUser passing in the userid of the user to be deleted
         deleteUser({uid: userid}).then(result => {
             console.log(result);
+            document.getElementById("spinner").style.visibility = "hidden";
             alert(result.data.message);
             window.location = "/researcher/rPortal.html";
         }).catch(function(error) {
