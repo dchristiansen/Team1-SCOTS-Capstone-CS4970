@@ -1,26 +1,21 @@
 import { getUsers } from "/Data.js";
 
-const btnLogout = document.getElementById("btnLogout");
 // Admin form to make a certain user an admin
 const adminForm = document.querySelector(".admin-action");
-
-/*
-  btnLogout:
-  Logs out a user from FirebaseAuth and redirect to the login page
-*/
-btnLogout.addEventListener("click", e => {
-    firebase.auth().signOut().then(function () {
-        window.location = "/login.html";
-    }).catch(function (error) {
-        console.log(error);
-    });
-});
+// Greeting for the researcher portal
+const greeting = document.getElementById("greeting");
+// username
+var username;
 
 // Observer for FirebaseAuth
 firebase.auth().onAuthStateChanged(user => {
+  
   // If user is signed in
   if(user)
   {
+    username = user.email.split("@")[0];
+    greeting.innerHTML = "Welcome to the Researcher Portal, " + username + "!";
+
     // Get admin token result
     user.getIdTokenResult().then(idTokenResult => {
       user.admin = idTokenResult.claims.admin;
@@ -51,6 +46,7 @@ firebase.auth().onAuthStateChanged(user => {
 */
 adminForm.addEventListener('submit', (e) => {
     e.preventDefault();
+    document.getElementById("spinner").style.visibility = "visible";
     // Get the email of the user to be made an admin
     const adminEmail = document.getElementById('admin-email').value;
     // Get the addAdminRole cloud function from Firebase
@@ -58,8 +54,10 @@ adminForm.addEventListener('submit', (e) => {
     // Call the addAdminRole function passing in the email of the user to be made an admin
     addAdminRole({ email: adminEmail }).then(result => {
         console.log(result);
+        document.getElementById("spinner").style.visibility = "hidden";
         if (result.data.errorInfo == null) {
             alert(result.data.message);
+            location.reload();
         }
         else {
             alert(result.data.errorInfo.message);

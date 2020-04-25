@@ -6,6 +6,7 @@
         <!--Import materialize.css-->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
         <link rel="stylesheet" href="/user/param.css">
+        <link rel="stylesheet" href="/spinner.css">
         <script src="/__/firebase/7.9.2/firebase-app.js"></script>
         <script src="/__/firebase/7.9.2/firebase-auth.js"></script>
         <script src="/__/firebase/7.9.2/firebase-firestore.js"></script>
@@ -49,6 +50,28 @@
             </div>
         </div>
       </form>
+      <div id="modal1" class="modal">
+        <div class="modal-content grey darken-4">
+          <div class="row" style="text-align: center;">
+            <h3 class="white-text">Creating User</h2>
+            <div id="spinner" class="loader">
+              <svg version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                 width="70px" height="70px" viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve">
+              <path fill="#000" d="M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z">
+                <animateTransform attributeType="xml"
+                  attributeName="transform"
+                  type="rotate"
+                  from="0 25 25"
+                  to="360 25 25"
+                  dur="0.6s"
+                  repeatCount="indefinite"/>
+                </path>
+              </svg>
+            </div>
+          </div>
+          </div>
+        </div>
+      </div>
       
       <script src="/navbar.js" type="module"></script>
       <script
@@ -60,6 +83,7 @@
       <script>
       $(document).ready(function(){
           $('.sidenav').sidenav();
+          $('.modal').modal();
         });
       </script>
       <script src="/researcher/users/createuser.js"></script>
