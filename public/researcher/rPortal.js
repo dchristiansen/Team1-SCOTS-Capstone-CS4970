@@ -56,8 +56,8 @@ adminForm.addEventListener('submit', (e) => {
         console.log(result);
         document.getElementById("spinner").style.visibility = "hidden";
         if (result.data.errorInfo == null) {
-
             alert(result.data.message);
+            location.reload();
         }
         else {
             alert(result.data.errorInfo.message);
