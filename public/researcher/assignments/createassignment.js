@@ -13,11 +13,21 @@ function insertAssignment() {
     var cycles = document.getElementById("cycles").value;
     var timeWOSound = document.getElementById("timeWOSound").value;
     var feedback = document.getElementById("feedback").checked;
+    
+    if (assignmentName == null || assignmentName == "" ||
+         bpm == null || bpm == "" || 
+         timeWSound == null || timeWSound == "" ||
+         cycles == null || cycles == "" ||
+         timeWOSound == null || timeWOSound == "")
+    {
+        alert("All parameters must be set to create an assignment");
+    }
+    else{
+        var userIDs = [];
 
-    var userIDs = [];
-
-    // Call imported createAssignment function to insert assignment into the database
-    createAssignment(assignmentName, bpm, timeWSound, timeWOSound, cycles, feedback, userIDs);
+        // Call imported createAssignment function to insert assignment into the database
+        createAssignment(assignmentName, bpm, timeWSound, timeWOSound, cycles, feedback, userIDs);
+    }
 
 }
 btnSetAssignment.onclick = insertAssignment;
