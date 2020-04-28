@@ -38,6 +38,7 @@ let yMin = yMax * -1;
 
 //Calculate the green, yellow, and red line positions based off of the bpm
 let beatTime = 60000/bpm;
+console.log(beatTime);
 //Ensure that the graph extends to include the final beat, since we actually have a half beat extra
 lastBeat += 0.5*(beatTime/1000);
 let greenY = beatTime/6;
@@ -164,7 +165,6 @@ let myChart = new Chart(ctx, {
 
 let scoreString = document.querySelector("#score");
 
-score *= 100;
 score = Math.round(score*100)/100;
 
 

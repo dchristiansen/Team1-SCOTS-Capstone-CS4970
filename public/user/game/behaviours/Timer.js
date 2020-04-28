@@ -112,10 +112,9 @@ export default class Timer extends Base.Behavior {
                         firebase.auth().onAuthStateChanged(async function (firebaseUser) {
                             if (firebaseUser) {
                                 console.log(stringTapVersion);
-                                let sesh = await createSession(assignmentId, ref.bpm, ref.soundPhaseTime, ref.noSoundPhaseTime, ref.cycles, feedback, firebaseUser.uid, stringTapVersion);
-                                console.log(sesh);
+                                //let sesh = await createSession(assignmentId, ref.bpm, ref.soundPhaseTime, ref.noSoundPhaseTime, ref.cycles, feedback, firebaseUser.uid, stringTapVersion);
                                 sessionStorage.setItem('totalTapArray', JSON.stringify(ref.tapHandler.tapDataTotal));
-                                sessionStorage.setItem('score', ref.scoreCalculator.calculateScore(ref.tapHandler.tapDataSoundOff, ref.beatTime, ref.noSoundPhaseTime, ref.cycles));
+                                sessionStorage.setItem('score', ref.scoreCalculator.newCalculateScore(ref.tapHandler.tapDataSoundOff, ref.beatTime));
                                 sessionStorage.setItem('data', JSON.stringify(ref.tapHandler.tapDataSoundOff));
                                 document.location.href = "/user/results.html";
                             } else {
