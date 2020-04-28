@@ -32,19 +32,19 @@
             <h2 class="white-text">Create User</h1>
             <div class="row">
                 <div class="input-field col s12 m6 l6">
-                    <input type="text" id="createUname" class="white-text">
+                    <input type="text" id="createUname" class="white-text" onkeyup='check();'>
                     <label class="active white-text" for="createUname">Username</label>
                 </div>
             </div>
             <div class="row">
                 <div class="input-field col s12 m6 l6">
-                    <input type="password" id="createPassword" class="validate white-text">
+                    <input type="password" id="createPassword" class="validate white-text" onkeyup='check();'>
                     <label class="active white-text" for="createPassword">Password</label>
                 </div>
             </div>
             <div class="row">
                 <div class="col">
-                    <button id="btnCreateUser" class="btn btn-large pink darken-2 waves-effect"><i class="material-icons right">chevron_right</i>Create User</button>
+                    <button id="btnCreateUser" disabled="true" class="btn btn-large pink darken-2 waves-effect"><i class="material-icons right">chevron_right</i>Create User</button>
                 </div>
             </div>
         </div>
@@ -63,5 +63,17 @@
         });
       </script>
       <script src="/researcher/users/createuser.js"></script>
+      <script>
+        var check = function() {
+          if(document.getElementById('createPassword').value != null && document.getElementById('createUname').value != null) 
+          {
+            document.getElementById('btnCreateUser').disabled = false;
+          }
+          else
+          {
+            document.getElementById('btnCreateUser').disabled = true;
+          }
+        }
+      </script>
   </body>
 </html>
