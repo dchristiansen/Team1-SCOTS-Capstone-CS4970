@@ -1,16 +1,18 @@
 import Engine from "../engine/Engine.js"
 
-export default class SceneManager {
-  static scenes = [];
-  static _currentSceneIndex = -1;
-  static get currentScene() {
+let sceneManagerInstance = new class SceneManager{
+
+  scenes = [];
+  _currentSceneIndex = -1;
+
+  get currentScene() {
     if (this._currentSceneIndex == -1) throw "Current scene index not set. Cannot get current scene."
     if (this.scenes.length == 0) throw "There are no scenes in the scene manager. Cannot get current scene."
     if (this._currentSceneIndex >= this.scenes.length) throw "Current scene index is out of bounds. Cannot get current scene."
     return this.scenes[this._currentSceneIndex];
   }
 
-  static set currentScene(argument) {
+  set currentScene(argument) {
     if (argument instanceof Engine.Base.Scene) {
       let index = this.scenes.indexOf(argument);
       if (index != -1) {
@@ -38,9 +40,11 @@ export default class SceneManager {
     }
   }
 
-  static addScene(scene) {
+  addScene(scene) {
     this.scenes.push(scene);
   }
 
 
 }
+
+export default sceneManagerInstance;
