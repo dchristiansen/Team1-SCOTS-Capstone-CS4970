@@ -3,16 +3,8 @@ import { getAssignmentsForUser } from "/Data.js"
 
 const greeting = document.getElementById("greeting");
 var username;
-const btnLogout = document.getElementById("btnLogout");
-const assignmentTable = document.querySelector("#tablebody");
 
-btnLogout.addEventListener("click", e => {
-    firebase.auth().signOut().then(function() {
-        window.location = "/login.html";
-    }).catch(function(error) {
-        console.log(error);
-    });
-});
+const assignmentTable = document.querySelector("#tablebody");
 
 firebase.auth().onAuthStateChanged(async function(user) {
     if (user) {
