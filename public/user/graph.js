@@ -9,55 +9,81 @@ let total = sessionStorage.getItem('totalTapArray');
 
 data = JSON.parse(data);
 
-console.log(soundOnTime);
-console.log(soundOffTime);
+
+soundOnTime*=1000;
+soundOffTime*=1000;
 console.log(data);
 
-let lastBeat = 0;
+let yMax = 0, yMin = -1, xMax = 0;
 
 //Creating the x,y pair array
 let chartArray = [];
+let prev;
+data.splice(0, 1);
 data.forEach(tap => {
-    let beat = Math.round(tap.beat/10)/100;
-    console.log(beat);
-    if(beat > lastBeat) {
-        lastBeat = beat;
+
+    let timeSinceLast = tap.timeSinceLast;
+    //Calculate pressTime taking into account cycle number
+    let pressTime = tap.pressTime+((parseInt(soundOnTime)+parseInt(soundOffTime))*(tap.cycleNumber-1));
+
+    //On sound reset get a negative number, this fixes the bug, might want to investigate a fix in taphandler
+    if(timeSinceLast < 0) {
+        timeSinceLast = (pressTime - prev.pressTime);
     }
-    let delta = Math.round(tap.delta);
-    //Push the value of the beat taking into account the cycle that we're on
-    console.log(tap.cycleNumber);
-    chartArray.push({x: (beat)+((parseInt(soundOnTime)+parseInt(soundOffTime))*(tap.cycleNumber-1)), y: delta})
+
+    //Get the max y value
+    if(timeSinceLast > yMax) {
+        yMax = timeSinceLast;
+    }
+
+    if(yMin == -1 || timeSinceLast < yMin) {
+        yMin = timeSinceLast;
+    }
+
+    chartArray.push({x: pressTime, y: timeSinceLast});
+    prev = tap;
 });
+
+xMax = chartArray[chartArray.length-1].x;
 
 console.log(chartArray);
 
-lastBeat *= cycles;
-
-let yMax = 30000/bpm;
-let yMin = yMax * -1;
+let lastBeat = data[data.length-1].pressTime;
 
 //Calculate the green, yellow, and red line positions based off of the bpm
-let beatTime = 60000/bpm;
-console.log(beatTime);
-//Ensure that the graph extends to include the final beat, since we actually have a half beat extra
-lastBeat += 0.5*(beatTime/1000);
-let greenY = beatTime/6;
-let yellowY = beatTime * 2 / 6;
-let greenZonePos = [{x: 0, y: greenY}, {x: lastBeat, y: greenY}];
-let greenZoneNeg = [{x: 0, y: greenY*-1}, {x: lastBeat, y: greenY*-1}];
-let yellowZonePos = [{x: 0, y: yellowY}, {x: lastBeat, y: yellowY}];
-let yellowZoneNeg = [{x: 0, y: yellowY*-1}, {x: lastBeat, y: yellowY*-1}];
-let redZonePos = [{x: 0, y: yMax}, {x: lastBeat, y: yMax}];
-let redZoneNeg = [{x: 0, y: yMin}, {x: lastBeat, y: yMin}];
+let beatTime = Math.round((60000/bpm));
+
+let greenYPos = beatTime + (beatTime * 0.1);
+let greenYNeg = beatTime - (beatTime * 0.1);
+let yellowYPos = beatTime + (beatTime * 0.15);
+let yellowYNeg = beatTime - (beatTime * 0.15);
+let redYPos = beatTime + (beatTime * 0.2);
+let redYNeg = beatTime - (beatTime * 0.2);
+
+let greenZonePos = [{x: 0, y: greenYPos}, {x: lastBeat, y: greenYPos}];
+let greenZoneNeg = [{x: 0, y: greenYNeg}, {x: lastBeat, y: greenYNeg}];
+let yellowZonePos = [{x: 0, y: yellowYPos}, {x: lastBeat, y: yellowYPos}];
+let yellowZoneNeg = [{x: 0, y: yellowYNeg}, {x: lastBeat, y: yellowYNeg}];
+let redZonePos = [{x: 0, y: redYPos}, {x: lastBeat, y: redYPos}];
+let redZoneNeg = [{x: 0, y: redYNeg}, {x: lastBeat, y: redYNeg}];
+
+//Check if the red zones are greater than the current y min/max, if so set them to be our new min/max
+if(redYPos > yMax) {
+    yMax = redYPos;
+}
+if(redYNeg < yMin) {
+    yMin = redYNeg;
+}
 
 //Calculating the sound on/sound off lines
 let soundOffLine = [{x: soundOnTime, y: yMax}, {x: soundOnTime, y: yMin}];
+let soundOnLine = [];
 let currentTime = parseInt(soundOnTime);
 for(let i = 1; i < cycles; i++) {
     currentTime += parseInt(soundOffTime);
     soundOffLine.push(NaN);
-    soundOffLine.push({x: currentTime, y: yMax}, {x: currentTime, y: yMin});
-    soundOffLine.push(NaN);
+    soundOnLine.push({x: currentTime, y: yMax}, {x: currentTime, y: yMin});
+    soundOnLine.push(NaN);
     currentTime += parseInt(soundOnTime);
     soundOffLine.push({x: currentTime, y: yMax}, {x: currentTime, y: yMin});
 }
@@ -71,14 +97,15 @@ let myChart = new Chart(ctx, {
         backgroundColor: 'rgba(255, 99, 132, 1)',
         datasets: [{
             order: 0,
-            label: 'Accuracy of taps',
+            label: 'Inter-tap Interval',
             data: chartArray,
             pointStyle: 'rectRot',
             radius: 5,
             hoverRadius: 10,
             borderColor: 'rgba(255, 99, 132, 1)',
             borderWidth: 1.2
-        }, {
+        }, 
+        {
             data: greenZonePos,
             borderColor: 'rgba(44, 155, 8, 0.6)',
             borderDash: [5, 15],
@@ -126,9 +153,20 @@ let myChart = new Chart(ctx, {
             showLine: true,
             pointRadius: 0,
             fill: false
-        }, {
+        }, 
+        {
             data: soundOffLine,
             borderColor: 'rgba(255, 99, 132, 0.3)',
+            borderDash: [5, 15],
+            type: 'line',
+            showLine: true,
+            pointRadius: 0,
+            fill: false,
+            spanGaps: false
+        },
+        {
+            data: soundOnLine,
+            borderColor: 'rgba(12, 176, 12, 0.3)',
             borderDash: [5, 15],
             type: 'line',
             showLine: true,
@@ -142,13 +180,13 @@ let myChart = new Chart(ctx, {
             yAxes: [{
                 ticks: {
                     beginAtZero: false,
-                    min: yMin,
-                    max: yMax
+                    max: yMax,
+                    min: yMin
                 }
             }],
             xAxes: [{
                 ticks: {
-                    max: lastBeat
+                    max: xMax
                 }
             }]
         }, 
@@ -176,9 +214,9 @@ function resetToParamSelect() {
     firebase.auth().onAuthStateChanged(function(user) {
         if(user) {
             console.log("user logged in, going to dashboard");
-            window.location = "/user/userdashboard.html";
+            window.location = "userdashboard.html";
         } else {
-            window.location = "/user/parameters.html";
+            window.location = "parameters.html";
         }
     });
 }

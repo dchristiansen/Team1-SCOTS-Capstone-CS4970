@@ -66,15 +66,12 @@ export default class ScoreCalculator extends Base.Behavior{
     }
 
     newCalculateScore(data, beatTime) {
-        console.log(data);
-        console.log(data.length);
         let total = 0;
 
         data.forEach(tap => {
             console.log(tap);
             let error = 100*(tap.timeSinceLast - beatTime)/beatTime;
             error = Math.abs(error);
-            console.log(error);
 
             total += (105 - (error * 5));
         });

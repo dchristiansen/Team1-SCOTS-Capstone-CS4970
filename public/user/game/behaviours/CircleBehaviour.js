@@ -29,10 +29,10 @@ export default class CircleBehaviour extends Base.Behavior {
 
             if(this.feedback == "true") {
                 if (this.tapHandler.timer.soundOn) {
-                    if (Math.abs(delta) < this.tapHandler.beatTime / 6) {
+                    if (Math.abs(delta) < this.tapHandler.beatTime * 0.1) {
                         this.circle.fill = "green";
                     }
-                    else if (Math.abs(delta) < this.tapHandler.beatTime * 2 / 6) {
+                    else if (Math.abs(delta) < this.tapHandler.beatTime * 0.15) {
                         this.circle.fill = "yellow"
                     }
                     else {
