@@ -1,7 +1,7 @@
 import Base from "../../engine/Base.js";
 
 export default class ScoreCalculator extends Base.Behavior{
-    calculateScore(data, beatTime, phaseTime, cycles) {
+    oldCalculateScore(data, beatTime, phaseTime, cycles) {
         let closestHitDelta = 0;
         let lastBeat = phaseTime;
         let misses = 0;
@@ -60,6 +60,28 @@ export default class ScoreCalculator extends Base.Behavior{
 
         if(score < 0) {
             score = 0;
+        }
+
+        return score;
+    }
+
+    newCalculateScore(data, beatTime) {
+        let total = 0;
+
+        data.forEach(tap => {
+            console.log(tap);
+            let error = 100*(tap.timeSinceLast - beatTime)/beatTime;
+            error = Math.abs(error);
+
+            total += (105 - (error * 5));
+        });
+
+        let score = total/data.length;
+        
+        if(score < 0) {
+            score = 0;
+        } else if(score > 100) {
+            score = 100;
         }
 
         return score;

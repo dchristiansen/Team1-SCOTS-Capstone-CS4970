@@ -123,18 +123,19 @@ export default class Timer extends Base.Behavior {
                         let ref = this;
                         firebase.auth().onAuthStateChanged(async function (firebaseUser) {
                             if (firebaseUser) {
+
                                 //Save the session using the array of csv strings
                                 let sesh = await createSession(assignmentId, ref.bpm, ref.soundPhaseTime, ref.noSoundPhaseTime, ref.cycles, feedback, firebaseUser.uid, tapArrayString);
                                 //console.log(sesh);
                                 //Set all of the sessionStorage information for use on the graph page
                                 sessionStorage.setItem('totalTapArray', JSON.stringify(ref.tapHandler.tapDataTotal));
-                                sessionStorage.setItem('score', ref.scoreCalculator.calculateScore(ref.tapHandler.tapDataSoundOff, ref.beatTime, ref.noSoundPhaseTime, ref.cycles));
+                                sessionStorage.setItem('score', ref.scoreCalculator.newCalculateScore(ref.tapHandler.tapDataSoundOff, ref.beatTime));
                                 sessionStorage.setItem('data', JSON.stringify(ref.tapHandler.tapDataSoundOff));
                                 document.location.href = "/user/results.html";
                             } else {
                                 //Set all of the sessionStorage information for use on the graph page
                                 sessionStorage.setItem('totalTapArray', JSON.stringify(ref.tapHandler.tapDataTotal));
-                                sessionStorage.setItem('score', ref.scoreCalculator.calculateScore(ref.tapHandler.tapDataSoundOff, ref.beatTime, ref.noSoundPhaseTime, ref.cycles));
+                                sessionStorage.setItem('score', ref.scoreCalculator.newCalculateScore(ref.tapHandler.tapDataSoundOff, ref.beatTime));
                                 sessionStorage.setItem('data', JSON.stringify(ref.tapHandler.tapDataSoundOff));
                                 document.location.href = "/user/results.html";
                             }
