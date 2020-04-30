@@ -3,22 +3,16 @@ import TapInfo from "../data/TapInfo.js"
 import Timer from "./Timer.js"
 
 export default class TapHandler extends Base.Behavior {
-
-    startTime = -1;
-    beatTime = 0;
-    lastTap = 0;
-    soundOn = true;
-    side = 0;
-    tapInfo;
-    timer;
-    tapDataSoundOff = [];
-    tapDataTotal = [];
-    currentCycle = 1;
-
-
     constructor(bpm) {
         super();
-        this.beatTime = Math.round(60000/bpm);
+        this.beatTime = Math.round(60000 / bpm);
+        this.startTime = -1;
+        this.lastTap = 0;
+        this.soundOn = true;
+        this.side = 0;
+        this.tapDataSoundOff = [];
+        this.tapDataTotal = [];
+        this.currentCycle = 1;
     }
 
     start() {
@@ -29,7 +23,7 @@ export default class TapHandler extends Base.Behavior {
         let date = new Date();
         let currentTime = date.getTime();
         //First tap, set startTime to that tap
-        if(this.timer.startTime == -1) {
+        if (this.timer.startTime == -1) {
             this.startTime = this.timer.startTimer();
             //this.startTime = this.timer.startTime;
         }
@@ -48,7 +42,7 @@ export default class TapHandler extends Base.Behavior {
         let currentTime = date.getTime()
         this.tapInfo.releaseTime = currentTime - this.startTime;
         this.tapInfo.updateDuration();
-        if(!this.timer.soundOn && !this.timer.gameOver)
+        if (!this.timer.soundOn && !this.timer.gameOver)
             this.tapDataSoundOff.push(this.tapInfo);
         this.tapDataTotal.push(this.tapInfo);
         console.log(this.tapInfo);

@@ -1,15 +1,10 @@
 import NameableParent from "./NamableParent.js"
 
 export default class GameObject extends NameableParent {
-    x; y;
-    scaleX;
-    scaleY;
-    rotation;
-    components = [];
-
     constructor(x = 0, y = 0, scaleX = 1, scaleY = 1, rotation = 0) {
         super();
         [this.x, this.y, this.scaleX, this.scaleY, this.rotation] = [x, y, scaleX, scaleY, rotation];
+        this.components = [];
     }
     addComponent(component) {
         this.components.push(component);

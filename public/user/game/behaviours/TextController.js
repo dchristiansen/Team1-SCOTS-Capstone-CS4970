@@ -2,8 +2,6 @@ import Base from "../../engine/Base.js"
 
 
 export default class Timer extends Base.Behavior {
-    timer;
-    text;
     constructor(timer, text) {
         super();
         this.timer = timer;

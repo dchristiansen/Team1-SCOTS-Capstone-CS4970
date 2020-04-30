@@ -1,10 +1,6 @@
 import Base from "../Base.js"
 
 export default class RectangleComponent extends Base.Component{
-    width;
-    height;
-    fill;
-    stroke;
     constructor(width, height, fill, stroke){
         super();
         this.width = width;

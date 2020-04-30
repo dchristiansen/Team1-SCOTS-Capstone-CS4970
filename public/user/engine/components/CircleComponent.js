@@ -1,9 +1,6 @@
 import Base from "../Base.js"
 
 export default class CircleComponent extends Base.Component{
-    radius;
-    fill;
-    stroke;
     constructor(radius, fill, stroke){
         super();
         this.radius = radius;

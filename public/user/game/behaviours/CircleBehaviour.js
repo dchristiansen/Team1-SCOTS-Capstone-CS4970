@@ -4,10 +4,6 @@ import CircleComponent from "../../engine/components/CircleComponent.js"
 import TapHandler from "./TapHandler.js";
 
 export default class CircleBehaviour extends Base.Behavior {
-    circle;
-    tapHandler;
-    feedback;
-
     constructor(feedback) {
         super();
         this.feedback = feedback;

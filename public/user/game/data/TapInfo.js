@@ -1,17 +1,4 @@
 class TapInfo{
-    beat;
-    prevBeat;
-    nextBeat;
-    pressTime;
-    releaseTime;
-    duration;
-    delta;
-    nextDelta;
-    prevDelta;
-    timeSinceLast;
-    soundOn;
-    side;
-    cycleNumber;
     constructor(beat, beatLength, pressTime, releaseTime, timeSinceLast, soundOn, side, cycleNumber){
         this.beat = beat;
         this.prevBeat = beat - beatLength;

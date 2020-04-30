@@ -6,6 +6,8 @@ const FRAMES_PER_SECOND = 30;
 const MILLIS_PER_SECOND = 1000;
 const MILLIS_PER_FRAME = MILLIS_PER_SECOND / FRAMES_PER_SECOND;
 
+let canv, ctx;
+
 let playScene;
 
 let bpm = sessionStorage.getItem("bpm");
@@ -61,8 +63,6 @@ function keyup(event) {
     pressed = false;
     pulse();
 }
-
-let canv, ctx;
 
 function playGame() {
     playScene = new Scenes.PlayScene(bpm, timeWSound, timeWOSound, cycles, feedback);

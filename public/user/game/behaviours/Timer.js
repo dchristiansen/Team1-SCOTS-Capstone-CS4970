@@ -5,27 +5,13 @@ import { createSession } from "../../..//Data.js"
 
 
 export default class Timer extends Base.Behavior {
-    bpm;
-    currentTime;
-    startTime = -1;
-    beatTime;
-    soundPhaseTime;
-    noSoundPhaseTime;
-    phaseSwitchTime;
-    cycles;
-    endTime;
-    tapHandler;
-    soundOn = true;
-    scoreCalculator;
-    gameOver = false;
-    interval;
-    beatSound;
-    mostRecentBeat = 0;
-    volumeChange;
-    currentCycle = 1;
-
     constructor(bpm, soundPhaseTime, noSoundPhaseTime, cycles) {
         super();
+        this.startTime = -1;
+        this.soundOn = true;
+        this.gameOver = false;
+        this.mostRecentBeat = 0;
+        this.currentCycle = 1;
         this.bpm = bpm;
         this.beatTime = Math.round(60000 / bpm);
         this.soundPhaseTime = soundPhaseTime * 1000;
