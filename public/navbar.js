@@ -24,7 +24,7 @@ firebase.auth().onAuthStateChanged(async function(user) {
         } 
         //Do the links for a user
         else {
-            linkArray.push({link: "/user/userdashboard.html", text: "User Dashboard"}, {link: "/user/edituser.html", text: "Edit User"}, {link: "Logout", text: "Logout"},
+            linkArray.push({link: "/user/userdashboard.html", text: "User Dashboard"}, {link: "/user/edituser.html", text: "Change Password"}, {link: "Logout", text: "Logout"},
             {link: "#", text: "About"}, {link: "#", text: "Contact"});
         }
     } else {
