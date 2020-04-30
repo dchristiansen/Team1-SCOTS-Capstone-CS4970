@@ -115,7 +115,7 @@ export default class Timer extends Base.Behavior {
 
                         //Create the comma separated string to be stored in the database
                         stringJson.forEach(tap => {
-                            let stringToInput = tap.beat + "," + tap.pressTime + "," + tap.releaseTime + "," + tap.timeSinceLast + "," + tap.delta + "," + tap.duration;
+                            let stringToInput = tap.cycleNumber + "," + tap.beat + "," + tap.pressTime + "," + tap.releaseTime + "," + tap.timeSinceLast + "," + tap.delta + "," + tap.duration;
                             tapArrayString.push(stringToInput);
                         });
 

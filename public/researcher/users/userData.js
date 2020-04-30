@@ -152,11 +152,11 @@ function formatCSV(session) {
     data.push(["Cycles", parameters.cycles]);
     data.push(["Feedback", parameters.feedback]);
     data.push([]);
-    data.push(["Beat time (ms)", "Tap time (ms)", "Release time (ms)", "Tap intervals (ms)", "Asynchrony (ms)", "Key-press duration (ms)"]);
+    data.push(["Cycle Number", "Beat time (ms)", "Tap time (ms)", "Release time (ms)", "Tap intervals (ms)", "Asynchrony (ms)", "Key-press duration (ms)"]);
     //let total = data.concat(taps);
     taps.forEach(function (tap) {
         let splitString = tap.split(",");
-        data.push([splitString[0], splitString[1], splitString[2], splitString[3], splitString[4], splitString[5]]);
+        data.push([splitString[0], splitString[1], splitString[2], splitString[3], splitString[4], splitString[5], splitString[6]]);
     });
     console.log(data);
     let csvContent = data.map(e => e.join(",")).join("\n");
