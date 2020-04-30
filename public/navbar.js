@@ -24,7 +24,7 @@ firebase.auth().onAuthStateChanged(async function(user) {
         } 
         //Do the links for a user
         else {
-            linkArray.push({link: "/user/userdashboard.html", text: "User Dashboard"}, {link: "/user/edituser.html", text: "Edit User"}, {link: "Logout", text: "Logout"},
+            linkArray.push({link: "/user/userdashboard.html", text: "User Dashboard"}, {link: "/user/edituser.html", text: "Change Password"}, {link: "Logout", text: "Logout"},
             {link: "#", text: "About"}, {link: "#", text: "Contact"});
         }
     } else {
@@ -38,40 +38,43 @@ firebase.auth().onAuthStateChanged(async function(user) {
     let mobileDemo = document.querySelector("#mobile-demo");
 
     //Create the list
-    let linkList = document.createElement("ul");
-    linkList.classList = "right hide-on-med-and-down";
-
-    //For each link in our link array, create the corresponding link in the navbar
-    linkArray.forEach(element => {
-        let pathname = element.link;
-        //Avoid creating a link for the page that we are currently on
-        if(window.location.pathname != pathname){
-            let listItem = document.createElement("li");
-            let itemContents = document.createElement("a");
-            //Add logout functionality to the logout button
-            if(element.link == "Logout") {
-                itemContents.addEventListener("click", e => {
-                    firebase.auth().signOut().then(function() {
-                        window.location = "/login.html";
-                    }).catch(function (error) {
-                        console.log(error);
+    if(document.querySelector("#linkList") == null){
+        let linkList = document.createElement("ul");
+        linkList.classList = "right hide-on-med-and-down";
+        linkList.id="linkList";
+    
+        //For each link in our link array, create the corresponding link in the navbar
+        linkArray.forEach(element => {
+            let pathname = element.link;
+            //Avoid creating a link for the page that we are currently on
+            if(window.location.pathname != pathname){
+                let listItem = document.createElement("li");
+                let itemContents = document.createElement("a");
+                //Add logout functionality to the logout button
+                if(element.link == "Logout") {
+                    itemContents.addEventListener("click", e => {
+                        firebase.auth().signOut().then(function() {
+                            window.location = "/login.html";
+                        }).catch(function (error) {
+                            console.log(error);
+                        });
                     });
-                });
-            } else {
-                itemContents.href = element.link;
+                } else {
+                    itemContents.href = element.link;
+                }
+                itemContents.innerText = element.text;
+                listItem.appendChild(itemContents);
+                //Create a copied version of the list item for use in the mobile navmenu
+                let demoItem = listItem.cloneNode(true);
+    
+                mobileDemo.appendChild(demoItem);
+                linkList.appendChild(listItem);
             }
-            itemContents.innerText = element.text;
-            listItem.appendChild(itemContents);
-            //Create a copied version of the list item for use in the mobile navmenu
-            let demoItem = listItem.cloneNode(true);
-
-            mobileDemo.appendChild(demoItem);
-            linkList.appendChild(listItem);
-        }
-    });
-
-    //Append the list to the navbar
-    navhtml.appendChild(linkList);
+        });
+    
+        //Append the list to the navbar
+        navhtml.appendChild(linkList);
+    }
 });
 
 /*      <div class="nav-wrapper blue darken-2">
