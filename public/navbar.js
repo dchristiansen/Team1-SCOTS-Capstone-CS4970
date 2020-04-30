@@ -18,10 +18,10 @@ firebase.auth().onAuthStateChanged(async function(user) {
     if(loggedIn) {
         //Do the links for a researcher
         if(rPortal) {
-            linkArray.push({link: "rPortal.html", text: "Researcher Portal Home"}, {link:"assignments.html", text: "View Assignments"}, 
-            {link:"createassignment.html", text:"Create Assignment"}, {link:"createuser.html", text: "Create User"}, {link: "Logout", text: "Logout"}, {link: "#", text: "About"}, 
-            {link: "#", text: "Contact"});
-        } 
+            linkArray.push({link: "rPortal.html", text: "Researcher Portal Home", id:"rPortal"}, {link:"assignments.html", text: "View Assignment", id:"viewA"},
+            {link:"createassignment.html", text:"Create Assignment", id:"createA"}, {link:"createuser.html", text: "Create User", id:"createU"}, {link: "Logout", text: "Logout", id:"logout"}, {link: "#", text: "About", id:"about"},
+            {link: "#", text: "Contact", id:"contact"});
+        }
         //Do the links for a user
         else {
             linkArray.push({link: "userdashboard.html", text: "User Dashboard"}, {link: "edituser.html", text: "Edit User"}, {link: "Logout", text: "Logout"},
@@ -61,6 +61,8 @@ firebase.auth().onAuthStateChanged(async function(user) {
                 itemContents.href = element.link;
             }
             itemContents.innerText = element.text;
+            listItem.id = element.id;
+
             listItem.appendChild(itemContents);
             //Create a copied version of the list item for use in the mobile navmenu
             let demoItem = listItem.cloneNode(true);
