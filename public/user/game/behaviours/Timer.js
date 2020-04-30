@@ -115,11 +115,10 @@ export default class Timer extends Base.Behavior {
 
                         //Create the comma separated string to be stored in the database
                         stringJson.forEach(tap => {
-                            let stringToInput = tap.beat + "," + tap.cycleNumber + "," + tap.delta + "," + tap.duration + "," + tap.pressTime + "," + tap.releaseTime
-                            + "," + tap.soundOn + "," + tap.timeSinceLast;
+                            let stringToInput = tap.beat + "," + tap.pressTime + "," + tap.releaseTime + "," + tap.timeSinceLast + "," + tap.delta + "," + tap.duration;
                             tapArrayString.push(stringToInput);
                         });
-                        
+
                         //Create a reference to this for use within the auth functions
                         let ref = this;
                         firebase.auth().onAuthStateChanged(async function (firebaseUser) {

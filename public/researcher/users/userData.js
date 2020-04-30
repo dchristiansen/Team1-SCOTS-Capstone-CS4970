@@ -144,7 +144,7 @@ function download() {
 */
 function formatCSV(session) {
     let parameters = session.parameters;
-    let taps = session.taps
+    let taps = session.taps;
     let data = [];
     data.push(["Tempo (BPM)", parameters.bpm]);
     data.push(["Time On (ms)", parameters.soundOnTime]);
@@ -153,9 +153,12 @@ function formatCSV(session) {
     data.push(["Feedback", parameters.feedback]);
     data.push([]);
     data.push(["Beat time (ms)", "Tap time (ms)", "Release time (ms)", "Tap intervals (ms)", "Asynchrony (ms)", "Key-press duration (ms)"]);
+    //let total = data.concat(taps);
     taps.forEach(function (tap) {
-        data.push([tap.beat, tap.pressTime, tap.releaseTime, tap.timeSinceLast, tap.delta, tap.duration]);
+        let splitString = tap.split(",");
+        data.push([splitString[0], splitString[1], splitString[2], splitString[3], splitString[4], splitString[5]]);
     });
+    console.log(data);
     let csvContent = data.map(e => e.join(",")).join("\n");
     return csvContent;
 }
