@@ -54,7 +54,7 @@ export default class Timer extends Base.Behavior {
                 if (newVolume < 0) {
                     newVolume = 0;
                 }
-                console.log("Lowering volume to " + newVolume);
+                //console.log("Lowering volume to " + newVolume);
                 this.beatSound.volume = newVolume;
             }
             this.beatSound.play();
@@ -67,7 +67,7 @@ export default class Timer extends Base.Behavior {
                 if (newVolume > 1) {
                     newVolume = 1;
                 }
-                console.log("Increasing volume to " + newVolume);
+                //console.log("Increasing volume to " + newVolume);
                 this.beatSound.volume = newVolume;
             }
             if (this.beatSound.volume > 0){
@@ -85,7 +85,9 @@ export default class Timer extends Base.Behavior {
         this.phaseSwitchTime = this.startTime + this.soundPhaseTime;
         this.endTime = this.phaseSwitchTime + this.noSoundPhaseTime + (this.beatTime / 2);
         this.tapHandler.startTime = this.startTime;
-        console.log("Start time is " + this.startTime);
+        this.soundOn = true;
+        this.tapHandler.soundOn = true;
+        //console.log("Start time is " + this.startTime);
         return this.startTime;
     }
 
@@ -94,8 +96,9 @@ export default class Timer extends Base.Behavior {
         //If we're in the sound phase
         if (this.soundOn) {
             if (this.currentTime > this.phaseSwitchTime + (this.beatTime / 2)) {
-                console.log("Turning sound off");
+                //console.log("Turning sound off");
                 this.soundOn = false;
+                this.tapHandler.soundOn = false;
             }
             //In the sound off phase
         } else {
@@ -107,18 +110,30 @@ export default class Timer extends Base.Behavior {
                         this.gameOver = true;
                         let feedback = sessionStorage.getItem('feedback');
                         let assignmentId = sessionStorage.getItem('aid');
-                        let stringTapVersion = JSON.parse(JSON.stringify(this.tapHandler.tapDataTotal));
+                        let stringJson = JSON.parse(JSON.stringify(this.tapHandler.tapDataTotal));
+                        let tapArrayString = [];
+
+                        //Create the comma separated string to be stored in the database
+                        stringJson.forEach(tap => {
+                            let stringToInput = tap.beat + "," + tap.cycleNumber + "," + tap.delta + "," + tap.duration + "," + tap.pressTime + "," + tap.releaseTime
+                            + "," + tap.soundOn + "," + tap.timeSinceLast;
+                            tapArrayString.push(stringToInput);
+                        });
+                        
+                        //Create a reference to this for use within the auth functions
                         let ref = this;
                         firebase.auth().onAuthStateChanged(async function (firebaseUser) {
                             if (firebaseUser) {
-                                console.log(stringTapVersion);
-                                let sesh = await createSession(assignmentId, ref.bpm, ref.soundPhaseTime, ref.noSoundPhaseTime, ref.cycles, feedback, firebaseUser.uid, stringTapVersion);
-                                console.log(sesh);
+                                //Save the session using the array of csv strings
+                                let sesh = await createSession(assignmentId, ref.bpm, ref.soundPhaseTime, ref.noSoundPhaseTime, ref.cycles, feedback, firebaseUser.uid, tapArrayString);
+                                //console.log(sesh);
+                                //Set all of the sessionStorage information for use on the graph page
                                 sessionStorage.setItem('totalTapArray', JSON.stringify(ref.tapHandler.tapDataTotal));
                                 sessionStorage.setItem('score', ref.scoreCalculator.calculateScore(ref.tapHandler.tapDataSoundOff, ref.beatTime, ref.noSoundPhaseTime, ref.cycles));
                                 sessionStorage.setItem('data', JSON.stringify(ref.tapHandler.tapDataSoundOff));
                                 document.location.href = "/user/results.html";
                             } else {
+                                //Set all of the sessionStorage information for use on the graph page
                                 sessionStorage.setItem('totalTapArray', JSON.stringify(ref.tapHandler.tapDataTotal));
                                 sessionStorage.setItem('score', ref.scoreCalculator.calculateScore(ref.tapHandler.tapDataSoundOff, ref.beatTime, ref.noSoundPhaseTime, ref.cycles));
                                 sessionStorage.setItem('data', JSON.stringify(ref.tapHandler.tapDataSoundOff));
@@ -127,11 +142,10 @@ export default class Timer extends Base.Behavior {
                         });
                     } else {
                         //Reset everything for the next cycle
-                        console.log("Resetting");
+                        //console.log("Resetting");
                         this.currentCycle++;
                         this.startTimer();
                         this.beatSound.volume = 1;
-                        this.soundOn = true;
                         this.tapHandler.currentCycle = this.currentCycle;
                     }
                 }
