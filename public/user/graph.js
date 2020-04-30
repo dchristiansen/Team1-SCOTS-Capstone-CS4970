@@ -48,8 +48,6 @@ xMax = chartArray[chartArray.length-1].x;
 
 console.log(chartArray);
 
-let lastBeat = data[data.length-1].pressTime;
-
 //Calculate the green, yellow, and red line positions based off of the bpm
 let beatTime = Math.round((60000/bpm));
 
@@ -60,12 +58,12 @@ let yellowYNeg = beatTime - (beatTime * 0.15);
 let redYPos = beatTime + (beatTime * 0.2);
 let redYNeg = beatTime - (beatTime * 0.2);
 
-let greenZonePos = [{x: 0, y: greenYPos}, {x: lastBeat, y: greenYPos}];
-let greenZoneNeg = [{x: 0, y: greenYNeg}, {x: lastBeat, y: greenYNeg}];
-let yellowZonePos = [{x: 0, y: yellowYPos}, {x: lastBeat, y: yellowYPos}];
-let yellowZoneNeg = [{x: 0, y: yellowYNeg}, {x: lastBeat, y: yellowYNeg}];
-let redZonePos = [{x: 0, y: redYPos}, {x: lastBeat, y: redYPos}];
-let redZoneNeg = [{x: 0, y: redYNeg}, {x: lastBeat, y: redYNeg}];
+let greenZonePos = [{x: 0, y: greenYPos}, {x: xMax, y: greenYPos}];
+let greenZoneNeg = [{x: 0, y: greenYNeg}, {x: xMax, y: greenYNeg}];
+let yellowZonePos = [{x: 0, y: yellowYPos}, {x: xMax, y: yellowYPos}];
+let yellowZoneNeg = [{x: 0, y: yellowYNeg}, {x: xMax, y: yellowYNeg}];
+let redZonePos = [{x: 0, y: redYPos}, {x: xMax, y: redYPos}];
+let redZoneNeg = [{x: 0, y: redYNeg}, {x: xMax, y: redYNeg}];
 
 //Check if the red zones are greater than the current y min/max, if so set them to be our new min/max
 if(redYPos > yMax) {
