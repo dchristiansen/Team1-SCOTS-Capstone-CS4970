@@ -23,9 +23,13 @@
         createUser({email: createdUsername, password: createdPassword}).then(result => {
             console.log(result);
             alert(result.data.message);
+            createUserName.value = "";
+            createPassword.value = "";
         }).catch(function(error) {
             console.log(error);
             alert(error.message);
+            createUserName.value = "";
+            createPassword.value = "";
         });
     });
 
