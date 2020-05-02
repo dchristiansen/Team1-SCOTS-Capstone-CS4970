@@ -59,7 +59,7 @@ firebase.auth().onAuthStateChanged(async function(user) {
             }
             else 
             {
-                alert("You do not have access to the User Dashboard");
+                alert("Researchers do not have access to the User Dashboard");
                 window.location = "/researcher/rPortal.html";
             }
         });

@@ -49,4 +49,16 @@ firebase.auth().onAuthStateChanged(user => {
         console.log("You are not signed in.");
         window.location = "/login.html";
     }
+
+    if(user)
+    {
+        user.getIdTokenResult().then(idTokenResult => {
+            user.admin = idTokenResult.claims.admin;
+            if(user.admin)
+            {
+                alert("Researchers do not have access to the Edit User page");
+                window.location = "/researcher/rPortal.html";
+            }
+        });
+    }
 });
