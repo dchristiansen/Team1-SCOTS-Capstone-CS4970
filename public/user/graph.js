@@ -9,13 +9,11 @@ let total = sessionStorage.getItem('totalTapArray');
 
 data = JSON.parse(data);
 
-
-soundOnTime*=1000;
-soundOffTime*=1000;
-console.log(data);
+//console.log(data);
 
 let yMax = 0, yMin = -1, xMax = 0;
 
+let beatTime = Math.round((60000 / bpm));
 //Creating the x,y pair array
 let chartArray = [];
 let prev;
@@ -24,33 +22,38 @@ data.forEach(tap => {
 
     let timeSinceLast = tap.timeSinceLast;
     //Calculate pressTime taking into account cycle number
-    let pressTime = tap.pressTime+((parseInt(soundOnTime)+parseInt(soundOffTime))*(tap.cycleNumber-1));
+    let pressTime = tap.pressTime + ((parseInt(soundOnTime) + parseInt(soundOffTime)) * (tap.cycleNumber - 1));
+    //Convert from milliseconds to seconds
+    pressTime /= 1000;
 
-    //On sound reset get a negative number, this fixes the bug, might want to investigate a fix in taphandler
-    if(timeSinceLast < 0) {
-        timeSinceLast = (pressTime - prev.pressTime);
+    //console.log(pressTime);
+
+    //If this is a tap within our y-bounds (less than 2 times the beat time)
+    if (timeSinceLast < (2 * beatTime)) {
+        //On sound reset get a negative number, this fixes the bug, might want to investigate a fix in taphandler
+        if (timeSinceLast < 0) {
+            timeSinceLast = (pressTime - prev.pressTime);
+        }
+
+        //Get the max y value
+        if (timeSinceLast > yMax) {
+            yMax = timeSinceLast;
+        }
+
+        if (yMin == -1 || timeSinceLast < yMin) {
+            yMin = timeSinceLast;
+        }
+
+        chartArray.push({ x: pressTime, y: timeSinceLast });
     }
-
-    //Get the max y value
-    if(timeSinceLast > yMax) {
-        yMax = timeSinceLast;
-    }
-
-    if(yMin == -1 || timeSinceLast < yMin) {
-        yMin = timeSinceLast;
-    }
-
-    chartArray.push({x: pressTime, y: timeSinceLast});
     prev = tap;
 });
 
-xMax = chartArray[chartArray.length-1].x;
+xMax = chartArray[chartArray.length - 1].x;
 
-console.log(chartArray);
+//console.log(chartArray);
 
 //Calculate the green, yellow, and red line positions based off of the bpm
-let beatTime = Math.round((60000/bpm));
-
 let greenYPos = beatTime + (beatTime * 0.1);
 let greenYNeg = beatTime - (beatTime * 0.1);
 let yellowYPos = beatTime + (beatTime * 0.15);
@@ -58,32 +61,32 @@ let yellowYNeg = beatTime - (beatTime * 0.15);
 let redYPos = beatTime + (beatTime * 0.2);
 let redYNeg = beatTime - (beatTime * 0.2);
 
-let greenZonePos = [{x: 0, y: greenYPos}, {x: xMax, y: greenYPos}];
-let greenZoneNeg = [{x: 0, y: greenYNeg}, {x: xMax, y: greenYNeg}];
-let yellowZonePos = [{x: 0, y: yellowYPos}, {x: xMax, y: yellowYPos}];
-let yellowZoneNeg = [{x: 0, y: yellowYNeg}, {x: xMax, y: yellowYNeg}];
-let redZonePos = [{x: 0, y: redYPos}, {x: xMax, y: redYPos}];
-let redZoneNeg = [{x: 0, y: redYNeg}, {x: xMax, y: redYNeg}];
+let greenZonePos = [{ x: 0, y: greenYPos }, { x: xMax, y: greenYPos }];
+let greenZoneNeg = [{ x: 0, y: greenYNeg }, { x: xMax, y: greenYNeg }];
+let yellowZonePos = [{ x: 0, y: yellowYPos }, { x: xMax, y: yellowYPos }];
+let yellowZoneNeg = [{ x: 0, y: yellowYNeg }, { x: xMax, y: yellowYNeg }];
+let redZonePos = [{ x: 0, y: redYPos }, { x: xMax, y: redYPos }];
+let redZoneNeg = [{ x: 0, y: redYNeg }, { x: xMax, y: redYNeg }];
 
 //Check if the red zones are greater than the current y min/max, if so set them to be our new min/max
-if(redYPos > yMax) {
+if (redYPos > yMax) {
     yMax = redYPos;
 }
-if(redYNeg < yMin) {
+if (redYNeg < yMin) {
     yMin = redYNeg;
 }
 
 //Calculating the sound on/sound off lines
-let soundOffLine = [{x: soundOnTime, y: yMax}, {x: soundOnTime, y: yMin}];
+let soundOffLine = [{ x: soundOnTime, y: yMax }, { x: soundOnTime, y: yMin }];
 let soundOnLine = [];
 let currentTime = parseInt(soundOnTime);
-for(let i = 1; i < cycles; i++) {
+for (let i = 1; i < cycles; i++) {
     currentTime += parseInt(soundOffTime);
     soundOffLine.push(NaN);
-    soundOnLine.push({x: currentTime, y: yMax}, {x: currentTime, y: yMin});
+    soundOnLine.push({ x: currentTime, y: yMax }, { x: currentTime, y: yMin });
     soundOnLine.push(NaN);
     currentTime += parseInt(soundOnTime);
-    soundOffLine.push({x: currentTime, y: yMax}, {x: currentTime, y: yMin});
+    soundOffLine.push({ x: currentTime, y: yMax }, { x: currentTime, y: yMin });
 }
 
 
@@ -102,7 +105,7 @@ let myChart = new Chart(ctx, {
             hoverRadius: 10,
             borderColor: 'rgba(255, 99, 132, 1)',
             borderWidth: 1.2
-        }, 
+        },
         {
             data: greenZonePos,
             borderColor: 'rgba(44, 155, 8, 0.6)',
@@ -151,7 +154,7 @@ let myChart = new Chart(ctx, {
             showLine: true,
             pointRadius: 0,
             fill: false
-        }, 
+        },
         {
             data: soundOffLine,
             borderColor: 'rgba(255, 99, 132, 0.3)',
@@ -187,11 +190,11 @@ let myChart = new Chart(ctx, {
                     max: xMax
                 }
             }]
-        }, 
+        },
         legend: {
             labels: {
                 //Only display the label for the accuracy of taps
-                filter: function(legendItem, data) {
+                filter: function (legendItem, data) {
                     return legendItem.datasetIndex == 0;
                 }
             }
@@ -201,16 +204,16 @@ let myChart = new Chart(ctx, {
 
 let scoreString = document.querySelector("#score");
 
-score = Math.round(score*100)/100;
+score = Math.round(score * 100) / 100;
 
 
 scoreString.innerHTML = "Score: " + score + "%";
 
 
 function resetToParamSelect() {
-    console.log("resetting");
-    firebase.auth().onAuthStateChanged(function(user) {
-        if(user) {
+    //console.log("resetting");
+    firebase.auth().onAuthStateChanged(function (user) {
+        if (user) {
             console.log("user logged in, going to dashboard");
             window.location = "userdashboard.html";
         } else {
