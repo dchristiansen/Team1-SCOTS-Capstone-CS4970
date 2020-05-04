@@ -89,31 +89,43 @@ btnSetAssignment.addEventListener("click", e => {
     var timeWOSound = document.getElementById("timeWOSound").value;
     var feedback = document.getElementById("feedback").checked;
 
-    // Get the assignment document id
-    let params = new URLSearchParams(location.search);
-    let assignmentId = params.get('id');
 
-    // Create parameters object
-    var parameters = {
-        bpm: bpm,
-        cycles: cycles,
-        feedback: feedback,
-        soundOffTime: timeWOSound,
-        soundOnTime: timeWSound
-    };
+    if (assignmentLabel == null || assignmentLabel == "" ||
+         bpm == null || bpm == "" || 
+         timeWSound == null || timeWSound == "" ||
+         cycles == null || cycles == "" ||
+         timeWOSound == null || timeWOSound == "")
+    {
+        alert("All parameters must be set to edit an assignment");
+    }
+    else 
+    {
+        // Get the assignment document id
+        let params = new URLSearchParams(location.search);
+        let assignmentId = params.get('id');
 
-    // Assignment document reference
-    var assignmentDoc = firestore.collection("assignments").doc(assignmentId);
+        // Create parameters object
+        var parameters = {
+            bpm: bpm,
+            cycles: cycles,
+            feedback: feedback,
+            soundOffTime: timeWOSound,
+            soundOnTime: timeWSound
+        };
 
-    // Update the assignment label and the parameters
-    assignmentDoc.update({
-        assignmentLabel: assignmentLabel,
-        parameters: parameters
-    }).then(function() {
-        alert("Assignment successfully updated.");
-    }).catch(function(error) {
-        console.error(error);
-    });
+        // Assignment document reference
+        var assignmentDoc = firestore.collection("assignments").doc(assignmentId);
+
+        // Update the assignment label and the parameters
+        assignmentDoc.update({
+            assignmentLabel: assignmentLabel,
+            parameters: parameters
+        }).then(function() {
+            alert("Assignment successfully updated.");
+        }).catch(function(error) {
+            console.error(error);
+        });
+    }
 });
 
 /*

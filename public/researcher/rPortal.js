@@ -49,20 +49,26 @@ adminForm.addEventListener('submit', (e) => {
     document.getElementById("spinner").style.visibility = "visible";
     // Get the email of the user to be made an admin
     const adminEmail = document.getElementById('admin-email').value;
-    // Get the addAdminRole cloud function from Firebase
-    const addAdminRole = firebase.functions().httpsCallable('addAdminRole');
-    // Call the addAdminRole function passing in the email of the user to be made an admin
-    addAdminRole({ email: adminEmail }).then(result => {
-        console.log(result);
-        document.getElementById("spinner").style.visibility = "hidden";
-        if (result.data.errorInfo == null) {
-            alert(result.data.message);
-            location.reload();
-        }
-        else {
-            alert(result.data.errorInfo.message);
-        }
-    });
+
+    if(adminEmail == null || adminEmail == "")
+    {
+      alert("Please enter a user's email to make them an admin");
+    }
+    else {
+      // Get the addAdminRole cloud function from Firebase
+      const addAdminRole = firebase.functions().httpsCallable('addAdminRole');
+      // Call the addAdminRole function passing in the email of the user to be made an admin
+      addAdminRole({ email: adminEmail }).then(result => {
+          console.log(result);
+          document.getElementById("spinner").style.visibility = "hidden";
+          if (result.data.errorInfo == null) {
+              alert(result.data.message);
+          }
+          else {
+              alert(result.data.errorInfo.message);
+          }
+      });
+    }
 });
 
 /*

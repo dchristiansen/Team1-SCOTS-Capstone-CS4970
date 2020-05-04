@@ -12,3 +12,18 @@ function setParams() {
   sessionStorage.setItem("timeWOSound",timeWOSound);
   sessionStorage.setItem("feedback",feedback);
 }
+
+firebase.auth().onAuthStateChanged(user => {
+    if(user)
+    {
+      user.getIdTokenResult().then(idTokenResult => {
+        user.admin = idTokenResult.claims.admin;
+        // If user is an admin, redirect to rPortal
+        if(user.admin)
+        {
+          alert("Researchers cannot play the game");
+          window.location = "/researcher/rPortal.html";
+        }
+      })
+    }
+})

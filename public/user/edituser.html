@@ -36,7 +36,7 @@
             <h2 class="white-text">Change Password</h2>
             <div class="row">
                 <div class="input-field col s12 m6 l6">
-                    <input type="password" id="password" class="white-text">
+                    <input type="password" id="password" class="white-text" onkeyup='check();'>
                     <label class="active white-text" for="password">New Password</label>
                 </div>
             </div>
@@ -70,8 +70,8 @@
             </script>
             <script>
                 var check = function() {
-                    if (document.getElementById('password').value ==
-                        document.getElementById('confirmPassword').value) {
+                    if ((document.getElementById('password').value == document.getElementById('confirmPassword').value) &&
+                        document.getElementById('password').value != null && document.getElementById('confirmPassword').value != null) {
                         document.getElementById('confirmMessage').style.color = 'green';
                         document.getElementById('confirmMessage').innerHTML = 'Password confirmed';
                         document.getElementById('btnChangePassword').disabled = false;
