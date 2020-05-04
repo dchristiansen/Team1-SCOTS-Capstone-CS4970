@@ -15,13 +15,18 @@
   <script src="/__/firebase/7.9.2/firebase-auth.js"></script>
   <script src="/__/firebase/7.9.2/firebase-firestore.js"></script>
   <script src="/__/firebase/init.js"></script>
-  <title>Scots | Parameter</title>
+  <style>
+    a.brand-logo {
+    padding-left: 10px
+  }
+  </style>
+  <title>RAC | Parameter</title>
 </head>
 
 <body class="grey darken-4">
   <nav>
     <div id="navbar" class="nav-wrapper blue darken-2">
-      <a href="/index.html" class="brand-logo">Scots</a>
+      <a href="/index.html" class="brand-logo">RAC</a>
       <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
     </div>
   </nav>
@@ -36,20 +41,20 @@
       <div class="row">
         <p class="range-field white-text col s12 m3 l3">
           BPM
-          <input type="number" id="BPM" name="BPM" class="white-text tooltipped" data-position="left"  data-tooltip="Beats Per Minute" value="100" min="30" max="1200" />
+          <input type="number" id="BPM" name="BPM" class="white-text tooltipped" data-position="left"  data-tooltip="Beats Per Minute" value="100" min="30" max="1200" required />
         </p>
         <p class="range-field white-text col s12 m3 l3">
           Time with sound
-          <input type="number" name="timeWSound" class="white-text tooltipped" data-position="right" data-tooltip="Number of seconds where beat will be played" id="timeWSound" value="10" min="1" max="180" />
+          <input type="number" name="timeWSound" class="white-text tooltipped" data-position="right" data-tooltip="Number of seconds where beat will be played" id="timeWSound" value="10" min="1" max="180" required />
         </p>
       </div>
       <div class="row">
         <p class="white-text col s12 m3 l3">Cycles
-          <input type="number" name="cycles" id="cycles" class="white-text tooltipped" data-position="left" data-tooltip="Number of cyles where sound is on & off" value="1" min="1" max="10" />
+          <input type="number" name="cycles" id="cycles" class="white-text tooltipped" data-position="left" data-tooltip="Number of cyles where sound is on & off" value="1" min="1" max="10" required />
         </p>
         <p class="range-field white-text col s12 m3 l3">
           Time without sound
-          <input type="number" name="timeWOSound" id="timeWOSound" class="white-text tooltipped" data-position="right" data-tooltip="Number of seconds where beat is off" value="10" min="1" max="180" />
+          <input type="number" name="timeWOSound" id="timeWOSound" class="white-text tooltipped" data-position="right" data-tooltip="Number of seconds where beat is off" value="10" min="1" max="180" required />
         </p>
       </div>
       <div class="row">

@@ -13,6 +13,7 @@
     */
     createUserForm.addEventListener('submit', (e) => {
         e.preventDefault();
+        $("#modal1").modal('open');
         // Grab username and password of the user we want to create
         const createdUsername = createUserName.value;
         const createdPassword = createPassword.value;
@@ -22,6 +23,7 @@
         // Call the createUser function and pass in the new username and password
         createUser({email: createdUsername, password: createdPassword}).then(result => {
             console.log(result);
+            $("#modal1").modal().hide();
             alert(result.data.message);
             createUserName.value = "";
             createPassword.value = "";

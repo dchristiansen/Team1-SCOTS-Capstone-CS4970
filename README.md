@@ -23,7 +23,12 @@ From the research subject perspective, a user will be able to login to their pro
 ## Steps to Setup the Project
 1. Install Node.js
 2. Clone the master branch from https://github.com/dchristiansen/Team1-SCOTS-Capstone-CS4970
-3. In the root directory of the project, run `npm install -g firebase-tools`
-4. Run `firebase login` and login via the browser
-5. Run `firebase projects: list` to verify that the Scots-Capstone project is there
-6. To serve the application locally, run `firebase serve`
+3. Request access to the Scots-Capstone Firebase project from the owner
+4. In the root directory of the project, run `npm install -g firebase-tools`
+5. cd into the functions directory
+6. In the functions directory of the project, run `npm install` to install the node module dependencies for Firebase Functions
+7. Run `firebase login` and login via the browser
+8. Run `firebase projects: list` to verify that the Scots-Capstone project is there
+9. To serve the application locally, run `firebase serve`
+10. To deploy the application to the application, from the root project of your local project directory, run `firebase deploy --only hosting:ractrainer`
+11. Visit `https://ractrainer.firebaseapp.com/`
