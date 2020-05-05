@@ -162,6 +162,8 @@ async function populateParameters(assignmentId) {
         {
             // Get fields from the database
             var assignmentLabel = doc.data().assignmentLabel;
+            assignmentLabel = decode(assignmentLabel);
+
             var parameters = doc.data().parameters;
             // Set the values of the html document
             document.getElementById("assignment_name").value = assignmentLabel;
@@ -291,3 +293,10 @@ $(document).ready(function() {
         $(this).data('checked', checked);
     })
 })
+
+function decode(str)
+{
+    var txt = document.createElement('textarea');
+    txt.innerHTML = str;
+    return txt.value;
+}
