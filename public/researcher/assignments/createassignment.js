@@ -8,6 +8,8 @@ var btnSetAssignment = document.getElementById("btnSetAssignment");
 function insertAssignment() {
     // Grab fields from the document
     var assignmentName = document.getElementById("assignment_name").value;
+    assignmentName = encode(assignmentName);
+
     var bpm = document.getElementById("BPM").value;
     var timeWSound = document.getElementById("timeWSound").value;
     var cycles = document.getElementById("cycles").value;
@@ -56,3 +58,8 @@ firebase.auth().onAuthStateChanged(user => {
     }
 });
 
+function encode(str){
+    return String(str).replace(/[^\w. ]/gi, function(c){
+       return '&#'+c.charCodeAt(0)+';';
+    });
+  }
