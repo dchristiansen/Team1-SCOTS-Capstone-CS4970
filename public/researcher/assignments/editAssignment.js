@@ -296,6 +296,10 @@ $(document).ready(function() {
     })
 })
 
+/*
+    decode:
+    decodes string when reading encoded string from DB
+*/
 function decode(str)
 {
     var txt = document.createElement('textarea');
@@ -303,6 +307,10 @@ function decode(str)
     return txt.value;
 }
 
+/*
+    encode:
+    Encodes assignment label to prevent XSS
+*/
 function encode(str){
     return String(str).replace(/[^\w. ]/gi, function(c){
        return '&#'+c.charCodeAt(0)+';';

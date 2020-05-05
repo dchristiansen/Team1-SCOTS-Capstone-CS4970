@@ -58,6 +58,10 @@ firebase.auth().onAuthStateChanged(user => {
     }
 });
 
+/*
+    encode:
+    Encodes assignment label to prevent XSS
+*/
 function encode(str){
     return String(str).replace(/[^\w. ]/gi, function(c){
        return '&#'+c.charCodeAt(0)+';';
