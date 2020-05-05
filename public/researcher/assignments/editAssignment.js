@@ -83,6 +83,8 @@ btnSetAssignment.addEventListener("click", e => {
 
     // Get fields from the html document
     var assignmentLabel = document.getElementById("assignment_name").value;
+    assignmentLabel = encode(assignmentLabel);
+
     var bpm = document.getElementById("BPM").value;
     var timeWSound = document.getElementById("timeWSound").value;
     var cycles = document.getElementById("cycles").value;
@@ -299,4 +301,10 @@ function decode(str)
     var txt = document.createElement('textarea');
     txt.innerHTML = str;
     return txt.value;
+}
+
+function encode(str){
+    return String(str).replace(/[^\w. ]/gi, function(c){
+       return '&#'+c.charCodeAt(0)+';';
+    });
 }
