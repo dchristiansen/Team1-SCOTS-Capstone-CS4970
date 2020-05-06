@@ -9,8 +9,6 @@ let total = sessionStorage.getItem('totalTapArray');
 
 data = JSON.parse(data);
 
-//console.log(data);
-
 let yMax = 0, yMin = -1, xMax = 0;
 
 let beatTime = Math.round((60000 / bpm));
@@ -22,14 +20,11 @@ data.forEach(tap => {
 
     let timeSinceLast = tap.timeSinceLast;
     //Calculate pressTime taking into account cycle number
-    let pressTime = tap.pressTime + ((parseInt(soundOnTime) + parseInt(soundOffTime)) * (tap.cycleNumber - 1));
-    //Convert from milliseconds to seconds
-    pressTime /= 1000;
-
-    //console.log(pressTime);
+    let pressTime = (tap.pressTime/1000) + ((parseInt(soundOnTime) + parseInt(soundOffTime)) * (tap.cycleNumber - 1));
+    pressTime = Math.round(pressTime * 100) / 100
 
     //If this is a tap within our y-bounds (less than 2 times the beat time)
-    if (timeSinceLast < (2 * beatTime)) {
+    if (timeSinceLast < (2 * beatTime) && timeSinceLast > (beatTime / 2)) {
         //On sound reset get a negative number, this fixes the bug, might want to investigate a fix in taphandler
         if (timeSinceLast < 0) {
             timeSinceLast = (pressTime - prev.pressTime);
@@ -211,10 +206,8 @@ scoreString.innerHTML = "Score: " + score + "%";
 
 
 function resetToParamSelect() {
-    //console.log("resetting");
     firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
-            console.log("user logged in, going to dashboard");
             window.location = "userdashboard.html";
         } else {
             window.location = "parameters.html";
