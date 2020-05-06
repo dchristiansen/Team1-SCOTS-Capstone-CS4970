@@ -5,6 +5,7 @@
       <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
       <!--Import materialize.css-->
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+      <link rel="stylesheet" href="./results.css">
       <script src="/__/firebase/7.9.2/firebase-app.js"></script>
       <script src="/__/firebase/7.9.2/firebase-auth.js"></script>
       <script defer src="/__/firebase/init.js"></script>
@@ -31,7 +32,16 @@
       </ul>
     <div class="container">
       <h2 class="white-text center-align" id="score"></h2>
-      <canvas id="Results"></canvas>
+      <div class="row">
+        <div class="col">
+          <ul class="tabs tabs-fixed-width">
+            <li class="tab col black"><a href="#" onclick="changeToIntervalGraph()" class="active">Inter-Tap Interval Graph</a>
+            <li class="tab col black"><a href="#" onclick="changeToAsynchronyGraph()">Asynchrony Graph</a>
+          </ul>
+        </div>
+      </div>
+      <canvas id="intervalGraph"></canvas>
+      <canvas id="asynchronyGraph" style="display:none"></canvas>
       <button onclick="window.location='/user/start.html';" class="btn btn-small  pink darken-3 waves-effect">Play Again</button>
       <button onclick="resetToParamSelect()" class="btn btn-small  pink darken-3 waves-effect">Return to Parameter Select</button>
     </div>
@@ -49,6 +59,7 @@
       <script>
       $(document).ready(function(){
           $('.sidenav').sidenav();
+          $('.tabs').tabs();
         });
       </script>
     </body>

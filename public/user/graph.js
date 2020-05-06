@@ -1,4 +1,5 @@
-let ctx = document.getElementById('Results').getContext('2d');
+let intervalGraphElement = document.getElementById('intervalGraph');
+let asynchronyGraphElement = document.getElementById('asynchronyGraph');
 let score = sessionStorage.getItem('score');
 let data = sessionStorage.getItem('totalTapArray');
 let soundOnTime = sessionStorage.getItem('timeWSound');
@@ -9,11 +10,15 @@ let total = sessionStorage.getItem('totalTapArray');
 
 data = JSON.parse(data);
 
-let yMax = 0, yMin = -1, xMax = 0;
+let yMaxInterval = 0, yMinInterval = -1, xMax = 0;
 
 let beatTime = Math.round((60000 / bpm));
-//Creating the x,y pair array
-let chartArray = [];
+
+let yMaxAsynchrony = beatTime / 2, yMinAsynchrony = -yMaxAsynchrony;
+
+//Creating the x,y pair array for the interval and asynchrony arrays
+let intervalChartArray = [];
+let asynchronyChartArray = [];
 let prev;
 data.splice(0, 1);
 data.forEach(tap => {
@@ -21,7 +26,11 @@ data.forEach(tap => {
     let timeSinceLast = tap.timeSinceLast;
     //Calculate pressTime taking into account cycle number
     let pressTime = (tap.pressTime/1000) + ((parseInt(soundOnTime) + parseInt(soundOffTime)) * (tap.cycleNumber - 1));
-    pressTime = Math.round(pressTime * 100) / 100
+    pressTime = Math.round(pressTime * 100) / 100;
+
+    //Calculate the current beat taking into account cycle number
+    let currentBeat = (tap.beat/1000) + ((parseInt(soundOnTime) + parseInt(soundOffTime)) * (tap.cycleNumber - 1));
+    currentBeat = Math.round(currentBeat * 100) / 100;
 
     //If this is a tap within our y-bounds (less than 2 times the beat time)
     if (timeSinceLast < (2 * beatTime) && timeSinceLast > (beatTime / 2)) {
@@ -31,62 +40,84 @@ data.forEach(tap => {
         }
 
         //Get the max y value
-        if (timeSinceLast > yMax) {
-            yMax = timeSinceLast;
+        if (timeSinceLast > yMaxInterval) {
+            yMaxInterval = timeSinceLast;
         }
 
-        if (yMin == -1 || timeSinceLast < yMin) {
-            yMin = timeSinceLast;
+        if (yMinInterval == -1 || timeSinceLast < yMinInterval) {
+            yMinInterval = timeSinceLast;
         }
 
-        chartArray.push({ x: pressTime, y: timeSinceLast });
+        intervalChartArray.push({ x: pressTime, y: timeSinceLast });
     }
+    
+    console.log(tap.delta);
+    asynchronyChartArray.push({ x: currentBeat, y: tap.delta});
+
     prev = tap;
 });
 
-xMax = chartArray[chartArray.length - 1].x;
+xMax = asynchronyChartArray[asynchronyChartArray.length - 1].x;
 
-//console.log(chartArray);
+//Calculate the green, yellow, and red line positions based off of the bpm for the interval chart
+let greenYPosInterval = beatTime + (beatTime * 0.1);
+let greenYNegInterval = beatTime - (beatTime * 0.1);
+let yellowYPosInterval = beatTime + (beatTime * 0.15);
+let yellowYNegInterval = beatTime - (beatTime * 0.15);
+let redYPosInterval = beatTime + (beatTime * 0.2);
+let redYNegInterval = beatTime - (beatTime * 0.2);
 
-//Calculate the green, yellow, and red line positions based off of the bpm
-let greenYPos = beatTime + (beatTime * 0.1);
-let greenYNeg = beatTime - (beatTime * 0.1);
-let yellowYPos = beatTime + (beatTime * 0.15);
-let yellowYNeg = beatTime - (beatTime * 0.15);
-let redYPos = beatTime + (beatTime * 0.2);
-let redYNeg = beatTime - (beatTime * 0.2);
-
-let greenZonePos = [{ x: 0, y: greenYPos }, { x: xMax, y: greenYPos }];
-let greenZoneNeg = [{ x: 0, y: greenYNeg }, { x: xMax, y: greenYNeg }];
-let yellowZonePos = [{ x: 0, y: yellowYPos }, { x: xMax, y: yellowYPos }];
-let yellowZoneNeg = [{ x: 0, y: yellowYNeg }, { x: xMax, y: yellowYNeg }];
-let redZonePos = [{ x: 0, y: redYPos }, { x: xMax, y: redYPos }];
-let redZoneNeg = [{ x: 0, y: redYNeg }, { x: xMax, y: redYNeg }];
+let greenZonePosInterval = [{ x: 0, y: greenYPosInterval }, { x: xMax, y: greenYPosInterval }];
+let greenZoneNegInterval = [{ x: 0, y: greenYNegInterval }, { x: xMax, y: greenYNegInterval }];
+let yellowZonePosInterval = [{ x: 0, y: yellowYPosInterval }, { x: xMax, y: yellowYPosInterval }];
+let yellowZoneNegInterval = [{ x: 0, y: yellowYNegInterval }, { x: xMax, y: yellowYNegInterval }];
+let redZonePosInterval = [{ x: 0, y: redYPosInterval }, { x: xMax, y: redYPosInterval }];
+let redZoneNegInterval = [{ x: 0, y: redYNegInterval }, { x: xMax, y: redYNegInterval }];
 
 //Check if the red zones are greater than the current y min/max, if so set them to be our new min/max
-if (redYPos > yMax) {
-    yMax = redYPos;
+if (redYPosInterval > yMaxInterval) {
+    yMaxInterval = redYPosInterval;
 }
-if (redYNeg < yMin) {
-    yMin = redYNeg;
+if (redYNegInterval < yMinInterval) {
+    yMinInterval = redYNegInterval;
 }
 
-//Calculating the sound on/sound off lines
-let soundOffLine = [{ x: soundOnTime, y: yMax }, { x: soundOnTime, y: yMin }];
-let soundOnLine = [];
+//Calculate the green, yellow, and red line positions based off of the bpm for the asynchrony chart
+let greenYPosAsynchrony = beatTime / 6;
+let greenYNegAsynchrony = -greenYPosAsynchrony;
+let yellowYPosAsynchrony = beatTime / 3;
+let yellowYNegAsynchrony = -yellowYPosAsynchrony;
+let redYPosAsynchrony = yMaxAsynchrony;
+let redYNegAsynchrony = -redYPosAsynchrony;
+
+let greenZonePosAsynchrony = [{ x: 0, y: greenYPosAsynchrony }, { x: xMax, y: greenYPosAsynchrony }];
+let greenZoneNegAsynchrony = [{ x: 0, y: greenYNegAsynchrony }, { x: xMax, y: greenYNegAsynchrony }];
+let yellowZonePosAsynchrony = [{ x: 0, y: yellowYPosAsynchrony }, { x: xMax, y: yellowYPosAsynchrony }];
+let yellowZoneNegAsynchrony = [{ x: 0, y: yellowYNegAsynchrony }, { x: xMax, y: yellowYNegAsynchrony }];
+let redZonePosAsynchrony = [{ x: 0, y: redYPosAsynchrony }, { x: xMax, y: redYPosAsynchrony }];
+let redZoneNegAsynchrony = [{ x: 0, y: redYNegAsynchrony }, { x: xMax, y: redYNegAsynchrony }];
+
+//Calculate the sound on/sound off lines for interval and asynchrony graphs
+let soundOffLineInterval = [{ x: soundOnTime, y: yMaxInterval }, { x: soundOnTime, y: yMinInterval }];
+let soundOffLineAsynchrony = [{ x: soundOnTime, y: yMaxAsynchrony }, { x: soundOnTime, y: yMinAsynchrony }];
+let soundOnLineInterval = [], soundOnLineAsynchrony = [];
 let currentTime = parseInt(soundOnTime);
 for (let i = 1; i < cycles; i++) {
     currentTime += parseInt(soundOffTime);
-    soundOffLine.push(NaN);
-    soundOnLine.push({ x: currentTime, y: yMax }, { x: currentTime, y: yMin });
-    soundOnLine.push(NaN);
+    soundOffLineInterval.push(NaN);
+    soundOffLineAsynchrony.push(NaN);
+    soundOnLineInterval.push({ x: currentTime, y: yMaxInterval }, { x: currentTime, y: yMinInterval });
+    soundOnLineAsynchrony.push({ x: currentTime, y: yMaxAsynchrony }, { x: currentTime, y: yMinAsynchrony });
+    soundOnLineInterval.push(NaN);
+    soundOnLineAsynchrony.push(NaN);
     currentTime += parseInt(soundOnTime);
-    soundOffLine.push({ x: currentTime, y: yMax }, { x: currentTime, y: yMin });
+    soundOffLineInterval.push({ x: currentTime, y: yMaxInterval }, { x: currentTime, y: yMinInterval });
+    soundOffLineAsynchrony.push({ x: currentTime, y: yMaxAsynchrony }, { x: currentTime, y: yMinAsynchrony });
 }
 
 
-//Create the chart
-let myChart = new Chart(ctx, {
+//Create the chart for the intertap interval graph
+let intervalGraph = new Chart(intervalGraphElement.getContext('2d'), {
     type: 'scatter',
     data: {
         fill: true,
@@ -94,7 +125,7 @@ let myChart = new Chart(ctx, {
         datasets: [{
             order: 0,
             label: 'Inter-tap Interval',
-            data: chartArray,
+            data: intervalChartArray,
             pointStyle: 'rectRot',
             radius: 5,
             hoverRadius: 10,
@@ -102,7 +133,7 @@ let myChart = new Chart(ctx, {
             borderWidth: 1.2
         },
         {
-            data: greenZonePos,
+            data: greenZonePosInterval,
             borderColor: 'rgba(44, 155, 8, 0.6)',
             borderDash: [5, 15],
             type: 'line',
@@ -110,7 +141,7 @@ let myChart = new Chart(ctx, {
             pointRadius: 0,
             fill: false
         }, {
-            data: yellowZonePos,
+            data: yellowZonePosInterval,
             borderColor: 'rgba(218, 251, 8, 0.6)',
             borderDash: [5, 15],
             type: 'line',
@@ -118,7 +149,7 @@ let myChart = new Chart(ctx, {
             pointRadius: 0,
             fill: false
         }, {
-            data: redZonePos,
+            data: redZonePosInterval,
             borderColor: 'rgba(194, 33, 9, 0.6)',
             borderDash: [5, 15],
             type: 'line',
@@ -126,7 +157,7 @@ let myChart = new Chart(ctx, {
             pointRadius: 0,
             fill: false
         }, {
-            data: greenZoneNeg,
+            data: greenZoneNegInterval,
             borderColor: 'rgba(44, 155, 8, 0.6)',
             borderDash: [5, 15],
             type: 'line',
@@ -134,7 +165,7 @@ let myChart = new Chart(ctx, {
             pointRadius: 0,
             fill: false
         }, {
-            data: yellowZoneNeg,
+            data: yellowZoneNegInterval,
             borderColor: 'rgba(218, 251, 8, 0.6)',
             borderDash: [5, 15],
             type: 'line',
@@ -142,7 +173,7 @@ let myChart = new Chart(ctx, {
             pointRadius: 0,
             fill: false
         }, {
-            data: redZoneNeg,
+            data: redZoneNegInterval,
             borderColor: 'rgba(194, 33, 9, 0.6)',
             borderDash: [5, 15],
             type: 'line',
@@ -151,7 +182,7 @@ let myChart = new Chart(ctx, {
             fill: false
         },
         {
-            data: soundOffLine,
+            data: soundOffLineInterval,
             borderColor: 'rgba(255, 99, 132, 0.3)',
             borderDash: [5, 15],
             type: 'line',
@@ -161,7 +192,7 @@ let myChart = new Chart(ctx, {
             spanGaps: false
         },
         {
-            data: soundOnLine,
+            data: soundOnLineInterval,
             borderColor: 'rgba(12, 176, 12, 0.3)',
             borderDash: [5, 15],
             type: 'line',
@@ -176,8 +207,120 @@ let myChart = new Chart(ctx, {
             yAxes: [{
                 ticks: {
                     beginAtZero: false,
-                    max: yMax,
-                    min: yMin
+                    max: yMaxInterval,
+                    min: yMinInterval
+                }
+            }],
+            xAxes: [{
+                ticks: {
+                    max: xMax
+                }
+            }]
+        },
+        legend: {
+            labels: {
+                //Only display the label for the accuracy of taps
+                filter: function (legendItem, data) {
+                    return legendItem.datasetIndex == 0;
+                }
+            }
+        }
+    }
+});
+
+//Create the chart for the asynchrony graph
+let asynchronyGraph = new Chart(asynchronyGraphElement.getContext('2d'), {
+    type: 'scatter',
+    data: {
+        fill: true,
+        backgroundColor: 'rgba(255, 99, 132, 1)',
+        datasets: [{
+            order: 0,
+            label: 'Asynchrony',
+            data: asynchronyChartArray,
+            pointStyle: 'rectRot',
+            radius: 5,
+            hoverRadius: 10,
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 1.2
+        },
+        {
+            data: greenZonePosAsynchrony,
+            borderColor: 'rgba(44, 155, 8, 0.6)',
+            borderDash: [5, 15],
+            type: 'line',
+            showLine: true,
+            pointRadius: 0,
+            fill: false
+        }, {
+            data: yellowZonePosAsynchrony,
+            borderColor: 'rgba(218, 251, 8, 0.6)',
+            borderDash: [5, 15],
+            type: 'line',
+            showLine: true,
+            pointRadius: 0,
+            fill: false
+        }, {
+            data: redZonePosAsynchrony,
+            borderColor: 'rgba(194, 33, 9, 0.6)',
+            borderDash: [5, 15],
+            type: 'line',
+            showLine: true,
+            pointRadius: 0,
+            fill: false
+        }, {
+            data: greenZoneNegAsynchrony,
+            borderColor: 'rgba(44, 155, 8, 0.6)',
+            borderDash: [5, 15],
+            type: 'line',
+            showLine: true,
+            pointRadius: 0,
+            fill: false
+        }, {
+            data: yellowZoneNegAsynchrony,
+            borderColor: 'rgba(218, 251, 8, 0.6)',
+            borderDash: [5, 15],
+            type: 'line',
+            showLine: true,
+            pointRadius: 0,
+            fill: false
+        }, {
+            data: redZoneNegAsynchrony,
+            borderColor: 'rgba(194, 33, 9, 0.6)',
+            borderDash: [5, 15],
+            type: 'line',
+            showLine: true,
+            pointRadius: 0,
+            fill: false
+        },
+        {
+            data: soundOffLineAsynchrony,
+            borderColor: 'rgba(255, 99, 132, 0.3)',
+            borderDash: [5, 15],
+            type: 'line',
+            showLine: true,
+            pointRadius: 0,
+            fill: false,
+            spanGaps: false
+        },
+        {
+            data: soundOnLineAsynchrony,
+            borderColor: 'rgba(12, 176, 12, 0.3)',
+            borderDash: [5, 15],
+            type: 'line',
+            showLine: true,
+            pointRadius: 0,
+            fill: false,
+            spanGaps: false
+        }],
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: false,
+                    max: yMaxAsynchrony,
+                    min: yMinAsynchrony
                 }
             }],
             xAxes: [{
@@ -215,3 +358,12 @@ function resetToParamSelect() {
     });
 }
 
+function changeToIntervalGraph() {
+    intervalGraphElement.style.display = "initial";
+    asynchronyGraphElement.style.display = "none";
+}
+
+function changeToAsynchronyGraph() {
+    intervalGraphElement.style.display = "none";
+    asynchronyGraphElement.style.display = "initial";
+}

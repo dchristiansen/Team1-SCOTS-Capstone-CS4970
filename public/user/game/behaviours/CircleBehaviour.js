@@ -25,18 +25,14 @@ export default class CircleBehaviour extends Base.Behavior {
     pulse() {
         if(Input.keys[' '] || Input.touch) {
             this.circle.radius = 90;
-            let timeSinceLast = this.tapHandler.tapDown();
-
-            console.log(this.tapHandler.beatTime);
-
+            let delta = this.tapHandler.tapDown();
+            
             if(this.feedback == "true") {
                 if (this.tapHandler.timer.soundOn) {
-                    console.log(timeSinceLast);
-                    console.log(this.tapHandler.beatTime + this.tapHandler.beatTime * 0.1);
-                    if ((Math.abs(timeSinceLast) < (this.tapHandler.beatTime + this.tapHandler.beatTime * 0.1)) && (Math.abs(timeSinceLast) > (this.tapHandler.beatTime - this.tapHandler.beatTime * 0.1))) {
+                    if (Math.abs(delta) < this.tapHandler.beatTime / 6) {
                         this.circle.fill = "green";
                     }
-                    else if ((Math.abs(timeSinceLast) < (this.tapHandler.beatTime + this.tapHandler.beatTime * 0.15)) && (Math.abs(timeSinceLast) > (this.tapHandler.beatTime - this.tapHandler.beatTime * 0.15))) {
+                    else if (Math.abs(delta) < this.tapHandler.beatTime * 2 / 6) {
                         this.circle.fill = "yellow"
                     }
                     else {
