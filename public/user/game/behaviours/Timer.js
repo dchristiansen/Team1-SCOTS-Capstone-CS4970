@@ -23,6 +23,7 @@ export default class Timer extends Base.Behavior {
     mostRecentBeat = 0;
     volumeChange;
     currentCycle = 1;
+    soundMax = true;
 
     constructor(bpm, soundPhaseTime, noSoundPhaseTime, cycles) {
         super();
@@ -48,6 +49,17 @@ export default class Timer extends Base.Behavior {
     playBeat() {
         //Check if we're in the sound on phase
         if (this.soundOn) {
+            
+            //Check if the sound has maxed out if we are in a new cycle
+            if(!this.soundMax) {
+                let newVolume = this.beatSound.volume + this.volumeChange;
+                if(newVolume >= 1) {
+                    newVolume = 1;
+                    this.soundMax = true;
+                }
+                this.beatSound.volume = newVolume
+            }
+
             //Check if volume needs to be lowered (3/4 of the way through soundPhase), if so lower it
             if (this.currentTime >= (this.startTime + (0.75 * this.soundPhaseTime)) && this.startTime != -1) {
                 let newVolume = this.beatSound.volume - this.volumeChange;
@@ -60,20 +72,20 @@ export default class Timer extends Base.Behavior {
             this.beatSound.play();
         }
         //If we're in the sound off phase, check if we're not on the last cycle
-        else if (this.currentCycle != this.cycles) {
-            //If not on the last cycle, check if we need to raise volume (3/4 of the way through soundOffPhase)
-            if (this.currentTime >= (this.phaseSwitchTime + (0.75 * this.noSoundPhaseTime)) && this.startTime != -1) {
-                let newVolume = this.beatSound.volume + this.volumeChange;
-                if (newVolume > 1) {
-                    newVolume = 1;
-                }
-                //console.log("Increasing volume to " + newVolume);
-                this.beatSound.volume = newVolume;
-            }
-            if (this.beatSound.volume > 0){
-                this.beatSound.play();
-            }
-        }
+        // else if (this.currentCycle != this.cycles) {
+        //     //If not on the last cycle, check if we need to raise volume (3/4 of the way through soundOffPhase)
+        //     if (this.currentTime >= (this.phaseSwitchTime + (0.75 * this.noSoundPhaseTime)) && this.startTime != -1) {
+        //         let newVolume = this.beatSound.volume + this.volumeChange;
+        //         if (newVolume > 1) {
+        //             newVolume = 1;
+        //         }
+        //         //console.log("Increasing volume to " + newVolume);
+        //         this.beatSound.volume = newVolume;
+        //     }
+        //     if (this.beatSound.volume > 0){
+        //         this.beatSound.play();
+        //     }
+        // }
         this.mostRecentBeat = new Date().getTime();
     }
 
@@ -99,6 +111,8 @@ export default class Timer extends Base.Behavior {
                 //console.log("Turning sound off");
                 this.soundOn = false;
                 this.tapHandler.soundOn = false;
+                this.beatSound.volume = 0;
+                this.soundMax = false;
             }
             //In the sound off phase
         } else {
@@ -145,7 +159,6 @@ export default class Timer extends Base.Behavior {
                         //console.log("Resetting");
                         this.currentCycle++;
                         this.startTimer();
-                        this.beatSound.volume = 1;
                         this.tapHandler.currentCycle = this.currentCycle;
                     }
                 }
