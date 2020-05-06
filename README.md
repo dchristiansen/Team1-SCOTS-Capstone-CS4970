@@ -32,3 +32,7 @@ From the research subject perspective, a user will be able to login to their pro
 9. To serve the application locally, run `firebase serve`
 10. To deploy the application to the application, from the root project of your local project directory, run `firebase deploy --only hosting:ractrainer`
 11. Visit `https://ractrainer.firebaseapp.com/`
+
+## Other Notes
+Our database security rules are not included in the codebase. You can view and edit them in the Google Firebase Project Console.
+
