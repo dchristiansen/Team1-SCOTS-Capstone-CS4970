@@ -83,6 +83,8 @@ btnSetAssignment.addEventListener("click", e => {
 
     // Get fields from the html document
     var assignmentLabel = document.getElementById("assignment_name").value;
+    assignmentLabel = encode(assignmentLabel);
+
     var bpm = document.getElementById("BPM").value;
     var timeWSound = document.getElementById("timeWSound").value;
     var cycles = document.getElementById("cycles").value;
@@ -162,6 +164,8 @@ async function populateParameters(assignmentId) {
         {
             // Get fields from the database
             var assignmentLabel = doc.data().assignmentLabel;
+            assignmentLabel = decode(assignmentLabel);
+
             var parameters = doc.data().parameters;
             // Set the values of the html document
             document.getElementById("assignment_name").value = assignmentLabel;
@@ -291,3 +295,24 @@ $(document).ready(function() {
         $(this).data('checked', checked);
     })
 })
+
+/*
+    decode:
+    decodes string when reading encoded string from DB
+*/
+function decode(str)
+{
+    var txt = document.createElement('textarea');
+    txt.innerHTML = str;
+    return txt.value;
+}
+
+/*
+    encode:
+    Encodes assignment label to prevent XSS
+*/
+function encode(str){
+    return String(str).replace(/[^\w. ]/gi, function(c){
+       return '&#'+c.charCodeAt(0)+';';
+    });
+}
