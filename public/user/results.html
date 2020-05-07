@@ -1,3 +1,6 @@
+<!-- results.html 
+This page displays the score and the graph of the gameplay
+-->
 <!DOCTYPE html>
   <html>
     <head>
@@ -31,8 +34,12 @@
       </ul>
     <div class="container">
       <h2 class="white-text center-align" id="score"></h2>
+      
+      <!-- Canvas to draw the graph -->
       <canvas id="Results"></canvas>
+      <!-- Play again button -->
       <button onclick="window.location='/user/start.html';" class="btn btn-small  pink darken-3 waves-effect">Play Again</button>
+      <!-- Button to change parameters -->
       <button onclick="resetToParamSelect()" class="btn btn-small  pink darken-3 waves-effect">Return to Parameter Select</button>
     </div>
 

@@ -1,3 +1,7 @@
+<!-- parameters.html
+This page allows an open user without an account to edit the parameters
+and then proceed to play the game
+-->
 <!DOCTYPE html>
 <html>
 
@@ -41,19 +45,23 @@
       <div class="row">
         <p class="range-field white-text col s12 m3 l3">
           BPM
+          <!-- Beats per minute -->
           <input type="number" id="BPM" name="BPM" class="white-text tooltipped" data-position="left"  data-tooltip="Beats Per Minute" value="100" min="30" max="1200" required />
         </p>
         <p class="range-field white-text col s12 m3 l3">
           Time with sound
+          <!-- Time with sound -->
           <input type="number" name="timeWSound" class="white-text tooltipped" data-position="right" data-tooltip="Number of seconds where beat will be played" id="timeWSound" value="10" min="1" max="180" required />
         </p>
       </div>
       <div class="row">
         <p class="white-text col s12 m3 l3">Cycles
+          <!-- Cycles -->
           <input type="number" name="cycles" id="cycles" class="white-text tooltipped" data-position="left" data-tooltip="Number of cyles where sound is on & off" value="1" min="1" max="10" required />
         </p>
         <p class="range-field white-text col s12 m3 l3">
           Time without sound
+          <!-- Time with sound -->
           <input type="number" name="timeWOSound" id="timeWOSound" class="white-text tooltipped" data-position="right" data-tooltip="Number of seconds where beat is off" value="10" min="1" max="180" required />
         </p>
       </div>
@@ -62,11 +70,13 @@
       <div class="switch col s3">
         <label class="white-text">
           Off
+          <!-- Feecback checkbox -->
           <input type="checkbox" id="feedback" class="pink" checked>
           <span class="lever tooltipped" data-position="bottom" data-tooltip="If on will show feedback based on tap"></span>
           On
         </label>
       </div>
+      <!-- Button to set the parameters in sessionStorage. Clicking this button redirects to the start page -->
       <div class="col">
         <button onclick="setParams()" class="btn btn-small  pink darken-3 waves-effect">Start Game</button>
         </div>
