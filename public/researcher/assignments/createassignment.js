@@ -13,11 +13,12 @@ function insertAssignment() {
     var cycles = document.getElementById("cycles").value;
     var timeWOSound = document.getElementById("timeWOSound").value;
     var feedback = document.getElementById("feedback").checked;
+    var defaultAssignment = document.querySelector("#default").checked;
 
     var userIDs = [];
 
     // Call imported createAssignment function to insert assignment into the database
-    createAssignment(assignmentName, bpm, timeWSound, timeWOSound, cycles, feedback, userIDs);
+    createAssignment(assignmentName, bpm, timeWSound, timeWOSound, cycles, feedback, defaultAssignment, userIDs);
 
 }
 btnSetAssignment.onclick = insertAssignment;

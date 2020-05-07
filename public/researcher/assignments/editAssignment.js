@@ -88,6 +88,7 @@ btnSetAssignment.addEventListener("click", e => {
     var cycles = document.getElementById("cycles").value;
     var timeWOSound = document.getElementById("timeWOSound").value;
     var feedback = document.getElementById("feedback").checked;
+    var defaultAssignment = document.querySelector("#default").checked;
 
     // Get the assignment document id
     let params = new URLSearchParams(location.search);
@@ -99,7 +100,7 @@ btnSetAssignment.addEventListener("click", e => {
         cycles: cycles,
         feedback: feedback,
         soundOffTime: timeWOSound,
-        soundOnTime: timeWSound
+        soundOnTime: timeWSound,
     };
 
     // Assignment document reference
@@ -108,7 +109,8 @@ btnSetAssignment.addEventListener("click", e => {
     // Update the assignment label and the parameters
     assignmentDoc.update({
         assignmentLabel: assignmentLabel,
-        parameters: parameters
+        parameters: parameters,
+        default: defaultAssignment,
     }).then(function() {
         alert("Assignment successfully updated.");
     }).catch(function(error) {
@@ -151,12 +153,15 @@ async function populateParameters(assignmentId) {
             // Get fields from the database
             var assignmentLabel = doc.data().assignmentLabel;
             var parameters = doc.data().parameters;
+            var defaultAssignment = doc.data().default;
+            console.log(doc.data().default);
             // Set the values of the html document
             document.getElementById("assignment_name").value = assignmentLabel;
             document.getElementById("BPM").value = parameters.bpm;
             document.getElementById("timeWSound").value = parameters.soundOnTime;
             document.getElementById("timeWOSound").value = parameters.soundOffTime;
             document.getElementById("cycles").value = parameters.cycles;
+            document.querySelector("#default").checked = defaultAssignment;
             if (!parameters.feedback)
             {
                 document.getElementById("feedback").removeAttribute("checked");
