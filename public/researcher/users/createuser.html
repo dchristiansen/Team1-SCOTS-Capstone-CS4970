@@ -1,3 +1,6 @@
+<!-- createuser.html
+This page allows a researcher to create a user
+-->
 <!DOCTYPE html>
 <html>
     <head>
@@ -39,23 +42,27 @@
             <h2 class="white-text">Create User</h1>
             <div class="row">
                 <div class="input-field col s12 m6 l6">
+                    <!-- New username field -->
                     <input type="text" id="createUname" class="white-text" onkeyup='check();'>
                     <label class="active white-text" for="createUname">Username</label>
                 </div>
             </div>
             <div class="row">
                 <div class="input-field col s12 m6 l6">
+                    <!-- New user password field-->
                     <input type="password" id="createPassword" class="validate white-text" onkeyup='check();'>
                     <label class="active white-text" for="createPassword">Password</label>
                 </div>
             </div>
             <div class="row">
                 <div class="col">
+                    <!-- Button to create a new user -->
                     <button id="btnCreateUser" disabled="true" class="btn btn-large pink darken-2 waves-effect"><i class="material-icons right">chevron_right</i>Create User</button>
                 </div>
             </div>
         </div>
       </form>
+      <!-- Loading modal -->
       <div id="modal1" class="modal">
         <div class="modal-content grey darken-4">
           <div class="row" style="text-align: center;">

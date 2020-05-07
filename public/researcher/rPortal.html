@@ -1,3 +1,8 @@
+<!-- rPortal.html 
+This page allows a researcher to view all the patients in the system. Clicking on an entry in the table redirects the user
+to userData.html. Here, a researcher can also give a current user of the system administrative privileges. The navbar on the researcher portal
+contains links to assignments.html, createassignment.html, and createuser.html
+-->
 <!DOCTYPE html>
   <html>
     <head>
@@ -40,21 +45,26 @@
       </ul>
 
   <div class="container">
+      <!-- Heading to welcome the user -->
       <h1 class="white-text" id="greeting"></h1>
       <h3 class="white-text">View Users</h3>
+        <!-- Modal to give a user admin privileges-->
           <div id="modal1" class="modal">
             <div class="modal-content grey darken-4">
               <h2 class="white-text">Create an Admin User</h2>
               <form class="col s12 width=50% font-size=50% admin-action">
                 <div class="row">
                   <div class="input-field col s6">
+                    <!-- Email of the user the researcher wants to give admin privileges -->
                     <input type="email" id="admin-email" class="white-text"/>
                     <label class="active white-text" for="admin-email">Enter a user to make an admin</label>
                   </div>
                 </div>
                 <div class="row">
+                  <!-- Button to make a user an admin -->
                   <button id="btnMakeAdmin" class="btn btn-small pink darken-3 waves effect">Make Admin</button>
                 </div>
+                <!-- Loading spinner -->
                 <div id="spinner" class="loader col" style="visibility: hidden;">
                   <svg version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                      width="60px" height="60px" viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve">
@@ -74,16 +84,17 @@
           </div>
       <div class="row">
         <div class="col " style="padding-top:3.5%">
+          <!-- Button to open up modal -->
           <a class="waves-effect waves-light btn modal-trigger pink darken-2" href="#modal1">Make a User an Admin</a>
         </div>
         <div class="col s12 m4 l4 offset-m6 offset-l5">
+          <!-- Search box to filter through users in the system -->
           <input type="text" id="search" style="margin-top:8%"  class="white-text" placeholder="Search User Id...">
         </div>
 
       </div>
 
-
-
+      <!-- Table of all users in the system -->
       <table class="highlight white-text pink darken-3 centered" style="margin-top:3%">
         <thead>
           <tr>
