@@ -154,7 +154,6 @@ async function populateParameters(assignmentId) {
             var assignmentLabel = doc.data().assignmentLabel;
             var parameters = doc.data().parameters;
             var defaultAssignment = doc.data().default;
-            console.log(doc.data().default);
             // Set the values of the html document
             document.getElementById("assignment_name").value = assignmentLabel;
             document.getElementById("BPM").value = parameters.bpm;
