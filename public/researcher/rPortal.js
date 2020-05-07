@@ -12,7 +12,7 @@ const table = document.querySelector("#tablebody");
 const pagination = document.querySelector("#pagination");
 
 let userData;
-let curentUserArray;
+let currentUserArray;
 let numPages;
 let currentPage = 1;
 let entriesPerPage = 5;
@@ -165,17 +165,17 @@ function createPagination() {
 
   //Create the buttons for each page
   for (let i = 0; i < numPages; i++) {
-    let currentPage = i + 1;
+    let current = i + 1;
     let li = document.createElement('li');
-    li.id = "page" + currentPage;
+    li.id = "page" + current;
     li.className = "waves-effect";
-    if(i == 0) {
+    if(current == currentPage) {
       li.className += " active";
     }
 
     let a = document.createElement('a');
-    a.setAttribute('data-page', currentPage)
-    a.innerHTML = currentPage;
+    a.setAttribute('data-page', current)
+    a.innerHTML = current;
 
     li.appendChild(a);
     pagination.appendChild(li);
@@ -201,25 +201,19 @@ function createPagination() {
 /*
   Filter the table by the users id
 */
-$(document).ready(function(){
-  $('#search').on('keyup', function(){
-    var input, filter, table, tr, td, i, txtValue;
-      input = document.getElementById("search");
-      filter = input.value.toUpperCase();
-      table = document.getElementById("tablebody");
-      tr = table.getElementsByTagName("tr");
-
-      for (i = 0; i < tr.length; i++) {
-          td = tr[i].getElementsByTagName("td")[0];
-          if (td) {
-            txtValue = td.textContent || td.innerText;
-            if (txtValue.toUpperCase().indexOf(filter) > -1) {
-              tr[i].style.display = "";
-            } else {
-              tr[i].style.display = "none";
-            }
-          }
-        }
+$(document).ready(function () {
+  $('#search').on('keyup', function () {
+    var input, filter;
+    currentUserArray = [];
+    input = document.getElementById("search");
+    filter = input.value.toUpperCase();
+    userData.forEach(user => {
+      let userId = user.data.userID;
+      if(userId.toUpperCase().indexOf(filter) > -1) {
+        currentUserArray.push(user);
+      }
+    });
+    populateTable(1);
   });
 });
 
@@ -239,7 +233,7 @@ $("#pagination").on("click", "a", function changePage(){
 
         //Ensure that the new page can be accessed (in case left or right chevrons move it past the number of pages)
         if(newPage <= numPages && newPage > 0) {
-          populateTable(newArray);
+          populateTable(newPage);
 
           //Change the active page in the pagination menu
           document.querySelector("#page" + currentPage).className = "waves-effect";

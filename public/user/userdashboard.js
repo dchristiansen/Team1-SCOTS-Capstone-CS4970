@@ -8,6 +8,7 @@ const assignmentTable = document.querySelector("#tablebody");
 const pagination = document.querySelector("#pagination");
 
 let assignmentsArray = [];
+let currentAssignmentArray;
 let currentPage = 1;
 let numPages;
 let entriesPerPage = 5;
@@ -23,13 +24,14 @@ firebase.auth().onAuthStateChanged(async function (user) {
 
         //Get all assignments for the current user
         assignmentsArray = await getAssignmentsForUser(authId);
-        let firstArray = assignmentsArray.dataArray.slice(0, 4);
-
-        //For the first five assignments, display them on the table
-        populateTable(firstArray);
+        console.log(assignmentsArray);
+        currentAssignmentArray = assignmentsArray = assignmentsArray.dataArray;
 
         //Get the total number of pages for pagination
-        numPages = Math.ceil(assignmentsArray.dataArray.length / entriesPerPage);
+        numPages = Math.ceil(currentAssignmentArray.length / entriesPerPage);
+
+        //For the first five assignments, display them on the table
+        populateTable(1);
 
         createPagination();
     } else {
@@ -39,9 +41,13 @@ firebase.auth().onAuthStateChanged(async function (user) {
     }
 });
 
-function populateTable(assignmentsArray) {
+function populateTable(newPage) {
     assignmentTable.innerHTML = "";
-    assignmentsArray.forEach(assignment => {
+
+    let startPosition = (newPage - 1) * entriesPerPage;
+    let newArray = currentAssignmentArray.slice(startPosition, startPosition + entriesPerPage);
+
+    newArray.forEach(assignment => {
         let tr = document.createElement('tr');
         tr.innerHtml = "<tr>";
         tr.innerHTML += "<td>" + assignment.data.assignmentLabel + "</td>";
@@ -63,12 +69,16 @@ function populateTable(assignmentsArray) {
         //Append the row to the table
         assignmentTable.appendChild(tr);
     });
+    createPagination();
 }
 
 function createPagination() {
+    pagination.innerHTML = "";
+    numPages = Math.ceil(currentAssignmentArray.length/entriesPerPage);
+
     //Create the left chevron for page scrolling
     let leftChevron = document.createElement('li');
-    leftChevron.className = "waves-effect disabled";
+    leftChevron.className = "waves-effect";
 
     let leftChevronA = document.createElement('a');
     leftChevronA.href = "#!";
@@ -84,13 +94,16 @@ function createPagination() {
 
     //Create the buttons for each page
     for (let i = 0; i < numPages; i++) {
-        let currentPage = i + 1;
+        let current = i + 1;
         let li = document.createElement('li');
         li.className = "waves-effect";
+        if(current == currentPage) {
+            li.className += " active";
+        }
 
         let a = document.createElement('a');
-        a.setAttribute('data-page', currentPage)
-        a.innerHTML = currentPage;
+        a.setAttribute('data-page', current)
+        a.innerHTML = current;
 
         li.appendChild(a);
         pagination.appendChild(li);
@@ -98,7 +111,7 @@ function createPagination() {
 
     //Add the right chevron for page scrolling
     let rightChevron = document.createElement('li');
-    rightChevron.className = "waves-effect disabled";
+    rightChevron.className = "waves-effect";
 
     let rightChevronA = document.createElement('a');
     rightChevronA.href = "#!";
@@ -150,12 +163,11 @@ $("#pagination").on("click", "a", function changePage() {
             newPage = currentPage - 1;
         }
 
-        console.log(newPage);
-
         if (newPage <= numPages && newPage > 0) {
-            let startPosition = (newPage - 1) * entriesPerPage;
-            let newArray = assignmentsArray.dataArray.slice(startPosition, startPosition + entriesPerPage);
             populateTable(newArray);
+
+            document.querySelector("#page" + currentPage).className = "waves-effect";
+            document.querySelector("#page" + newPage).className = "waves-effect active";
             currentPage = newPage;
         }
     }

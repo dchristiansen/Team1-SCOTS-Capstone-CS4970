@@ -164,7 +164,7 @@ $(document).ready(function () {
     window.location.href = this.dataset.href;
   });
   $('#searchAssignment').on('keyup', function () {
-    var input, filter, table, tr, td, i, txtValue;
+    var input, filter;
     currentAssignmentArray = [];
     input = document.getElementById("searchAssignment");
     filter = input.value.toUpperCase();
@@ -172,9 +172,9 @@ $(document).ready(function () {
       let assignmentText = assignment.data.assignmentLabel;
       if (assignmentText.toUpperCase().indexOf(filter) > -1) {
         currentAssignmentArray.push(assignment);
-        populateTable(1);
       }
     });
+    populateTable(1);
   });
 });
 
@@ -194,14 +194,14 @@ $("#pagination").on("click", "a", function changePage(){
 
       //Ensure that the new page can be accessed (in case left or right chevrons move it past the number of pages)
       if(newPage <= numPages && newPage > 0) {
+        //Change the current page
+        currentPage = newPage;
+
         populateTable(newPage);
 
         //Change the active page in the pagination menu
         document.querySelector("#page" + currentPage).className = "waves-effect";
         document.querySelector("#page" + newPage).className = "waves-effect active";
-
-        //Change the current page
-        currentPage = newPage;
       }
   }
 });
