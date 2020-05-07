@@ -10,7 +10,9 @@ var username;
 // Get table from the html document
 const table = document.querySelector("#tablebody");
 const pagination = document.querySelector("#pagination");
+
 let userData;
+let curentUserArray;
 let numPages;
 let currentPage = 1;
 let entriesPerPage = 5;
@@ -32,16 +34,13 @@ firebase.auth().onAuthStateChanged(user => {
       {
         // Get users
         let usersCall = await getUsers();
-        userData = usersCall.dataArray;
-        let firstUsers = userData.slice(0,entriesPerPage);
+        currentUserArray = userData = usersCall.dataArray;
+
         //Calculate the total number of pages
-        numPages = Math.ceil(userData.length/entriesPerPage);
+        numPages = Math.ceil(currentUserArray.length/entriesPerPage);
 
         //Populate the table with the first batch of users
-        populateTable(firstUsers);
-
-        //Create the pagination icons
-        createPagination();
+        populateTable(1);
       }
       // Else redirect to the userdashboard
       else
@@ -91,10 +90,17 @@ adminForm.addEventListener('submit', (e) => {
 
   Input: array userData, the users for the current page
 */
-function populateTable(userData) {
+function populateTable(newPage) {
     table.innerHTML = "";
+
+    //Calculate the position within the userData array to begin at
+    let startPosition = (newPage-1) * entriesPerPage;
+
+    //Grab the new array to display using populateTable
+    let newArray = currentUserArray.slice(startPosition, startPosition + entriesPerPage);
+
     // Loop through userData
-    userData.forEach(function (obj) {
+    newArray.forEach(function (obj) {
         // Create a row entry for each user
         let tr = document.createElement('tr');
         
@@ -130,6 +136,7 @@ function populateTable(userData) {
         // Append the row to the table
         table.appendChild(tr);
     });
+    createPagination();
 }
 
 /*
@@ -138,6 +145,8 @@ function populateTable(userData) {
   based on the number of pages
 */
 function createPagination() {
+  pagination.innerHTML = "";
+  numPages = Math.ceil(currentUserArray.length/entriesPerPage);
   //Create the left chevron for page scrolling
   let leftChevron = document.createElement('li');
   leftChevron.className = "waves-effect";
@@ -230,11 +239,6 @@ $("#pagination").on("click", "a", function changePage(){
 
         //Ensure that the new page can be accessed (in case left or right chevrons move it past the number of pages)
         if(newPage <= numPages && newPage > 0) {
-          //Calculate the position within the userData array to begin at
-          let startPosition = (newPage-1) * entriesPerPage;
-
-          //Grab the new array to display using populateTable
-          let newArray = userData.slice(startPosition, startPosition + entriesPerPage);
           populateTable(newArray);
 
           //Change the active page in the pagination menu
