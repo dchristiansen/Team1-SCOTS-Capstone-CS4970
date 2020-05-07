@@ -7,7 +7,13 @@ const greeting = document.getElementById("greeting");
 // username
 var username;
 
-// Observer for FirebaseAuth
+/*
+  onAuthStateChanged(user)
+  Observer for Authentication State:
+  If the user is logged in and an admin, then the table of all users
+  in the system will be populated. Otherwise, go back to the user dashboard
+  or back to the login screen if not authenticated
+*/
 firebase.auth().onAuthStateChanged(user => {
   
   // If user is signed in

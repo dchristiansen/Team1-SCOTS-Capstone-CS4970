@@ -6,6 +6,14 @@ var username;
 
 const assignmentTable = document.querySelector("#tablebody");
 
+
+/*
+  onAuthStateChanged(user)
+  Observer for Authentication State:
+  If the user is logged in and the user is not an admin, then this listener will
+  populate the assignments table. Otherwise, go back to the researcher portal
+  or back to the login screen if not authenticated
+*/
 firebase.auth().onAuthStateChanged(async function(user) {
     if (user) {
         

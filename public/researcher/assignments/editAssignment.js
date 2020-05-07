@@ -248,7 +248,13 @@ async function populateUserTable(assignmentId)
     });
 }
 
-// Observer for FirebaseAuth
+/*
+  onAuthStateChanged(user)
+  Observer for Authentication State:
+  If the user is logged in and the user is an admin, then this listener will
+  set the header, parameters, and the user table. Otherwise, go back to the user dashboard
+  or back to the login screen if not authenticated
+*/
 firebase.auth().onAuthStateChanged((user) => {
     // If user is logged in
     if(user)
