@@ -34,7 +34,12 @@ function insertAssignment() {
 }
 btnSetAssignment.onclick = insertAssignment;
 
-// Oberserver for FirebaseAuth
+/*
+  onAuthStateChanged(user)
+  Observer for Authentication State:
+  If the user is not logged in, then redirect to the login screen.
+  If a user is logged in and and not an admin, redirect to userdashboard
+*/
 firebase.auth().onAuthStateChanged(user => {
     // If user is not logged in, then redirect to the login page
     if(!user) {

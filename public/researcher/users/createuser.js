@@ -35,7 +35,13 @@
         });
     });
 
-    // Observer for FirebaseAuth
+
+    /*
+        onAuthStateChanged(user)
+        Observer for Authentication State:
+        If the user is not logged in, redirect to login page. If the user is logged in and
+        not an admin, then redirect to the user dashboard
+    */
     firebase.auth().onAuthStateChanged(user => {
         // If user is not signed in redirect to login page
         if(!user)
