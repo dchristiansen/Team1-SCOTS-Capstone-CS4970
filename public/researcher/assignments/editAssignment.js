@@ -373,7 +373,6 @@ $(document).ready(function() {
         for(let i = 0; i < checkedArray.length; i++) {
             checkedArray[i] = checked;
         }
-        console.log(checkedArray);
     })
 })
 
