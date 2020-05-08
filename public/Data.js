@@ -31,7 +31,7 @@ var firestore = firebase.firestore();
 
 //Description: Creates new session upon completion of game. Stores tap objects as an array of TapObjects.
 //Also updates the user document with the latest session time
-function createSession(assignmentID, bpm, soundOn, soundOff, cycles, feedback, userID, tapData){
+function createSession(assignmentID, bpm, soundOn, soundOff, cycles, feedback, userID, tapData, score){
 
     // Create a batch
     var batch = firestore.batch();
@@ -50,7 +50,8 @@ function createSession(assignmentID, bpm, soundOn, soundOff, cycles, feedback, u
         },
         userID: userID,
         sessionTime: firebase.firestore.Timestamp.now(),
-        taps: tapData
+        taps: tapData,
+        score: score
     };
     batch.set(newSessionRef, docData);
 
@@ -252,7 +253,7 @@ async function getUsers(){
 //Description: Creates new assignment for listed users based off of passed parameters
 
 //TODO: Add error handling
-function createAssignment(assignmentLabel, bpm, soundOn, soundOff, cycles, feedback, defaultAssignment, userIDs ){
+function createAssignment(assignmentLabel, bpm, soundOn, soundOff, cycles, feedback, defaultAssignment, userIDs){
     let assignments = firestore.collection("assignments");
     let docData = {
         assignmentLabel: assignmentLabel,
