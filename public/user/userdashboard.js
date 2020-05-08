@@ -45,29 +45,11 @@ firebase.auth().onAuthStateChanged(async function(user) {
 
         //Get the total number of pages for pagination
         numPages = Math.ceil(currentAssignmentArray.length / entriesPerPage);
-                //For each assignment fetched, add the corresponding row
-                assignmentsArray.dataArray.forEach(assignment => {
-                    let tr = document.createElement('tr');
-                    tr.innerHtml = "<tr>";
-                    tr.innerHTML += "<td>" + assignment.data.assignmentLabel + "</td>";
-                    tr.innerHTML += "<td>" + assignment.data.parameters.bpm + "</td>";
-                    tr.innerHTML += "<td>" + assignment.data.parameters.soundOnTime + "</td>";
-                    tr.innerHTML += "<td>" + assignment.data.parameters.soundOffTime + "</td>";
-                    if(assignment.data.parameters.feedback) {
-                        tr.innerHTML += "<td>On</td>";
-                    } else {
-                        tr.innerHTML += "<td>Off</td>";
-                    }
-                    tr.innerHTML += "<td>" + assignment.data.parameters.cycles + "</td>";
-                    tr.innerHTML += "</tr>";
+         //For the first five assignments, display them on the table
+         populateTable(1);
 
-                    //Set the parameter attribute to the values within the table
-                    tr.setAttribute('data-parameters', assignment.data.assignmentLabel + "," + assignment.data.parameters.bpm + "," + assignment.data.parameters.soundOnTime + ","
-                    + assignment.data.parameters.soundOffTime + "," + assignment.data.parameters.feedback + "," + assignment.data.parameters.cycles);
-
-                    //Append the row to the table
-                    assignmentTable.appendChild(tr);
-                });
+         createPagination();
+                
             }
             else 
             {
@@ -77,10 +59,7 @@ firebase.auth().onAuthStateChanged(async function(user) {
         });
         
 
-        //For the first five assignments, display them on the table
-        populateTable(1);
-
-        createPagination();
+       
     } else {
         // No user is signed in.
         console.log("No user is signed in");
