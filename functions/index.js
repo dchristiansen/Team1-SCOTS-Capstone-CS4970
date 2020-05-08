@@ -126,7 +126,6 @@ function getAdmins(nextPageToken) {
         // If we have gone through entire list, return false
         return false;
     }).catch(function(error) {
-        console.log(error);
         return false;
     });
 }

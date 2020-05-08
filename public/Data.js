@@ -60,9 +60,9 @@ function createSession(assignmentID, bpm, soundOn, soundOff, cycles, feedback, u
 
     //Commit the batch
    return batch.commit().then(function(){
-        console.log("New Session successfully written! ", newSessionRef.id);
+        console.log("New Session successfully written!");
     }).catch(function(error){
-        console.error("Error when adding new session: ", error);
+        console.log("Error when writing session!");
     });
 }
 
@@ -97,9 +97,8 @@ async function getSession(sessionID){
     try {
         sessionsData = await getSessionData(sessionID);
     } catch(err){
-        console.log("Error getting sessions ", err);
+        alert("Unable to display Session!");
     } finally{
-          console.log("returning data to client...", sessionsData);
           return sessionsData;
     }
 
@@ -119,15 +118,13 @@ async function getAllSessionsForUser(userID){
     async function getSessionData(userID){
 
         //Return data as an array of maps, where each item contains the docID and session data
-        //We can change this to return a custom object later
+        
         var returnData = {
             dataArray: []
         }
 
         var sessions = firestore.collection("sessions").orderBy("sessionTime", "desc");
-        //IMPORTANT
-        //we can implement pagination later on to perform batched reads
-        //I am implementing a limit so we don't run into pricing issues
+        
         var query = sessions.where("userID", "==", userID);
 
         let promise = await query.get();
@@ -145,9 +142,8 @@ async function getAllSessionsForUser(userID){
     try {
         sessionsArray = await getSessionData(userID);
     } catch(err){
-        console.log("Error getting sessions ", err);
+        alert("Unable to display Sessions!");
     } finally{
-          console.log("returning data to client...", sessionsArray);
           return sessionsArray;
     }
 }
@@ -182,9 +178,8 @@ async function getUser(userID){
     try {
         userData = await getUserData(userID);
     } catch(err){
-        console.log("Error getting user ", err);
+        alert("Unable to display User!");
     } finally{
-          console.log("returning data to client...", userData);
           return userData;
     }
 
@@ -197,7 +192,6 @@ async function getUser(userID){
 
 //Description: Returns all the users in the users collection
 
-//TODO: Implement limit? Paginate data?
 async function getUsers(){
 
     var usersArray = {dataArray: null};
@@ -222,9 +216,8 @@ async function getUsers(){
     try {
         usersArray = await getUserData();
       }catch(err){
-        console.log("Error getting users ", err);
+        alert("Unable to display Users!");
       }finally{
-          console.log("returning data to client...", usersArray);
           return usersArray;
       }
 }
@@ -251,7 +244,6 @@ async function getUsers(){
 
 //Description: Creates new assignment for listed users based off of passed parameters
 
-//TODO: Add error handling
 function createAssignment(assignmentLabel, bpm, soundOn, soundOff, cycles, feedback, defaultAssignment, userIDs ){
     let assignments = firestore.collection("assignments");
     let docData = {
@@ -270,7 +262,6 @@ function createAssignment(assignmentLabel, bpm, soundOn, soundOff, cycles, feedb
         alert("New Assignment successfully written!");
     }).catch(function(error) {
         alert("Unable to write new Assignment");
-        console.log(error);
     });
 }
 
@@ -282,7 +273,6 @@ function createAssignment(assignmentLabel, bpm, soundOn, soundOff, cycles, feedb
 
 //Description: Returns all the assignments for the passed userID
 
-//TODO: Pagination?
 async function getAssignmentsForUser(userID){
 
     var assignmentsArray = {dataArray: null};
@@ -325,9 +315,8 @@ async function getAssignmentsForUser(userID){
     try {
         assignmentsArray = await getAssignmentData(userID);
     } catch(err){
-        console.log("Error getting assignments ", err);
+        alert("Unable to display Assignments!");
     } finally{
-          console.log("returning data to client...", assignmentsArray);
           return assignmentsArray;
     }
 }
@@ -357,9 +346,8 @@ async function getAllAssignments(){
   try {
       assignmentsArray = await getAssignmentData();
   } catch(err){
-      console.log("Error getting assignments ", err);
+    alert("Unable to display Assignments!");
   } finally{
-        console.log("returning data to client...", assignmentsArray);
         return assignmentsArray;
   }
 

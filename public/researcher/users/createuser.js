@@ -22,13 +22,11 @@
         const createUser = firebase.functions().httpsCallable('createUser');
         // Call the createUser function and pass in the new username and password
         createUser({email: createdUsername, password: createdPassword}).then(result => {
-            console.log(result);
             $("#modal1").modal().hide();
             alert(result.data.message);
             createUserName.value = "";
             createPassword.value = "";
         }).catch(function(error) {
-            console.log(error);
             alert(error.message);
             createUserName.value = "";
             createPassword.value = "";
