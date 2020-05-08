@@ -42,8 +42,8 @@
           <li class="tab col black"><a href="#" onclick="changeToAsynchronyGraph()">Asynchrony Graph</a>
         </ul>
       </div>
-      <div class="col">
-        <button data-target="modal1" class="btn btn-small pink darken-3 waves-effect modal-trigger">graph info</button>
+      <div class="col offset-s9">
+        <button data-target="modal1" class="btn btn-small pink darken-3 waves-effect modal-trigger">Graph Info</button>
       </div>
     </div>
     <canvas id="intervalGraph"></canvas>
@@ -57,7 +57,21 @@
   <div id="modal1" class="modal">
     <div class="modal-content grey darken-4">
       <h4 class="white-text">Graph Information</h4>
-      <p class="white-text">Someone write the graph explanation here cause I don't feel like it</p>
+      <p class="white-text">These graphs display the asynchrony and interval length of each tap in your session.</p>
+      <p class="white-text">Asynchrony is how far away your tap was from the actual correct beat. It is normal for this 
+        value to drift over time when the beat is silent.</p>
+      <p class="white-text">Interval length is the rate you tap at with your internal imagined rhythm. This should stay 
+        near the center line with some variation. </p>
+      <p class="white-text">If your asynchrony or interval length is within 10% of the ideal value, the point will fall 
+        between the green lines. This is the ideal area to be.</p>
+      <p class="white-text">If the value is within 15% of the ideal value, it will fall between the yellow lines.</p>  
+      <p class="white-text">If the value is within 20% of the ideal value, it will fall between the red lines.</p>  
+      <p class="white-text">Anything with a variation beyond 20% will fall outside the red lines.</p>  
+      <p class="white-text">The vertical pink and green lines separate phases with and without sound.</p>  
+      <p class="white-text">The first phase has sound on. A pink vertical line marks a transition where the sound turns 
+        off. A green vertical line marks a transition where the sound turns back on.</p>
+      <p class="white-text">A score is displayed at the top of the page. This score is calculated based on the interval 
+        lengths. Staying in the green area will maximize your score.</p>  
     </div>
   </div>
 
