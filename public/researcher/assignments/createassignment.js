@@ -17,13 +17,14 @@ function insertAssignment() {
     var feedback = document.getElementById("feedback").checked;
 
     if (assignmentName == null || assignmentName == "" ||
-         bpm == null || bpm == "" || 
+         bpm == null || bpm == "" ||
          timeWSound == null || timeWSound == "" ||
          cycles == null || cycles == "" ||
          timeWOSound == null || timeWOSound == "")
     {
         alert("All parameters must be set to create an assignment");
     }
+    //// TODO: Add elseif to check the Parameter values are in range
     else{
         var defaultAssignment = document.querySelector("#default").checked;
         var userIDs = [];

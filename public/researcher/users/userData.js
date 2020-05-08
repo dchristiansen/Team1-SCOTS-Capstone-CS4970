@@ -149,6 +149,7 @@ function download() {
 function formatCSV(session) {
     let parameters = session.parameters;
     let taps = session.taps;
+    let score = session.score
     let data = [];
     data.push(["Tempo (BPM)", parameters.bpm]);
     data.push(["Time On (ms)", parameters.soundOnTime]);
@@ -156,10 +157,12 @@ function formatCSV(session) {
     data.push(["Cycles", parameters.cycles]);
     data.push(["Feedback", parameters.feedback]);
     data.push([]);
-    data.push(["Cycle Number", "Beat time (ms)", "Tap time (ms)", "Release time (ms)", "Tap intervals (ms)", "Asynchrony (ms)", "Key-press duration (ms)"]);
+    data.push(["Score", score]);
+    data.push([]);
+    data.push(["Cycle Number", "Sound On", "Beat time (ms)", "Tap time (ms)", "Release time (ms)", "Tap intervals (ms)", "Asynchrony (ms)", "Key-press duration (ms)"]);
     taps.forEach(function (tap) {
         let splitString = tap.split(",");
-        data.push([splitString[0], splitString[1], splitString[2], splitString[3], splitString[4], splitString[5], splitString[6]]);
+        data.push([splitString[0], splitString[1], splitString[2], splitString[3], splitString[4], splitString[5], splitString[6], splitString[7]]);
     });
     return data;
 }
