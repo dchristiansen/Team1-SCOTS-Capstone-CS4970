@@ -1,66 +1,81 @@
 <!DOCTYPE html>
-  <html>
-    <head>
-      <!--Import Google Icon Font-->
-      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-      <!--Import materialize.css-->
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-      <link rel="stylesheet" href="./results.css">
-      <script src="/__/firebase/7.9.2/firebase-app.js"></script>
-      <script src="/__/firebase/7.9.2/firebase-auth.js"></script>
-      <script defer src="/__/firebase/init.js"></script>
+<html>
 
-      <!--Let browser know website is optimized for mobile-->
-      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-      <style>
-        a.brand-logo {
-        padding-left: 10px
-      }
-      </style>
-      <title>UNO | Results</title>
-    </head>
+<head>
+  <!--Import Google Icon Font-->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <!--Import materialize.css-->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <link rel="stylesheet" href="./results.css">
+  <script src="/__/firebase/7.9.2/firebase-app.js"></script>
+  <script src="/__/firebase/7.9.2/firebase-auth.js"></script>
+  <script defer src="/__/firebase/init.js"></script>
 
-    <body class="grey darken-4">
-      <nav>
-        <div id="navbar" class="nav-wrapper blue darken-2">
-          <a href="/index.html" class="brand-logo">UNO</a>
-          <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-        </div>
-      </nav>
+  <!--Let browser know website is optimized for mobile-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    a.brand-logo {
+      padding-left: 10px
+    }
+  </style>
+  <title>UNO | Results</title>
+</head>
 
-      <ul class="sidenav" id="mobile-demo">
-      </ul>
-    <div class="container">
-      <h2 class="white-text center-align" id="score"></h2>
-      <div class="row">
-        <div class="col">
-          <ul class="tabs tabs-fixed-width">
-            <li class="tab col black"><a href="#" onclick="changeToIntervalGraph()" class="active">Inter-Tap Interval Graph</a>
-            <li class="tab col black"><a href="#" onclick="changeToAsynchronyGraph()">Asynchrony Graph</a>
-          </ul>
-        </div>
-      </div>
-      <canvas id="intervalGraph"></canvas>
-      <canvas id="asynchronyGraph" style="display:none"></canvas>
-      <button onclick="window.location='/user/start.html';" class="btn btn-small  pink darken-3 waves-effect">Play Again</button>
-      <button onclick="resetToParamSelect()" class="btn btn-small  pink darken-3 waves-effect">Return to Parameter Select</button>
+<body class="grey darken-4">
+  <nav>
+    <div id="navbar" class="nav-wrapper blue darken-2">
+      <a href="/index.html" class="brand-logo">UNO</a>
+      <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
     </div>
+  </nav>
+
+  <ul class="sidenav" id="mobile-demo">
+  </ul>
+
+  <div class="container">
+    <h2 class="white-text center-align" id="score"></h2>
+    <div class="row">
+      <div class="col">
+        <ul class="tabs tabs-fixed-width">
+          <li class="tab col black"><a href="#" onclick="changeToIntervalGraph()" class="active">Inter-Tap Interval
+              Graph</a>
+          <li class="tab col black"><a href="#" onclick="changeToAsynchronyGraph()">Asynchrony Graph</a>
+        </ul>
+      </div>
+      <div class="col">
+        <button data-target="modal1" class="btn btn-small pink darken-3 waves-effect modal-trigger">graph info</button>
+      </div>
+    </div>
+    <canvas id="intervalGraph"></canvas>
+    <canvas id="asynchronyGraph" style="display:none"></canvas>
+    <button onclick="window.location='/user/start.html';" class="btn btn-small  pink darken-3 waves-effect">Play
+      Again</button>
+    <button onclick="resetToParamSelect()" class="btn btn-small  pink darken-3 waves-effect">Return to Parameter
+      Select</button>
+  </div>
+
+  <div id="modal1" class="modal">
+    <div class="modal-content grey darken-4">
+      <h4 class="white-text">Graph Information</h4>
+      <p class="white-text">Someone write the graph explanation here cause I don't feel like it</p>
+    </div>
+  </div>
 
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
-    <script src="/user/graph.js"></script>
-    <script src="/navbar.js" type="module"></script>
-    <script
-      src="https://code.jquery.com/jquery-3.4.1.min.js"
-      integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-      crossorigin="anonymous"></script>
-      <!--JavaScript at end of body for optimized loading-->
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-      <script>
-      $(document).ready(function(){
-          $('.sidenav').sidenav();
-          $('.tabs').tabs();
-        });
-      </script>
-    </body>
-  </html>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+  <script src="/user/graph.js"></script>
+  <script src="/navbar.js" type="module"></script>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+  <!--JavaScript at end of body for optimized loading-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      $('.sidenav').sidenav();
+      $('.tabs').tabs();
+      $('.modal').modal();
+    });
+  </script>
+</body>
+
+</html>

@@ -1,114 +1,112 @@
 <!DOCTYPE html>
-  <html>
-    <head>
-      <!--Import Google Icon Font-->
-      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-      <!--Import materialize.css-->
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-      <link rel="stylesheet" href="/spinner.css">
-      <script src="/__/firebase/7.9.2/firebase-app.js"></script>
-      <script src="/__/firebase/7.9.2/firebase-auth.js"></script>
-      <script src="/__/firebase/7.9.2/firebase-firestore.js"></script>
-      <script src="/__/firebase/7.9.2/firebase-functions.js"></script>
-      <script src="/__/firebase/7.14.2/firebase-analytics.js"></script>
-      <script defer src="/__/firebase/init.js"></script>
-      <!--Let browser know website is optimized for mobile-->
-      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-      <style>
-        a.brand-logo {
-        padding-left: 10px
-      }
-      </style>
-      <title>UNO | Researcher</title>
-    </head>
+<html>
 
-    <style>
-      tr[data-href] {
-        cursor: pointer;
-      }
-    </style>
+<head>
+  <!--Import Google Icon Font-->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <!--Import materialize.css-->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <link rel="stylesheet" href="/spinner.css">
+  <script src="/__/firebase/7.9.2/firebase-app.js"></script>
+  <script src="/__/firebase/7.9.2/firebase-auth.js"></script>
+  <script src="/__/firebase/7.9.2/firebase-firestore.js"></script>
+  <script src="/__/firebase/7.9.2/firebase-functions.js"></script>
+  <script src="/__/firebase/7.14.2/firebase-analytics.js"></script>
+  <script defer src="/__/firebase/init.js"></script>
+  <!--Let browser know website is optimized for mobile-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    a.brand-logo {
+      padding-left: 10px
+    }
+  </style>
+  <title>UNO | Researcher</title>
+</head>
 
-    <body class="grey darken-4">
-      <nav>
-        <div id="navbar" class="nav-wrapper blue darken-2">
-          <a href="/index.html" class="brand-logo">UNO</a>
-          <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-        </div>
-      </nav>
+<style>
+  tr[data-href] {
+    cursor: pointer;
+  }
+</style>
 
-      <ul class="sidenav" id="mobile-demo">
-      </ul>
+<body class="grey darken-4">
+  <nav>
+    <div id="navbar" class="nav-wrapper blue darken-2">
+      <a href="/index.html" class="brand-logo">UNO</a>
+      <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+    </div>
+  </nav>
+
+  <ul class="sidenav" id="mobile-demo">
+  </ul>
 
   <div class="container">
-      <h1 class="white-text" id="greeting"></h1>
-      <h3 class="white-text">View Users</h3>
-          <div id="modal1" class="modal">
-            <div class="modal-content grey darken-4">
-              <h2 class="white-text">Create an Admin User</h2>
-              <form class="col s12 width=50% font-size=50% admin-action">
-                <div class="row">
-                  <div class="input-field col s6">
-                    <input type="email" id="admin-email" class="white-text"/>
-                    <label class="active white-text" for="admin-email">Enter a user to make an admin</label>
-                  </div>
-                </div>
-                <div class="row">
-                  <button id="btnMakeAdmin" class="btn btn-small pink darken-3 waves effect">Make Admin</button>
-                </div>
-                <div id="spinner" class="loader col" style="visibility: hidden;">
-                  <svg version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                     width="60px" height="60px" viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve">
-                  <path fill="#000" d="M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z">
-                    <animateTransform attributeType="xml"
-                      attributeName="transform"
-                      type="rotate"
-                      from="0 25 25"
-                      to="360 25 25"
-                      dur="0.6s"
-                      repeatCount="indefinite"/>
-                    </path>
-                  </svg>
-                </div>
-              </form>
+    <h1 class="white-text" id="greeting"></h1>
+    <h3 class="white-text">View Users</h3>
+    <div id="modal1" class="modal">
+      <div class="modal-content grey darken-4">
+        <h2 class="white-text">Create an Admin User</h2>
+        <form class="col s12 width=50% font-size=50% admin-action">
+          <div class="row">
+            <div class="input-field col s6">
+              <input type="email" id="admin-email" class="white-text" />
+              <label class="active white-text" for="admin-email">Enter a user to make an admin</label>
             </div>
           </div>
-      <div class="row">
-        <div class="col " style="padding-top:3.5%">
-          <a class="waves-effect waves-light btn modal-trigger pink darken-2" href="#modal1">Make a User an Admin</a>
-        </div>
-        <div class="col s12 m4 l4 offset-m6 offset-l5">
-          <input type="text" id="search" style="margin-top:8%"  class="white-text" placeholder="Search User Id...">
-        </div>
-
+          <div class="row">
+            <button id="btnMakeAdmin" class="btn btn-small pink darken-3 waves effect">Make Admin</button>
+          </div>
+          <div id="spinner" class="loader col" style="visibility: hidden;">
+            <svg version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="60px" height="60px" viewBox="0 0 50 50"
+              style="enable-background:new 0 0 50 50;" xml:space="preserve">
+              <path fill="#000"
+                d="M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z">
+                <animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 25 25"
+                  to="360 25 25" dur="0.6s" repeatCount="indefinite" />
+              </path>
+            </svg>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col " style="padding-top:3.5%">
+        <a class="waves-effect waves-light btn modal-trigger pink darken-2" href="#modal1">Make a User an Admin</a>
+      </div>
+      <div class="col s12 m4 l4 offset-m6 offset-l5">
+        <input type="text" id="search" style="margin-top:8%" class="white-text" placeholder="Search User Id...">
       </div>
 
+    </div>
 
 
-      <table class="highlight white-text pink darken-3 centered" style="margin-top:3%">
-        <thead>
-          <tr>
-              <th>User ID</th>
-              <th>Last Session</th>
-          </tr>
-        </thead>
-        <tbody id="tablebody">
-        </tbody>
-      </table>
+
+    <table class="highlight white-text pink darken-3 centered" style="margin-top:3%">
+      <thead>
+        <tr>
+          <th>User ID</th>
+          <th>Last Session</th>
+        </tr>
+      </thead>
+      <tbody id="tablebody">
+      </tbody>
+    </table>
 
 
     <div class="row">
       <div class="col offset-s4">
-      <ul class="pagination">
-       <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
-       <li class="active"><a href="#!">1</a></li>
-       <li class="waves-effect"><a href="#!">2</a></li>
-       <li class="waves-effect"><a href="#!">3</a></li>
-       <li class="waves-effect"><a href="#!">4</a></li>
-       <li class="waves-effect"><a href="#!">5</a></li>
-       <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
-     </ul>
-     </div>
-   </div>
+        <ul class="pagination">
+          <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
+          <li class="active"><a href="#!">1</a></li>
+          <li class="waves-effect"><a href="#!">2</a></li>
+          <li class="waves-effect"><a href="#!">3</a></li>
+          <li class="waves-effect"><a href="#!">4</a></li>
+          <li class="waves-effect"><a href="#!">5</a></li>
+          <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
+        </ul>
+      </div>
+    </div>
   </div>
 
   <div class="container">
@@ -118,17 +116,16 @@
 
   <script src="/researcher/rPortal.js" type="module"></script>
   <script src="/navbar.js" type="module"></script>
-    <script
-      src="https://code.jquery.com/jquery-3.4.1.min.js"
-      integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-      crossorigin="anonymous"></script>
-      <!--JavaScript at end of body for optimized loading-->
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-      <script>
-      $(document).ready(function(){
-          $('.sidenav').sidenav();
-          $('.modal').modal();
-        });
-      </script>
-    </body>
-  </html>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+  <!--JavaScript at end of body for optimized loading-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      $('.sidenav').sidenav();
+      $('.modal').modal();
+    });
+  </script>
+</body>
+
+</html>

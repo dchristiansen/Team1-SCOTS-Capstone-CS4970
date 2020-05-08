@@ -51,7 +51,6 @@ data.forEach(tap => {
         intervalChartArray.push({ x: pressTime, y: timeSinceLast });
     }
     
-    console.log(tap.delta);
     asynchronyChartArray.push({ x: currentBeat, y: tap.delta});
 
     prev = tap;
