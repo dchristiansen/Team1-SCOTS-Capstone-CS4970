@@ -27,7 +27,7 @@ btnDeleteAssignment.addEventListener("click", e => {
         }).catch(function(error) {
             alert("Error deleting assignment: " + error);
         });
-    }   
+    }
 });
 
 /*
@@ -38,7 +38,7 @@ btnDeleteAssignment.addEventListener("click", e => {
 btnAssignToUsers.addEventListener("click", e => {
     // Get checkboxes
     let checkboxes = $("#tablebody input:checked");
-    
+
     // Get input of the checkboxes
     checkboxes = $("#tablebody input");
     // Loop through userData array which corresponds to the checkboxes
@@ -93,14 +93,14 @@ btnSetAssignment.addEventListener("click", e => {
 
 
     if (assignmentLabel == null || assignmentLabel == "" ||
-         bpm == null || bpm == "" || 
+         bpm == null || bpm == "" ||
          timeWSound == null || timeWSound == "" ||
          cycles == null || cycles == "" ||
          timeWOSound == null || timeWOSound == "")
     {
         alert("All parameters must be set to edit an assignment");
     }
-    else 
+    else
     {
         // Get the assignment document id
         let params = new URLSearchParams(location.search);
@@ -221,7 +221,7 @@ async function populateUserTable(assignmentId)
         }
         td_ses.innerHTML = latestSessionTime;
         td_id.innerHTML = obj.data.userID;
-        
+
         // Append the user id and latest session time to the row
         tr.appendChild(td_id);
         tr.appendChild(td_ses);
@@ -296,8 +296,8 @@ firebase.auth().onAuthStateChanged((user) => {
 $(document).ready(function() {
     $("#btnSelectAll").click(function() {
         let checked = !$(this).data('checked');
-        $('input:checkbox').prop('checked', checked);
-        $(this).val(checked ? 'uncheck all' : 'check all')
+        $('input:checkbox').not("#feedback").prop('checked', checked);
+        $(this).val(checked ? 'uncheck all' : 'check all');
         $(this).data('checked', checked);
     })
 })
