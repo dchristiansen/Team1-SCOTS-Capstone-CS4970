@@ -130,7 +130,7 @@ export default class Timer extends Base.Behavior {
 
                         //Create the comma separated string to be stored in the database
                         stringJson.forEach(tap => {
-                            let stringToInput = tap.cycleNumber + "," + tap.beat + "," + tap.pressTime + "," + tap.releaseTime + "," + tap.timeSinceLast + "," + tap.delta + "," + tap.duration;
+                            let stringToInput = tap.cycleNumber + "," + tap.soundOn + "," + tap.beat + "," + tap.pressTime + "," + tap.releaseTime + "," + tap.timeSinceLast + "," + tap.delta + "," + tap.duration;
                             tapArrayString.push(stringToInput);
                         });
 
@@ -140,12 +140,14 @@ export default class Timer extends Base.Behavior {
                             if (firebaseUser) {
 
                                 //Save the session using the array of csv strings
-                                let sesh = await createSession(assignmentId, ref.bpm, ref.soundPhaseTime, ref.noSoundPhaseTime, ref.cycles, feedback, firebaseUser.uid, tapArrayString);
+                                
                                 //console.log(sesh);
                                 //Set all of the sessionStorage information for use on the graph page
+                                let score = ref.scoreCalculator.newCalculateScore(ref.tapHandler.tapDataSoundOff, ref.beatTime)
                                 sessionStorage.setItem('totalTapArray', JSON.stringify(ref.tapHandler.tapDataTotal));
-                                sessionStorage.setItem('score', ref.scoreCalculator.newCalculateScore(ref.tapHandler.tapDataSoundOff, ref.beatTime));
+                                sessionStorage.setItem('score', score);
                                 sessionStorage.setItem('data', JSON.stringify(ref.tapHandler.tapDataSoundOff));
+                                let sesh = await createSession(assignmentId, ref.bpm, ref.soundPhaseTime, ref.noSoundPhaseTime, ref.cycles, feedback, firebaseUser.uid, tapArrayString, score);
                                 document.location.href = "/user/results.html";
                             } else {
                                 //Set all of the sessionStorage information for use on the graph page
