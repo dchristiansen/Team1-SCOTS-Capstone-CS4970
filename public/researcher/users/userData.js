@@ -241,11 +241,9 @@ accountRecoveryForm.addEventListener('submit', (e) => {
         const changeUserPassword = firebase.functions().httpsCallable('changeUserPassword');
         // Change user password, passing in the user id and the confirmed password to the cloud function
         changeUserPassword({ uid: userid, password: confirmPassword }).then(result => {
-            console.log(result);
             document.getElementById("spinner").style.visibility = "hidden";
             alert(result.data.message)
         }).catch(function (error) {
-            console.log(error);
             alert(error.message);
         })
     }
@@ -270,12 +268,10 @@ deleteUserForm.addEventListener('submit', (e) => {
         const deleteUser = firebase.functions().httpsCallable('deleteUser');
         // Call deleteUser passing in the userid of the user to be deleted
         deleteUser({ uid: userid }).then(result => {
-            console.log(result);
             document.getElementById("spinner").style.visibility = "hidden";
             alert(result.data.message);
             window.location = "/researcher/rPortal.html";
         }).catch(function (error) {
-            console.log(error);
             alert(error.message);
         })
     }

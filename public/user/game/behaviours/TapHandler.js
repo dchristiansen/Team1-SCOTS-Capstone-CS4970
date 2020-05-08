@@ -52,6 +52,6 @@ export default class TapHandler extends Base.Behavior {
         if(!this.timer.soundOn && !this.timer.gameOver)
             this.tapDataSoundOff.push(this.tapInfo);
         this.tapDataTotal.push(this.tapInfo);
-        console.log(this.tapInfo);
+        
     }
 }
