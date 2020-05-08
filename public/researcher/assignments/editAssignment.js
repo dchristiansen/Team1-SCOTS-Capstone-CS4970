@@ -90,7 +90,7 @@ btnSetAssignment.addEventListener("click", e => {
     var cycles = document.getElementById("cycles").value;
     var timeWOSound = document.getElementById("timeWOSound").value;
     var feedback = document.getElementById("feedback").checked;
-
+    var defaultAssignment = document.querySelector("#default").checked;
 
     if (assignmentLabel == null || assignmentLabel == "" ||
          bpm == null || bpm == "" || 
@@ -118,16 +118,20 @@ btnSetAssignment.addEventListener("click", e => {
         // Assignment document reference
         var assignmentDoc = firestore.collection("assignments").doc(assignmentId);
 
-        // Update the assignment label and the parameters
-        assignmentDoc.update({
-            assignmentLabel: assignmentLabel,
-            parameters: parameters
-        }).then(function() {
-            alert("Assignment successfully updated.");
-        }).catch(function(error) {
-            console.error(error);
-        });
+
+    // Update the assignment label and the parameters
+      assignmentDoc.update({
+          assignmentLabel: assignmentLabel,
+          parameters: parameters,
+          default: defaultAssignment,
+      }).then(function() {
+          alert("Assignment successfully updated.");
+      }).catch(function(error) {
+          console.error(error);
+      });
+
     }
+
 });
 
 /*
@@ -167,12 +171,14 @@ async function populateParameters(assignmentId) {
             assignmentLabel = decode(assignmentLabel);
 
             var parameters = doc.data().parameters;
+            var defaultAssignment = doc.data().default;
             // Set the values of the html document
             document.getElementById("assignment_name").value = assignmentLabel;
             document.getElementById("BPM").value = parameters.bpm;
             document.getElementById("timeWSound").value = parameters.soundOnTime;
             document.getElementById("timeWOSound").value = parameters.soundOffTime;
             document.getElementById("cycles").value = parameters.cycles;
+            document.querySelector("#default").checked = defaultAssignment;
             if (!parameters.feedback)
             {
                 document.getElementById("feedback").removeAttribute("checked");

@@ -98,6 +98,7 @@ export default class Timer extends Base.Behavior {
             if (this.currentTime > this.phaseSwitchTime + (this.beatTime / 2)) {
                 //console.log("Turning sound off");
                 this.soundOn = false;
+                this.beatSound.volume = 0;
                 this.tapHandler.soundOn = false;
             }
             //In the sound off phase
