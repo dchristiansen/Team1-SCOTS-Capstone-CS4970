@@ -97,6 +97,7 @@ btnSetAssignment.addEventListener("click", e => {
     {
         alert("All parameters must be set to edit an assignment");
     }
+    //// TODO: Add elseif to check the Parameter values are in range
     else
     {
         // Get the assignment document id
@@ -209,12 +210,13 @@ async function populateUserTable(assignmentId, newPage)
         {
             latestSessionTime = latestSessionTime.seconds * 1000;
             latestSessionTime = new Date(latestSessionTime);
+
         }
         else
         {
             latestSessionTime = "N/A";
         }
-        td_ses.innerHTML = latestSessionTime;
+        td_ses.innerHTML = latestSessionTime.toLocaleString(navigator.language);
         td_id.innerHTML = obj.data.userID;
 
         // Append the user id and latest session time to the row
@@ -354,20 +356,20 @@ firebase.auth().onAuthStateChanged((user) => {
 
                 assignedUIDs = [];
                 var assignmentDoc = await firestore.collection("assignments").doc(assignmentId)
-            
+
                 await assignmentDoc.get().then(function(doc) {
                     if(doc.exists)
                     {
                         assignedUIDs = doc.data().userIDs;
                     }
                 });
-            
+
                 // Get users
                 let usersCall = await getUsers();
                 currentUserArray = userData = usersCall.dataArray;
 
                 checkedArray = new Array(userData.length);
-            
+
                 numPages = Math.ceil(currentUserArray.length/entriesPerPage);
 
                 getAssignedUsers();
@@ -395,7 +397,7 @@ firebase.auth().onAuthStateChanged((user) => {
 $(document).ready(function() {
     $("#btnSelectAll").click(function() {
         let checked = !$(this).data('checked');
-        $('input:checkbox').not("#feedback").prop('checked', checked);
+        $('input:checkbox').not(".rip_kobe").prop('checked', checked);
         $(this).val(checked ? 'uncheck all' : 'check all');
         $(this).data('checked', checked);
         for(let i = 0; i < checkedArray.length; i++) {
@@ -406,25 +408,25 @@ $(document).ready(function() {
 
 $("#pagination").on("click", "a", function changePage(){
     let newPage = $(this).data('page');
-  
+
     //Change to the new page
     if(newPage != currentPage) {
         //For the right chevron
         if(newPage == "next") {
             newPage = currentPage+1;
         }
-        //For the left chevron 
+        //For the left chevron
         else if(newPage == "prev") {
             newPage = currentPage-1;
         }
-  
+
         //Ensure that the new page can be accessed (in case left or right chevrons move it past the number of pages)
         if(newPage <= numPages && newPage > 0) {
             //Change the current page
             currentPage = newPage;
 
             populateUserTable(assignmentId, newPage);
-    
+
             //Change the active page in the pagination menu
             document.querySelector("#page" + currentPage).className = "waves-effect";
             document.querySelector("#page" + newPage).className = "waves-effect active";

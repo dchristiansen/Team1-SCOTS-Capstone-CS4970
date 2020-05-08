@@ -154,7 +154,6 @@ function createPagination() {
 
 
 $("#tablebody").on("click", "tr", function setGameParameters() {
-    //console.log($(this).data('parameters'));
     //Get the parameters in the form of an array
     let params = $(this).data('parameters').split(",");
 

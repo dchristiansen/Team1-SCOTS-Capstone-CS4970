@@ -84,7 +84,6 @@ adminForm.addEventListener('submit', (e) => {
       const addAdminRole = firebase.functions().httpsCallable('addAdminRole');
       // Call the addAdminRole function passing in the email of the user to be made an admin
       addAdminRole({ email: adminEmail }).then(result => {
-          console.log(result);
           document.getElementById("spinner").style.visibility = "hidden";
           if (result.data.errorInfo == null) {
               alert(result.data.message);

@@ -4,7 +4,7 @@ From this page, a researcher can download the tap data from a selected gameplay 
 Additionally, a researcher can recover the selected user's password or delete the user from the system
 -->
 <!DOCTYPE html>
-  <html>
+  <html lang="en">
     <head>
       <!-- Global site tag (gtag.js) - Google Analytics -->
       <script async src="https://www.googletagmanager.com/gtag/js?id=UA-165901337-1"></script>
@@ -45,8 +45,8 @@ Additionally, a researcher can recover the selected user's password or delete th
         </div>
       </nav>
 
-      <ul class="sidenav" id="mobile-demo">
-      </ul>
+  <ul class="sidenav" id="mobile-demo">
+  </ul>
 
 
   <div class="container">
@@ -61,28 +61,30 @@ Additionally, a researcher can recover the selected user's password or delete th
         <form class="col s6 width=50% font-size=50% admin-recovery">
           <div class="row">
             <div class="input-field col s12 m6 l6 offset-m2 offset-l2">
-                <!-- New password to assign to a user-->
-                <input type="password" id="password" class="white-text">
-                <label class="active white-text" for="password">New Password</label>
+              <!-- New password to assign to a user-->
+              <input type="password" id="password" class="white-text">
+              <label class="active white-text" for="password">New Password</label>
             </div>
           </div>
           <div class="row">
             <div class="input-field col s12 m6 l6 offset-m2 offset-l2">
-                <!-- Confirm password field -->
-                <input type="password" id="confirmPassword" class="white-text" onkeyup='check();'>
-                <label class="active white-text" for="confirmPassword">Confirm Password</label>
+              <!-- Confirm password field -->
+              <input type="password" id="confirmPassword" class="white-text" onkeyup='check();'>
+              <label class="active white-text" for="confirmPassword">Confirm Password</label>
             </div>
           </div>
           <div class="row">
             <!-- Indicates if new password field and confirm password field match-->
             <div class="input-field col s6 offset-s2">
-                <span id="confirmMessage"></span>
+              <span id="confirmMessage"></span>
             </div>
           </div>
           <div class="row">
             <!-- Button to change the password-->
             <div class="input-field col s6 offset-s2">
-                <button id="btnChangePassword" disabled="true" class="btn btn-large pink darken-2 waves-effect modal-close" style="margin-left: 1%"><i class="material-icons right">chevron_right</i>Change Password</button>
+              <button id="btnChangePassword" disabled="true"
+                class="btn btn-large pink darken-2 waves-effect modal-close" style="margin-left: 1%"><i
+                  class="material-icons right">chevron_right</i>Change Password</button>
             </div>
           </div>
         </form>
@@ -90,20 +92,17 @@ Additionally, a researcher can recover the selected user's password or delete th
           <div class="row">
             <!-- Button to delete the user-->
             <div class="input-field col s6 offset-s2">
-              <button id="btnDeleteUser" style="margin-left: 1%" class="btn btn-large pink darken-2 waves-effect" style="margin-left: 1%"><i class="material-icons right">delete</i>Delete this User</button>
+              <button id="btnDeleteUser" style="margin-left: 1%" class="btn btn-large pink darken-2 waves-effect"><i class="material-icons right">delete</i>Delete this User</button>
             </div>
             <!-- Loading spinner -->
             <div id="spinner" class="loader col" style="visibility: hidden;">
-              <svg version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                 width="60px" height="60px" viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve">
-              <path fill="#000" d="M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z">
-                <animateTransform attributeType="xml"
-                  attributeName="transform"
-                  type="rotate"
-                  from="0 25 25"
-                  to="360 25 25"
-                  dur="0.6s"
-                  repeatCount="indefinite"/>
+              <svg version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="60px" height="60px"
+                viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve">
+                <path fill="#000"
+                  d="M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z">
+                  <animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 25 25"
+                    to="360 25 25" dur="0.6s" repeatCount="indefinite" />
                 </path>
               </svg>
             </div>
@@ -111,62 +110,67 @@ Additionally, a researcher can recover the selected user's password or delete th
         </form>
       </div>
     </div>
-      <!-- Function to check if the password field and check password field match -->
-      <script>
-        var check = function() {
-            if (document.getElementById('password').value ==
-                document.getElementById('confirmPassword').value) {
-                document.getElementById('confirmMessage').style.color = 'green';
-                document.getElementById('confirmMessage').innerHTML = 'Password confirmed';
-                document.getElementById('btnChangePassword').disabled = false;
-            } else {
-                document.getElementById('confirmMessage').style.color = 'red';
-                document.getElementById('confirmMessage').innerHTML = 'Passwords must match';
-                document.getElementById('btnChangePassword').disabled = true;
-            }
+    <!-- Function to check if the password field and check password field match -->
+    <script>
+      var check = function () {
+        if (document.getElementById('password').value ==
+          document.getElementById('confirmPassword').value) {
+          document.getElementById('confirmMessage').style.color = 'green';
+          document.getElementById('confirmMessage').innerHTML = 'Password confirmed';
+          document.getElementById('btnChangePassword').disabled = false;
+        } else {
+          document.getElementById('confirmMessage').style.color = 'red';
+          document.getElementById('confirmMessage').innerHTML = 'Passwords must match';
+          document.getElementById('btnChangePassword').disabled = true;
         }
-      </script>
-
-
-    <h3 class="white-text">User Sessions</h1>
+      }
+    </script>
+    <h3 class="white-text">User Sessions</h3>
     <!-- Button to download sessions -->
-    <button id="downloadbutton"class="waves-effect btn-large pink darken-3"><i class="material-icons left">file_download</i>Download</button>
+    <button id="downloadbutton" class="waves-effect btn-large pink darken-3"><i class="material-icons left">file_download</i>Download</button>
     <!-- Button to select or deselect all sessions -->
     <button class="waves-effect btn-large pink darken-3 disabled" id="select" style="margin-left: 1%">Select/Deselect All</button>
-    
+
     <!-- Table of sessions -->
     <table class="white-text pink darken-3 centered" style="margin-top:3%">
       <thead id="test">
         <tr>
+
             <th>Session Name</th>
             <th>Session Time</th>
             <th>Parameters</th>
             <th>Select</th>
-        </tr>
-      </thead>
-      <tbody id="tablebody">
-      </tbody>
-    </table>
+          </tr>
+        </thead>
+        <tbody id="tablebody">
+        </tbody>
+      </table>
+
+      <div class="row">
+        <div class="col offset-s4">
+          <ul class="pagination" id="pagination">
+          </ul>
+        </div>
+      </div>
 
   </div>
 
-    <script src="/researcher/users/userData.js" type="module"></script>
-    <script src="/navbar.js" type="module"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.3.0/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.0/xlsx.full.min.js"></script>
-    <script
-      src="https://code.jquery.com/jquery-3.4.1.min.js"
-      integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-      crossorigin="anonymous"></script>
-      <!--JavaScript at end of body for optimized loading-->
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-      <script>
-      $(document).ready(function(){
-          $('.sidenav').sidenav();
-           $('.modal').modal();
-        });
-      </script>
+  <script src="/researcher/users/userData.js" type="module"></script>
+  <script src="/navbar.js" type="module"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.3.0/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.0/xlsx.full.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+  <!--JavaScript at end of body for optimized loading-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      $('.sidenav').sidenav();
+      $('.modal').modal();
+    });
+  </script>
 
-    </body>
-  </html>
+</body>
+
+</html>

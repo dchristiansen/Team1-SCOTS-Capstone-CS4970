@@ -32,6 +32,7 @@ export default class ScoreCalculator extends Base.Behavior{
                 else {
                     let numMisses = (currentBeat - beatTime) - lastBeat;
                     numMisses = numMisses / beatTime;
+
                     misses += numMisses;
                     closestHitDelta = Math.abs(tap.delta);
                     lastBeat = currentBeat;

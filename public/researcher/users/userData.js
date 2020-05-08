@@ -6,6 +6,14 @@ const accountRecoveryForm = document.querySelector(".admin-recovery");
 // Form to delete a user
 const deleteUserForm = document.querySelector(".admin-delete-user");
 
+// Get table from the html document
+const table = document.querySelector("#tablebody");
+let currentAssignmentArray = [];
+let checkedArray;
+let numPages;
+let currentPage = 1;
+let entriesPerPage = 5;
+
 /*
     setHeader
     parameter: userid
@@ -23,14 +31,14 @@ async function setHeader(userid) {
     Parameter: userid
     Populates the sessions for a given userid
 */
-async function populateTable(userid) {
-    // Get table from the html document
-    let table = document.querySelector("#tablebody");
-    // Get sessions
-    let sessionsCall = await getAllSessionsForUser(userid);
-    sessionData = sessionsCall.dataArray;
+async function populateTable(newPage) {
+    table.innerHTML = "";
+    let startPosition = (newPage - 1) * entriesPerPage;
+    let newArray = currentAssignmentArray.slice(startPosition, startPosition + 5);
+
     // Loop through sessionData
-    sessionData.forEach(function (obj) {
+    for(let i = 0; i < newArray.length; i++){
+        let obj = newArray[i];
         // Create a row entry for each session
         let tr = document.createElement('tr');
 
@@ -69,6 +77,10 @@ async function populateTable(userid) {
         let checkbox = document.createElement('input');
         let span = document.createElement('span');
         checkbox.type = "checkbox";
+        checkbox.addEventListener('input', checkCheckedArray);
+        if(checkedArray[i + (currentPage - 1) * entriesPerPage]) {
+            checkbox.checked = true;
+        }
         label.appendChild(checkbox);
         label.appendChild(span);
         td_checkbox.appendChild(label);
@@ -78,7 +90,74 @@ async function populateTable(userid) {
         // Remove the disabled property for the select all button once table is populated
         let selectBtn = document.querySelector("#select");
         selectBtn.classList.remove("disabled");
-    });
+    }
+    createPagination();
+}
+
+/*
+  createPagination:
+  Creates the pagination icons beneath the table,
+  based on the number of pages
+*/
+function createPagination() {
+    pagination.innerHTML = "";
+    numPages = Math.ceil(currentAssignmentArray.length / entriesPerPage);
+
+    //Create the left chevron for page scrolling
+    let leftChevron = document.createElement('li');
+    leftChevron.className = "waves-effect";
+
+    let leftChevronA = document.createElement('a');
+    leftChevronA.href = "#!";
+    leftChevronA.setAttribute('data-page', "prev");
+
+    let leftChevronIcon = document.createElement('i');
+    leftChevronIcon.className = "material-icons";
+    leftChevronIcon.innerHTML = "chevron_left";
+
+    leftChevronA.appendChild(leftChevronIcon);
+    leftChevron.appendChild(leftChevronA);
+    pagination.appendChild(leftChevron);
+
+    //Create the buttons for each page
+    for (let i = 0; i < numPages; i++) {
+        let current = i + 1;
+        let li = document.createElement('li');
+        li.id = "page" + current;
+        li.className = "waves-effect";
+        if (current == currentPage) {
+            li.className += " active";
+        }
+
+        let a = document.createElement('a');
+        a.setAttribute('data-page', current)
+        a.innerHTML = current;
+
+        li.appendChild(a);
+        pagination.appendChild(li);
+    }
+
+    //Add the right chevron for page scrolling
+    let rightChevron = document.createElement('li');
+    rightChevron.className = "waves-effect";
+
+    let rightChevronA = document.createElement('a');
+    rightChevronA.href = "#!";
+    rightChevronA.setAttribute('data-page', "next")
+
+    let rightChevronIcon = document.createElement('i');
+    rightChevronIcon.className = "material-icons";
+    rightChevronIcon.innerHTML = "chevron_right";
+
+    rightChevronA.appendChild(rightChevronIcon);
+    rightChevron.appendChild(rightChevronA);
+    pagination.appendChild(rightChevron);
+}
+
+function checkCheckedArray(e) {
+    let index = e.path[3].rowIndex - 1;
+    index += (currentPage - 1) * entriesPerPage;
+    checkedArray[index] = !checkedArray[index];
 }
 
 /*
@@ -96,9 +175,9 @@ function download() {
         let zip = new JSZip();
         checkboxes = $("#tablebody input");
         // Iterate through sessionData
-        for (let i = 0; i < sessionData.length; i++) {
+        for (let i = 0; i < checkedArray.length; i++) {
             // If a session is checked, push that session into the array
-            if (checkboxes[i].checked) {
+            if (checkedArray[i]) {
                 sessionsDL.push({ session: sessionData[i].data, id: i });
             }
         }
@@ -180,7 +259,7 @@ firebase.auth().onAuthStateChanged(user => {
     // If user is logged in
     if (user) {
         // Get admin token result
-        user.getIdTokenResult().then(idTokenResult => {
+        user.getIdTokenResult().then(async function(idTokenResult) {
             user.admin = idTokenResult.claims.admin;
             // If user is an admin
             if (user.admin) {
@@ -192,10 +271,16 @@ firebase.auth().onAuthStateChanged(user => {
                 let params = new URLSearchParams(location.search);
                 let userid = params.get('id');
 
+                // Get sessions
+                let sessionsCall = await getAllSessionsForUser(userid);
+                currentAssignmentArray = sessionData = sessionsCall.dataArray;
+
+                checkedArray = new Array(sessionData.length);
+
                 // Set the header with userid
                 setHeader(userid);
                 // Populate table with sessions from the given userid
-                populateTable(userid);
+                populateTable(1);
             }
             else {
                 // Alert that you are not an admin and return to the user dashboard
@@ -218,6 +303,9 @@ $(document).ready(function () {
         $('input:checkbox').prop('checked', checked);
         $(this).val(checked ? 'uncheck all' : 'check all')
         $(this).data('checked', checked);
+        for(let i = 0; i < checkedArray.length; i++) {
+            checkedArray[i] = checked;
+        }
     });
 });
 
@@ -241,11 +329,9 @@ accountRecoveryForm.addEventListener('submit', (e) => {
         const changeUserPassword = firebase.functions().httpsCallable('changeUserPassword');
         // Change user password, passing in the user id and the confirmed password to the cloud function
         changeUserPassword({ uid: userid, password: confirmPassword }).then(result => {
-            console.log(result);
             document.getElementById("spinner").style.visibility = "hidden";
             alert(result.data.message)
         }).catch(function (error) {
-            console.log(error);
             alert(error.message);
         })
     }
@@ -270,13 +356,39 @@ deleteUserForm.addEventListener('submit', (e) => {
         const deleteUser = firebase.functions().httpsCallable('deleteUser');
         // Call deleteUser passing in the userid of the user to be deleted
         deleteUser({ uid: userid }).then(result => {
-            console.log(result);
             document.getElementById("spinner").style.visibility = "hidden";
             alert(result.data.message);
             window.location = "/researcher/rPortal.html";
         }).catch(function (error) {
-            console.log(error);
             alert(error.message);
         })
     }
 });
+
+$("#pagination").on("click", "a", function changePage(){
+    let newPage = $(this).data('page');
+  
+    //Change to the new page
+    if(newPage != currentPage) {
+        //For the right chevron
+        if(newPage == "next") {
+            newPage = currentPage+1;
+        }
+        //For the left chevron 
+        else if(newPage == "prev") {
+            newPage = currentPage-1;
+        }
+  
+        //Ensure that the new page can be accessed (in case left or right chevrons move it past the number of pages)
+        if(newPage <= numPages && newPage > 0) {
+            //Change the current page
+            currentPage = newPage;
+
+            populateTable(newPage);
+    
+            //Change the active page in the pagination menu
+            document.querySelector("#page" + currentPage).className = "waves-effect";
+            document.querySelector("#page" + newPage).className = "waves-effect active";
+            }
+    }
+  });
