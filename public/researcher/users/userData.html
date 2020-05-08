@@ -4,47 +4,46 @@ From this page, a researcher can download the tap data from a selected gameplay 
 Additionally, a researcher can recover the selected user's password or delete the user from the system
 -->
 <!DOCTYPE html>
-<html>
+  <html lang="en">
+    <head>
+      <!-- Global site tag (gtag.js) - Google Analytics -->
+      <script async src="https://www.googletagmanager.com/gtag/js?id=UA-165901337-1"></script>
+      <script>
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
 
-<head>
-  <!-- Global site tag (gtag.js) - Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-165901337-1"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
-    gtag('js', new Date());
+              gtag('config', 'UA-165901337-1');
+      </script>
+      <!--Import Google Icon Font-->
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      <!--Import materialize.css-->
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+        <link rel="stylesheet" href="/spinner.css"/>
+        <script src="/__/firebase/7.9.2/firebase-app.js"></script>
+        <script src="/__/firebase/7.9.2/firebase-auth.js"></script>
+        <script src="/__/firebase/7.9.2/firebase-firestore.js"></script>
+        <script src="/__/firebase/7.9.2/firebase-functions.js"></script>
+        <script src="/__/firebase/7.14.2/firebase-analytics.js"></script>
+        <script defer src="/__/firebase/init.js"></script>
+      <!--Let browser know website is optimized for mobile-->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-    gtag('config', 'UA-165901337-1');
-  </script>
-  <!--Import Google Icon Font-->
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <!--Import materialize.css-->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-  <link rel="stylesheet" href="/spinner.css" />
-  <script src="/__/firebase/7.9.2/firebase-app.js"></script>
-  <script src="/__/firebase/7.9.2/firebase-auth.js"></script>
-  <script src="/__/firebase/7.9.2/firebase-firestore.js"></script>
-  <script src="/__/firebase/7.9.2/firebase-functions.js"></script>
-  <script src="/__/firebase/7.14.2/firebase-analytics.js"></script>
-  <script defer src="/__/firebase/init.js"></script>
-  <!--Let browser know website is optimized for mobile-->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <style>
+        a.brand-logo {
+        padding-left: 10px
+      }
+      </style>
+      <title>RAC | User Data</title>
+    </head>
 
-  <style>
-    a.brand-logo {
-      padding-left: 10px
-    }
-  </style>
-  <title>RAC | User Data</title>
-</head>
-
-<body class="grey darken-4">
-  <nav>
-    <div id="navbar" class="nav-wrapper blue darken-2">
-      <a href="/index.html" class="brand-logo">RAC</a>
-      <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-    </div>
-  </nav>
+    <body class="grey darken-4">
+      <nav>
+        <div id="navbar" class="nav-wrapper blue darken-2">
+          <a href="/index.html" class="brand-logo">RAC</a>
+          <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+        </div>
+      </nav>
 
   <ul class="sidenav" id="mobile-demo">
   </ul>
@@ -93,8 +92,7 @@ Additionally, a researcher can recover the selected user's password or delete th
           <div class="row">
             <!-- Button to delete the user-->
             <div class="input-field col s6 offset-s2">
-              <button id="btnDeleteUser" style="margin-left: 1%" class="btn btn-large pink darken-2 waves-effect"
-                style="margin-left: 1%"><i class="material-icons right">delete</i>Delete this User</button>
+              <button id="btnDeleteUser" style="margin-left: 1%" class="btn btn-large pink darken-2 waves-effect"><i class="material-icons right">delete</i>Delete this User</button
             </div>
             <!-- Loading spinner -->
             <div id="spinner" class="loader col" style="visibility: hidden;">
@@ -127,20 +125,17 @@ Additionally, a researcher can recover the selected user's password or delete th
         }
       }
     </script>
+    <h3 class="white-text">User Sessions</h3>
+    <!-- Button to download sessions -->
+    <button id="downloadbutton" class="waves-effect btn-large pink darken-3"><i class="material-icons left">file_download</i>Download</button>
+    <!-- Button to select or deselect all sessions -->
+    <button class="waves-effect btn-large pink darken-3 disabled" id="select" style="margin-left: 1%">Select/Deselect All</button>
 
+    <!-- Table of sessions -->
+    <table class="white-text pink darken-3 centered" style="margin-top:3%">
+      <thead id="test">
+        <tr>
 
-    <h3 class="white-text">User Sessions</h1>
-      <!-- Button to download sessions -->
-      <button id="downloadbutton" class="waves-effect btn-large pink darken-3"><i
-          class="material-icons left">file_download</i>Download</button>
-      <!-- Button to select or deselect all sessions -->
-      <button class="waves-effect btn-large pink darken-3 disabled" id="select" style="margin-left: 1%">Select/Deselect
-        All</button>
-
-      <!-- Table of sessions -->
-      <table class="white-text pink darken-3 centered" style="margin-top:3%">
-        <thead id="test">
-          <tr>
             <th>Session Name</th>
             <th>Session Time</th>
             <th>Parameters</th>
