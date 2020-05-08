@@ -209,12 +209,13 @@ async function populateUserTable(assignmentId, newPage)
         {
             latestSessionTime = latestSessionTime.seconds * 1000;
             latestSessionTime = new Date(latestSessionTime);
+            
         }
         else
         {
             latestSessionTime = "N/A";
         }
-        td_ses.innerHTML = latestSessionTime;
+        td_ses.innerHTML = latestSessionTime.toLocaleString(navigator.language);
         td_id.innerHTML = obj.data.userID;
 
         // Append the user id and latest session time to the row
