@@ -1,6 +1,18 @@
+<!-- results.html 
+This page displays the score and the graph of the gameplay
+-->
 <!DOCTYPE html>
   <html>
     <head>
+      <!-- Global site tag (gtag.js) - Google Analytics -->
+      <script async src="https://www.googletagmanager.com/gtag/js?id=UA-165901337-1"></script>
+      <script>
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+
+              gtag('config', 'UA-165901337-1');
+      </script>
       <!--Import Google Icon Font-->
       <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
       <!--Import materialize.css-->
@@ -12,18 +24,19 @@
 
       <!--Let browser know website is optimized for mobile-->
       <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        
       <style>
         a.brand-logo {
         padding-left: 10px
       }
       </style>
-      <title>UNO | Results</title>
+      <title>RAC | Results</title>
     </head>
 
     <body class="grey darken-4">
       <nav>
         <div id="navbar" class="nav-wrapper blue darken-2">
-          <a href="/index.html" class="brand-logo">UNO</a>
+          <a href="/index.html" class="brand-logo">RAC</a>
           <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
         </div>
       </nav>
@@ -32,6 +45,7 @@
       </ul>
     <div class="container">
       <h2 class="white-text center-align" id="score"></h2>
+
       <div class="row">
         <div class="col">
           <ul class="tabs tabs-fixed-width">
@@ -43,6 +57,7 @@
       <canvas id="intervalGraph"></canvas>
       <canvas id="asynchronyGraph" style="display:none"></canvas>
       <button onclick="window.location='/user/start.html';" class="btn btn-small  pink darken-3 waves-effect">Play Again</button>
+      <!-- Button to change parameters -->
       <button onclick="resetToParamSelect()" class="btn btn-small  pink darken-3 waves-effect">Return to Parameter Select</button>
     </div>
 

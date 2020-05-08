@@ -1,6 +1,7 @@
 import { getUsers } from "../..//Data.js";
 import { getAllAssignments } from "../..//Data.js";
 
+
 // Get the assignment table
 const assignmentTable = document.querySelector("#assignmentTableBody")
 const pagination = document.querySelector("#pagination");
@@ -11,7 +12,13 @@ let numPages;
 let currentPage = 1;
 let entriesPerPage = 5;
 
-// Observer for FirebaseAuth
+/*
+  onAuthStateChanged(user)
+  Observer for Authentication State:
+  If the user is logged in and the user is an admin, then this listener will
+  populate the assignments table. Otherwise, go back to the user dashboard
+  or back to the login screen if not authenticated
+*/
 firebase.auth().onAuthStateChanged(user => {
   // If user is logged in
   if(user)

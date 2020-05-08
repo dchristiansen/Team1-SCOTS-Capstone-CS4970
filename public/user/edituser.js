@@ -40,7 +40,12 @@ btnChangePassword.addEventListener("click", e => {
     });
 });
 
-// Observer for FirebaseAuth
+/*
+    onAuthStateChanged(user)
+    Observer for Authentication State:
+    If the user is not logged in, redirect to login page. If the user is logged in and
+    not an admin, then redirect to the user dashboard
+*/
 firebase.auth().onAuthStateChanged(user => {
     // If a user is not logged in
     if(!user)
@@ -48,5 +53,17 @@ firebase.auth().onAuthStateChanged(user => {
         // Redirect to the login screen
         console.log("You are not signed in.");
         window.location = "/login.html";
+    }
+
+    if(user)
+    {
+        user.getIdTokenResult().then(idTokenResult => {
+            user.admin = idTokenResult.claims.admin;
+            if(user.admin)
+            {
+                alert("Researchers do not have access to the Edit User page");
+                window.location = "/researcher/rPortal.html";
+            }
+        });
     }
 });

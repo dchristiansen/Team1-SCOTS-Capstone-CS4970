@@ -7,28 +7,75 @@ var username;
 const assignmentTable = document.querySelector("#tablebody");
 const pagination = document.querySelector("#pagination");
 
+
 let assignmentsArray = [];
 let currentAssignmentArray;
 let currentPage = 1;
 let numPages;
 let entriesPerPage = 5;
 
-firebase.auth().onAuthStateChanged(async function (user) {
+/*
+  onAuthStateChanged(user)
+  Observer for Authentication State:
+  If the user is logged in and the user is not an admin, then this listener will
+  populate the assignments table. Otherwise, go back to the researcher portal
+  or back to the login screen if not authenticated
+*/
+firebase.auth().onAuthStateChanged(async function(user) {
+
     if (user) {
-        username = user.email.split("@")[0];
-        greeting.innerHTML = "Welcome, " + username + "!";
-        let authId = user.uid;
-        //TODO: If user.uid is not the primary key for the user table, query user table to get
-        //primary key. Otherwise, save autId into sessionStorage
-        sessionStorage.setItem('uid', authId);
+        
+        // Get admin token result
+        user.getIdTokenResult().then(async(idTokenResult) => {
+            user.admin = idTokenResult.claims.admin;
+            if(!user.admin)
+            {
+                username = user.email.split("@")[0];
+                greeting.innerHTML = "Welcome, " + username + "!";
+                let authId = user.uid;
+                //TODO: If user.uid is not the primary key for the user table, query user table to get
+                //primary key. Otherwise, save autId into sessionStorage
+                sessionStorage.setItem('uid', authId);
+            
 
         //Get all assignments for the current user
         assignmentsArray = await getAssignmentsForUser(authId);
-        console.log(assignmentsArray);
+        
         currentAssignmentArray = assignmentsArray = assignmentsArray.dataArray;
 
         //Get the total number of pages for pagination
         numPages = Math.ceil(currentAssignmentArray.length / entriesPerPage);
+                //For each assignment fetched, add the corresponding row
+                assignmentsArray.dataArray.forEach(assignment => {
+                    let tr = document.createElement('tr');
+                    tr.innerHtml = "<tr>";
+                    tr.innerHTML += "<td>" + assignment.data.assignmentLabel + "</td>";
+                    tr.innerHTML += "<td>" + assignment.data.parameters.bpm + "</td>";
+                    tr.innerHTML += "<td>" + assignment.data.parameters.soundOnTime + "</td>";
+                    tr.innerHTML += "<td>" + assignment.data.parameters.soundOffTime + "</td>";
+                    if(assignment.data.parameters.feedback) {
+                        tr.innerHTML += "<td>On</td>";
+                    } else {
+                        tr.innerHTML += "<td>Off</td>";
+                    }
+                    tr.innerHTML += "<td>" + assignment.data.parameters.cycles + "</td>";
+                    tr.innerHTML += "</tr>";
+
+                    //Set the parameter attribute to the values within the table
+                    tr.setAttribute('data-parameters', assignment.data.assignmentLabel + "," + assignment.data.parameters.bpm + "," + assignment.data.parameters.soundOnTime + ","
+                    + assignment.data.parameters.soundOffTime + "," + assignment.data.parameters.feedback + "," + assignment.data.parameters.cycles);
+
+                    //Append the row to the table
+                    assignmentTable.appendChild(tr);
+                });
+            }
+            else 
+            {
+                alert("Researchers do not have access to the User Dashboard");
+                window.location = "/researcher/rPortal.html";
+            }
+        });
+        
 
         //For the first five assignments, display them on the table
         populateTable(1);

@@ -81,37 +81,55 @@ btnSetAssignment.addEventListener("click", e => {
 
     // Get fields from the html document
     var assignmentLabel = document.getElementById("assignment_name").value;
+    assignmentLabel = encode(assignmentLabel);
+
     var bpm = document.getElementById("BPM").value;
     var timeWSound = document.getElementById("timeWSound").value;
     var cycles = document.getElementById("cycles").value;
     var timeWOSound = document.getElementById("timeWOSound").value;
     var feedback = document.getElementById("feedback").checked;
+    var defaultAssignment = document.querySelector("#default").checked;
 
-    // Get the assignment document id
-    let params = new URLSearchParams(location.search);
-    let assignmentId = params.get('id');
+    if (assignmentLabel == null || assignmentLabel == "" ||
+         bpm == null || bpm == "" || 
+         timeWSound == null || timeWSound == "" ||
+         cycles == null || cycles == "" ||
+         timeWOSound == null || timeWOSound == "")
+    {
+        alert("All parameters must be set to edit an assignment");
+    }
+    else 
+    {
+        // Get the assignment document id
+        let params = new URLSearchParams(location.search);
+        let assignmentId = params.get('id');
 
-    // Create parameters object
-    var parameters = {
-        bpm: bpm,
-        cycles: cycles,
-        feedback: feedback,
-        soundOffTime: timeWOSound,
-        soundOnTime: timeWSound
-    };
+        // Create parameters object
+        var parameters = {
+            bpm: bpm,
+            cycles: cycles,
+            feedback: feedback,
+            soundOffTime: timeWOSound,
+            soundOnTime: timeWSound
+        };
 
-    // Assignment document reference
-    var assignmentDoc = firestore.collection("assignments").doc(assignmentId);
+        // Assignment document reference
+        var assignmentDoc = firestore.collection("assignments").doc(assignmentId);
+
 
     // Update the assignment label and the parameters
-    assignmentDoc.update({
-        assignmentLabel: assignmentLabel,
-        parameters: parameters
-    }).then(function() {
-        alert("Assignment successfully updated.");
-    }).catch(function(error) {
-        console.error(error);
-    });
+      assignmentDoc.update({
+          assignmentLabel: assignmentLabel,
+          parameters: parameters,
+          default: defaultAssignment,
+      }).then(function() {
+          alert("Assignment successfully updated.");
+      }).catch(function(error) {
+          console.error(error);
+      });
+
+    }
+
 });
 
 /*
@@ -148,13 +166,17 @@ async function populateParameters(assignmentId) {
         {
             // Get fields from the database
             var assignmentLabel = doc.data().assignmentLabel;
+            assignmentLabel = decode(assignmentLabel);
+
             var parameters = doc.data().parameters;
+            var defaultAssignment = doc.data().default;
             // Set the values of the html document
             document.getElementById("assignment_name").value = assignmentLabel;
             document.getElementById("BPM").value = parameters.bpm;
             document.getElementById("timeWSound").value = parameters.soundOnTime;
             document.getElementById("timeWOSound").value = parameters.soundOffTime;
             document.getElementById("cycles").value = parameters.cycles;
+            document.querySelector("#default").checked = defaultAssignment;
             if (!parameters.feedback)
             {
                 document.getElementById("feedback").removeAttribute("checked");
@@ -304,7 +326,14 @@ function getAssignedUsers() {
 
 let assignmentId;
 let assignedUIDs = [];
-// Observer for FirebaseAuth
+
+ /* onAuthStateChanged(user)
+  Observer for Authentication State:
+  If the user is logged in and the user is an admin, then this listener will
+  set the header, parameters, and the user table. Otherwise, go back to the user dashboard
+  or back to the login screen if not authenticated
+*/
+
 firebase.auth().onAuthStateChanged((user) => {
     // If user is logged in
     if(user)
@@ -403,3 +432,25 @@ $("#pagination").on("click", "a", function changePage(){
             }
     }
   });
+
+/*
+    decode:
+    decodes string when reading encoded string from DB
+*/
+function decode(str)
+{
+    var txt = document.createElement('textarea');
+    txt.innerHTML = str;
+    return txt.value;
+}
+
+/*
+    encode:
+    Encodes assignment label to prevent XSS
+*/
+function encode(str){
+    return String(str).replace(/[^\w. ]/gi, function(c){
+       return '&#'+c.charCodeAt(0)+';';
+    });
+}
+
