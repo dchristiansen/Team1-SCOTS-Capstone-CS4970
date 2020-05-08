@@ -19,7 +19,7 @@ export default class PlayScene extends Engine.Base.Scene{
         gameObject.addComponent(Timer);
 
         let guideText = new Engine.Base.GameObject(0, -150);
-        let text = new Engine.Components.TextComponent("", "15pt Times", "white");
+        let text = new Engine.Components.TextComponent("", "20px Roboto", "white");
         let textController = new GameBehaviours.TextController(Timer, text);
         guideText.addComponent(text);
         guideText.addComponent(textController);

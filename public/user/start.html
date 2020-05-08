@@ -1,6 +1,20 @@
+<!-- start.html 
+This button displays instructions of the game and a button to start the game.
+Upon clicking the start button, the game is also played on this screen
+-->
+
 <!DOCTYPE html>
   <html>
     <head>
+      <!-- Global site tag (gtag.js) - Google Analytics -->
+      <script async src="https://www.googletagmanager.com/gtag/js?id=UA-165901337-1"></script>
+      <script>
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+
+              gtag('config', 'UA-165901337-1');
+      </script>
       <!--Import Google Icon Font-->
       <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
       <!--Import materialize.css-->
@@ -9,21 +23,22 @@
       <script src="/__/firebase/7.9.2/firebase-app.js"></script>
       <script src="/__/firebase/7.9.2/firebase-auth.js"></script>
       <script src="/__/firebase/7.9.2/firebase-firestore.js"></script>
-      <script defer src="/__/firebase/init.js"></script>
+      <script src="/__/firebase/init.js"></script>
       <!--Let browser know website is optimized for mobile-->
       <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        
       <style>
         a.brand-logo {
         padding-left: 10px
       }
       </style>
-      <title>UNO | Play</title>
+      <title>RAC | Play</title>
     </head>
 
     <body class="grey darken-4">
       <nav>
         <div id="navbar" class="nav-wrapper blue darken-2">
-          <a href="/index.html" class="brand-logo">UNO</a>
+          <a href="/index.html" class="brand-logo">RAC</a>
           <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
         </div>
       </nav>
@@ -31,15 +46,27 @@
       <ul class="sidenav" id="mobile-demo">
       </ul>
 
-<div class="container">
-  <div id="instructions" class="white-text">
-    <p>After you press "START" a beat sound will begin playing.</p>
-    <p>Once you get a feel for the beat, begin pressing the spacebar in time with it.</p>
-    <p>After some time, the beat sound will begin to fade to silence.</p>
-    <p>Continue tapping at the same frequency until the game ends.</p>
-    <p>The beat sound may fade in and out multiple times.</p>
+<!-- Instructions -->
+<div class="container"> 
+  <div class="row" style="text-align: center">
+    <button id="startButton">START</button>
   </div>
-  <button id="startButton">START</button>
+  <div id="modal1" class="modal">
+    <div class="modal-content grey darken-4">
+      <h2 class="white-text">Instructions</h2>
+      <div class="row white-text">
+        <p>After you press "START" a beat sound will begin playing.</p>
+        <p>Once you get a feel for the beat, begin pressing the spacebar in time with it.</p>
+        <p>After some time, the beat sound will begin to fade to silence.</p>
+        <p>Continue tapping at the same frequency until the game ends.</p>
+        <p>The beat sound may fade in and out multiple times.</p>
+      </div>
+    </div>
+  </div>
+  <div id='instructions' class="row" style="text-align:center">
+    <a class="waves-effect waves-light btn btn-large modal-trigger pink darken-2" href="#modal1">Instructions</a>
+  </div>
+  <!-- Game canvas -->
   <div class="row">
     <canvas id="gameCanvas" width="640px" height="480px" class="hidden col s12"></canvas>
   </div>
@@ -56,8 +83,24 @@
       <script>
       $(document).ready(function(){
           $('.sidenav').sidenav();
+          $('.modal').modal();
         });
       </script>
     <script src="/user/EdgeRACTrainer.js" type="module"></script>
+    <script>
+      firebase.auth().onAuthStateChanged(user => {
+        if(user)
+        {
+          user.getIdTokenResult().then(idTokenResult => {
+            user.admin = idTokenResult.claims.admin;
+            if(user.admin)
+            {
+              alert("Researchers do not access to the Start game page");
+              window.location = "/researcher/rPortal.html";
+            }
+          });
+        }
+      })
+    </script>
     </body>
   </html>

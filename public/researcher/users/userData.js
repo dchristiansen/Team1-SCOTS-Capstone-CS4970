@@ -53,7 +53,7 @@ async function populateTable(userid) {
         // Grab the parameters from obj.data
         let parameters = obj.data.parameters;
         let fbt = "";
-        if (parameters.feedback == "true"){
+        if (parameters.feedback == "true") {
 
             fbt = "On"
         } else {
@@ -99,40 +99,44 @@ function download() {
         for (let i = 0; i < sessionData.length; i++) {
             // If a session is checked, push that session into the array
             if (checkboxes[i].checked) {
-                sessionsDL.push({session : sessionData[i].data, id : i});
+                sessionsDL.push({ session: sessionData[i].data, id: i });
             }
         }
         // If there is only one session to be downloaded
         if (sessionsDL.length == 1) {
             // Grab that session
             let session = sessionsDL[0];
-            // Format the csv
-            let csv = formatCSV(session.session);
-            // Encode csv
-            let csvContent = "data:text/csv;charset=utf-8," + csv;
-            let encodedUri = encodeURI(csvContent);
-
-            // Download the csv
-            let link = document.createElement('a');
-            link.setAttribute('href', encodedUri);
-            link.setAttribute('download', 'session' + session.id + '.csv');
-            link.click();
+            // Format the data
+            let data = formatCSV(session.session);
+            // Create an Excel Workbook
+            let wb = XLSX.utils.book_new()
+            // Write the data to an Excel worksheet
+            let ws = XLSX.utils.json_to_sheet(data);
+            // Add the worksheet to the workbook
+            XLSX.utils.book_append_sheet(wb, ws, "session");
+            //Download the workbook
+            XLSX.writeFile(wb, 'session' + session.id + '.xlsx');
             return;
         } else {
             // Iterate through each session
             sessionsDL.forEach(function (session) {
-                // Format each csv and zip it
-                let csv = formatCSV(session.session);
-                zip.file("session" + session.id + ".csv", csv);
+                // Format the workbook
+                let data = formatCSV(session.session);
+                let wb = XLSX.utils.book_new()
+                let ws = XLSX.utils.json_to_sheet(data);
+                XLSX.utils.book_append_sheet(wb, ws, "session");
+                // Write workbook data to a binary string
+                let wbout = XLSX.write(wb, { bookType: 'xlsx', bookSST: true, type: 'binary' });
+                // Add binary of workbook to zip file
+                zip.file("session" + session.id + ".xlsx", wbout, { binary: true });
             });
-
+            // Download Zip File
+            zip.generateAsync({ type: "blob" }).then(function (blob) {
+                window.saveAs(blob, "sessions.zip");
+            }, function (err) {
+                jQuery("#blob").text(err);
+            });
         }
-        // Save zip
-        zip.generateAsync({ type: "blob" }).then(function (blob) {
-            window.saveAs(blob, "sessions.zip");
-        }, function (err) {
-            jQuery("#blob").text(err);
-        });
     }
 }
 
@@ -145,6 +149,7 @@ function download() {
 function formatCSV(session) {
     let parameters = session.parameters;
     let taps = session.taps;
+    let score = session.score
     let data = [];
     data.push(["Tempo (BPM)", parameters.bpm]);
     data.push(["Time On (ms)", parameters.soundOnTime]);
@@ -152,34 +157,37 @@ function formatCSV(session) {
     data.push(["Cycles", parameters.cycles]);
     data.push(["Feedback", parameters.feedback]);
     data.push([]);
-    data.push(["Cycle Number", "Beat time (ms)", "Tap time (ms)", "Release time (ms)", "Tap intervals (ms)", "Asynchrony (ms)", "Key-press duration (ms)"]);
-    //let total = data.concat(taps);
+    data.push(["Score", score]);
+    data.push([]);
+    data.push(["Cycle Number", "Sound On", "Beat time (ms)", "Tap time (ms)", "Release time (ms)", "Tap intervals (ms)", "Asynchrony (ms)", "Key-press duration (ms)"]);
     taps.forEach(function (tap) {
         let splitString = tap.split(",");
-        data.push([splitString[0], splitString[1], splitString[2], splitString[3], splitString[4], splitString[5], splitString[6]]);
+        data.push([splitString[0], splitString[1], splitString[2], splitString[3], splitString[4], splitString[5], splitString[6], splitString[7]]);
     });
-    console.log(data);
-    let csvContent = data.map(e => e.join(",")).join("\n");
-    return csvContent;
+    return data;
 }
 
 let sessionData;
 
-// Observer for FirebaseAuth
+/*
+  onAuthStateChanged(user)
+  Observer for Authentication State:
+  If the user is logged in and the user is an admin, then this listener will
+  populate the sessions table. Otherwise, go back to the user dashboard
+  or back to the login screen if not authenticated
+*/
 firebase.auth().onAuthStateChanged(user => {
     // If user is logged in
-    if(user)
-    {
+    if (user) {
         // Get admin token result
         user.getIdTokenResult().then(idTokenResult => {
             user.admin = idTokenResult.claims.admin;
             // If user is an admin
-            if(user.admin)
-            {
+            if (user.admin) {
                 // Set the onclick method of the download button
                 let downloadButton = document.querySelector("#downloadbutton");
                 downloadButton.onclick = download;
- 
+
                 // Grab the userid from the url
                 let params = new URLSearchParams(location.search);
                 let userid = params.get('id');
@@ -189,16 +197,14 @@ firebase.auth().onAuthStateChanged(user => {
                 // Populate table with sessions from the given userid
                 populateTable(userid);
             }
-            else
-            {
+            else {
                 // Alert that you are not an admin and return to the user dashboard
                 alert("You are not an admin.");
                 window.location = "/user/userdashboard.html";
             }
         });
     }
-    else
-    {
+    else {
         // Not signed in so redirect to login screen
         console.log("You are not signed in.");
         window.location = "/login.html";
@@ -223,8 +229,7 @@ $(document).ready(function () {
 accountRecoveryForm.addEventListener('submit', (e) => {
     e.preventDefault();
 
-    if(confirm("Are you sure you want to change this user's password?"))
-    {
+    if (confirm("Are you sure you want to change this user's password?")) {
         document.getElementById("spinner").style.visibility = "visible";
         // Grab confirmed password
         const confirmPassword = document.getElementById("confirmPassword").value;
@@ -235,15 +240,15 @@ accountRecoveryForm.addEventListener('submit', (e) => {
         // Grab changeUserPassword function from Firebase
         const changeUserPassword = firebase.functions().httpsCallable('changeUserPassword');
         // Change user password, passing in the user id and the confirmed password to the cloud function
-        changeUserPassword({uid: userid, password: confirmPassword}).then(result => {
+        changeUserPassword({ uid: userid, password: confirmPassword }).then(result => {
             console.log(result);
             document.getElementById("spinner").style.visibility = "hidden";
             alert(result.data.message)
-        }).catch(function(error) {
+        }).catch(function (error) {
             console.log(error);
             alert(error.message);
         })
-    }   
+    }
 });
 
 /*
@@ -255,8 +260,7 @@ deleteUserForm.addEventListener('submit', (e) => {
     e.preventDefault();
 
     // Prompt the user of they are sure if they want to delete the user
-    if(confirm("Are you sure you want to delete this user?"))
-    {
+    if (confirm("Are you sure you want to delete this user?")) {
         document.getElementById("spinner").style.visibility = "visible";
         // Grab userid
         let params = new URLSearchParams(location.search);
@@ -265,12 +269,12 @@ deleteUserForm.addEventListener('submit', (e) => {
         // Get deleteUser function from Firebase
         const deleteUser = firebase.functions().httpsCallable('deleteUser');
         // Call deleteUser passing in the userid of the user to be deleted
-        deleteUser({uid: userid}).then(result => {
+        deleteUser({ uid: userid }).then(result => {
             console.log(result);
             document.getElementById("spinner").style.visibility = "hidden";
             alert(result.data.message);
             window.location = "/researcher/rPortal.html";
-        }).catch(function(error) {
+        }).catch(function (error) {
             console.log(error);
             alert(error.message);
         })

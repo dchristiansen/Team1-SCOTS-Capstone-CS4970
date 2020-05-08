@@ -31,7 +31,7 @@ var firestore = firebase.firestore();
 
 //Description: Creates new session upon completion of game. Stores tap objects as an array of TapObjects.
 //Also updates the user document with the latest session time
-function createSession(assignmentID, bpm, soundOn, soundOff, cycles, feedback, userID, tapData){
+function createSession(assignmentID, bpm, soundOn, soundOff, cycles, feedback, userID, tapData, score){
 
     // Create a batch
     var batch = firestore.batch();
@@ -50,7 +50,8 @@ function createSession(assignmentID, bpm, soundOn, soundOff, cycles, feedback, u
         },
         userID: userID,
         sessionTime: firebase.firestore.Timestamp.now(),
-        taps: tapData
+        taps: tapData,
+        score: score
     };
     batch.set(newSessionRef, docData);
 
@@ -128,7 +129,7 @@ async function getAllSessionsForUser(userID){
         //IMPORTANT
         //we can implement pagination later on to perform batched reads
         //I am implementing a limit so we don't run into pricing issues
-        var query = sessions.where("userID", "==", userID).limit(20);
+        var query = sessions.where("userID", "==", userID);
 
         let promise = await query.get();
         for (const sess of promise.docs){
@@ -243,6 +244,8 @@ async function getUsers(){
 
 //       boolean feedback: true if feedback was enabled, false if not
 
+//       boolean defaultAssignment: true if the assignment is a default assignment to be assigned to all users
+
 //       string array userIDs: the list of users that are assigned this assignment
 
 //Output: none
@@ -250,7 +253,7 @@ async function getUsers(){
 //Description: Creates new assignment for listed users based off of passed parameters
 
 //TODO: Add error handling
-function createAssignment(assignmentLabel, bpm, soundOn, soundOff, cycles, feedback, userIDs ){
+function createAssignment(assignmentLabel, bpm, soundOn, soundOff, cycles, feedback, defaultAssignment, userIDs){
     let assignments = firestore.collection("assignments");
     let docData = {
         assignmentLabel: assignmentLabel,
@@ -261,6 +264,7 @@ function createAssignment(assignmentLabel, bpm, soundOn, soundOff, cycles, feedb
             cycles: cycles,
             feedback: feedback,
         },
+        default: defaultAssignment,
         userIDs: userIDs,
     };
     assignments.add(docData).then(function(){
@@ -289,11 +293,12 @@ async function getAssignmentsForUser(userID){
             dataArray: []
         }
         var assignments = firestore.collection("assignments").orderBy("assignmentLabel");
-        var query = assignments.where("userIDs", "array-contains", userID).limit(20);
+        var userIdQuery = assignments.where("userIDs", "array-contains", userID);
+        var defaultQuery = assignments.where("default", "==", true);
 
-        let promise = await query.get();
+        let userIdPromise = await userIdQuery.get();
 
-        for (const assign of promise.docs){
+        for (const assign of userIdPromise.docs){
             returnData.dataArray.push(
                 {
                     id: assign.id,
@@ -301,6 +306,20 @@ async function getAssignmentsForUser(userID){
                 }
             );
         }
+
+        let defaultPromise = await defaultQuery.get();
+
+        for(const assign of defaultPromise.docs) {
+            if(!returnData.dataArray.includes(assign)){
+                returnData.dataArray.push(
+                    {
+                        id: assign.id,
+                        data:assign.data()
+                    }
+                )
+            }
+        }
+
         return returnData;
     }
 
@@ -321,7 +340,7 @@ async function getAllAssignments(){
       var returnData = {
           dataArray: []
       }
-      var assignments = firestore.collection("assignments").orderBy("assignmentLabel").limit(20);
+      var assignments = firestore.collection("assignments").orderBy("assignmentLabel");
 
       let promise = await assignments.get();
 

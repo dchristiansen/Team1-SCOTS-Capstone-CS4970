@@ -25,9 +25,15 @@ From the research subject perspective, a user will be able to login to their pro
 2. Clone the master branch from https://github.com/dchristiansen/Team1-SCOTS-Capstone-CS4970
 3. Request access to the Scots-Capstone Firebase project from the owner
 4. In the root directory of the project, run `npm install -g firebase-tools`
-5. In the root directory of the project, run `firebase init functions` to install the node module dependencies for Firebase Functions
-6. Run `firebase login` and login via the browser
-7. Run `firebase projects: list` to verify that the Scots-Capstone project is there
-8. To serve the application locally, run `firebase serve`
-9. To deploy the application to the application, from the root project of your local project directory, run `firebase deploy --only hosting:ractrainer`
-10. Visit `https://ractrainer.firebaseapp.com/`
+5. cd into the functions directory
+6. In the functions directory of the project, run `npm install` to install the node module dependencies for Firebase Functions
+   Run `firebase deploy --only functions` to deploy the functions
+7. Run `firebase login` and login via the browser
+8. Run `firebase projects: list` to verify that the Scots-Capstone project is there
+9. To serve the application locally, run `firebase serve`
+10. To deploy the application to the application, from the root project of your local project directory, run `firebase deploy --only hosting:ractrainer`
+11. Visit `https://ractrainer.firebaseapp.com/`
+
+## Other Notes
+Our database security rules are not included in the codebase. You can view and edit them in the Google Firebase Project Console.
+

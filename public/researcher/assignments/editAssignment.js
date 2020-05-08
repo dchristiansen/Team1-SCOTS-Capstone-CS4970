@@ -8,6 +8,13 @@ const btnAssignToUsers = document.getElementById("btnAssignToUsers");
 // Button to delete assignment
 const btnDeleteAssignment = document.getElementById("btnDeleteAssignment");
 
+const table = document.querySelector("#tablebody");
+let userData;
+let currentUserArray;
+let numPages;
+let currentPage = 1;
+let entriesPerPage = 5;
+
 /*
     btnDeleteAssignment:
     Event listener on the button delete an assignment from the database
@@ -27,8 +34,10 @@ btnDeleteAssignment.addEventListener("click", e => {
         }).catch(function(error) {
             alert("Error deleting assignment: " + error);
         });
-    }   
+    }
 });
+
+let checkedArray;
 
 /*
     btnAssignToUsers:
@@ -36,23 +45,11 @@ btnDeleteAssignment.addEventListener("click", e => {
     set the userIDs field in the database for the assignment
 */
 btnAssignToUsers.addEventListener("click", e => {
-    // Get checkboxes
-    let checkboxes = $("#tablebody input:checked");
-    
-    // Get input of the checkboxes
-    checkboxes = $("#tablebody input");
-    // Loop through userData array which corresponds to the checkboxes
+    let assignedUIDs = [];
 
-    var assignedUIDs = [];
-
-    for(let i = 0; i < userData.length; i++)
-    {
-        // If a checkbox is checked
-        if(checkboxes[i].checked)
-        {
-            // Grab the uid of the ith user in the userData array
+    for(let i = 0; i < checkedArray.length; i++) {
+        if(checkedArray[i] == true) {
             let assignTo = userData[i].id;
-            // Push the uid of the user onto the array
             assignedUIDs.push(assignTo);
         }
     }
@@ -83,37 +80,55 @@ btnSetAssignment.addEventListener("click", e => {
 
     // Get fields from the html document
     var assignmentLabel = document.getElementById("assignment_name").value;
+    assignmentLabel = encode(assignmentLabel);
+
     var bpm = document.getElementById("BPM").value;
     var timeWSound = document.getElementById("timeWSound").value;
     var cycles = document.getElementById("cycles").value;
     var timeWOSound = document.getElementById("timeWOSound").value;
     var feedback = document.getElementById("feedback").checked;
+    var defaultAssignment = document.querySelector("#default").checked;
 
-    // Get the assignment document id
-    let params = new URLSearchParams(location.search);
-    let assignmentId = params.get('id');
+    if (assignmentLabel == null || assignmentLabel == "" ||
+         bpm == null || bpm == "" ||
+         timeWSound == null || timeWSound == "" ||
+         cycles == null || cycles == "" ||
+         timeWOSound == null || timeWOSound == "")
+    {
+        alert("All parameters must be set to edit an assignment");
+    }
+    else
+    {
+        // Get the assignment document id
+        let params = new URLSearchParams(location.search);
+        let assignmentId = params.get('id');
 
-    // Create parameters object
-    var parameters = {
-        bpm: bpm,
-        cycles: cycles,
-        feedback: feedback,
-        soundOffTime: timeWOSound,
-        soundOnTime: timeWSound
-    };
+        // Create parameters object
+        var parameters = {
+            bpm: bpm,
+            cycles: cycles,
+            feedback: feedback,
+            soundOffTime: timeWOSound,
+            soundOnTime: timeWSound
+        };
 
-    // Assignment document reference
-    var assignmentDoc = firestore.collection("assignments").doc(assignmentId);
+        // Assignment document reference
+        var assignmentDoc = firestore.collection("assignments").doc(assignmentId);
+
 
     // Update the assignment label and the parameters
-    assignmentDoc.update({
-        assignmentLabel: assignmentLabel,
-        parameters: parameters
-    }).then(function() {
-        alert("Assignment successfully updated.");
-    }).catch(function(error) {
-        console.error(error);
-    });
+      assignmentDoc.update({
+          assignmentLabel: assignmentLabel,
+          parameters: parameters,
+          default: defaultAssignment,
+      }).then(function() {
+          alert("Assignment successfully updated.");
+      }).catch(function(error) {
+          console.error(error);
+      });
+
+    }
+
 });
 
 /*
@@ -150,13 +165,17 @@ async function populateParameters(assignmentId) {
         {
             // Get fields from the database
             var assignmentLabel = doc.data().assignmentLabel;
+            assignmentLabel = decode(assignmentLabel);
+
             var parameters = doc.data().parameters;
+            var defaultAssignment = doc.data().default;
             // Set the values of the html document
             document.getElementById("assignment_name").value = assignmentLabel;
             document.getElementById("BPM").value = parameters.bpm;
             document.getElementById("timeWSound").value = parameters.soundOnTime;
             document.getElementById("timeWOSound").value = parameters.soundOffTime;
             document.getElementById("cycles").value = parameters.cycles;
+            document.querySelector("#default").checked = defaultAssignment;
             if (!parameters.feedback)
             {
                 document.getElementById("feedback").removeAttribute("checked");
@@ -164,30 +183,22 @@ async function populateParameters(assignmentId) {
         }
     });
 }
-let userData;
+
 /*
     populateUserTable
     Fetch all users and populate the user table
 */
-async function populateUserTable(assignmentId)
+async function populateUserTable(assignmentId, newPage)
 {
-    var assignedUIDs = [];
-    var assignmentDoc = await firestore.collection("assignments").doc(assignmentId)
+    table.innerHTML = "";
 
-    await assignmentDoc.get().then(function(doc) {
-        if(doc.exists)
-        {
-            assignedUIDs = doc.data().userIDs;
-        }
-    });
+    let startPosition = (newPage - 1) * entriesPerPage;
 
-    // Get table from the html document
-    let table = document.querySelector("#tablebody");
-    // Get users
-    let usersCall = await getUsers();
-    userData = usersCall.dataArray;
+    let newArray = currentUserArray.slice(startPosition, startPosition + 5);
+
     // Loop through usersData
-    userData.forEach(function(obj) {
+    for(let i = 0; i < newArray.length; i++){
+        let obj = newArray[i];
         // Create a row entry for each user
         let tr = document.createElement('tr');
         let td_id = document.createElement('td');
@@ -205,7 +216,7 @@ async function populateUserTable(assignmentId)
         }
         td_ses.innerHTML = latestSessionTime;
         td_id.innerHTML = obj.data.userID;
-        
+
         // Append the user id and latest session time to the row
         tr.appendChild(td_id);
         tr.appendChild(td_ses);
@@ -216,9 +227,12 @@ async function populateUserTable(assignmentId)
         let checkbox = document.createElement('input');
         let span = document.createElement('span');
         checkbox.type = "checkbox";
-        if(assignedUIDs.includes(obj.id))
+        checkbox.addEventListener('input', checkCheckedArray);
+        if(checkedArray[i + (currentPage - 1) * entriesPerPage])
         {
             checkbox.checked = true;
+        } else {
+            checkbox.checked = false;
         }
         label.appendChild(checkbox);
         label.appendChild(span);
@@ -229,30 +243,137 @@ async function populateUserTable(assignmentId)
 
         // Append row to the table
         table.appendChild(tr);
-    });
+    }
+    createPagination();
 }
 
-// Observer for FirebaseAuth
+/*
+  createPagination:
+  Creates the pagination icons beneath the table,
+  based on the number of pages
+*/
+function createPagination() {
+    pagination.innerHTML = "";
+    numPages = Math.ceil(currentUserArray.length / entriesPerPage);
+
+    //Create the left chevron for page scrolling
+    let leftChevron = document.createElement('li');
+    leftChevron.className = "waves-effect";
+
+    let leftChevronA = document.createElement('a');
+    leftChevronA.href = "#!";
+    leftChevronA.setAttribute('data-page', "prev");
+
+    let leftChevronIcon = document.createElement('i');
+    leftChevronIcon.className = "material-icons";
+    leftChevronIcon.innerHTML = "chevron_left";
+
+    leftChevronA.appendChild(leftChevronIcon);
+    leftChevron.appendChild(leftChevronA);
+    pagination.appendChild(leftChevron);
+
+    //Create the buttons for each page
+    for (let i = 0; i < numPages; i++) {
+        let current = i + 1;
+        let li = document.createElement('li');
+        li.id = "page" + current;
+        li.className = "waves-effect";
+        if (current == currentPage) {
+            li.className += " active";
+        }
+
+        let a = document.createElement('a');
+        a.setAttribute('data-page', current)
+        a.innerHTML = current;
+
+        li.appendChild(a);
+        pagination.appendChild(li);
+    }
+
+    //Add the right chevron for page scrolling
+    let rightChevron = document.createElement('li');
+    rightChevron.className = "waves-effect";
+
+    let rightChevronA = document.createElement('a');
+    rightChevronA.href = "#!";
+    rightChevronA.setAttribute('data-page', "next")
+
+    let rightChevronIcon = document.createElement('i');
+    rightChevronIcon.className = "material-icons";
+    rightChevronIcon.innerHTML = "chevron_right";
+
+    rightChevronA.appendChild(rightChevronIcon);
+    rightChevron.appendChild(rightChevronA);
+    pagination.appendChild(rightChevron);
+}
+
+function checkCheckedArray(e) {
+    let index = e.path[3].rowIndex - 1;
+    index += (currentPage - 1) * entriesPerPage;
+    checkedArray[index] = !checkedArray[index];
+}
+
+function getAssignedUsers() {
+    for(let i = 0; i < userData.length; i++) {
+        if(assignedUIDs.includes(userData[i].id)) {
+            checkedArray[i] = true;
+        } else {
+            checkedArray[i] = false;
+        }
+    }
+}
+
+let assignmentId;
+let assignedUIDs = [];
+
+ /* onAuthStateChanged(user)
+  Observer for Authentication State:
+  If the user is logged in and the user is an admin, then this listener will
+  set the header, parameters, and the user table. Otherwise, go back to the user dashboard
+  or back to the login screen if not authenticated
+*/
+
 firebase.auth().onAuthStateChanged((user) => {
     // If user is logged in
     if(user)
     {
         // Get admin token result
-        user.getIdTokenResult().then(idTokenResult => {
+        user.getIdTokenResult().then(async function(idTokenResult) {
             user.admin = idTokenResult.claims.admin;
             // If user is an admin
             if(user.admin)
             {
                 // Get assignmentId from url (selected from previous page)
                 let params = new URLSearchParams(location.search);
-                let assignmentId = params.get('id');
+                assignmentId = params.get('id');
 
                 // Set the header with assignmentId
                 setHeader(assignmentId);
                 // Populate the parameters with the assignmentId
                 populateParameters(assignmentId);
+
+                assignedUIDs = [];
+                var assignmentDoc = await firestore.collection("assignments").doc(assignmentId)
+            
+                await assignmentDoc.get().then(function(doc) {
+                    if(doc.exists)
+                    {
+                        assignedUIDs = doc.data().userIDs;
+                    }
+                });
+            
+                // Get users
+                let usersCall = await getUsers();
+                currentUserArray = userData = usersCall.dataArray;
+
+                checkedArray = new Array(userData.length);
+            
+                numPages = Math.ceil(currentUserArray.length/entriesPerPage);
+
+                getAssignedUsers();
+
                 // Populate the userTable
-                populateUserTable(assignmentId);
+                populateUserTable(assignmentId, 1);
             }
             else
             {
@@ -274,8 +395,60 @@ firebase.auth().onAuthStateChanged((user) => {
 $(document).ready(function() {
     $("#btnSelectAll").click(function() {
         let checked = !$(this).data('checked');
-        $('input:checkbox').prop('checked', checked);
-        $(this).val(checked ? 'uncheck all' : 'check all')
+        $('input:checkbox').not("#feedback").prop('checked', checked);
+        $(this).val(checked ? 'uncheck all' : 'check all');
         $(this).data('checked', checked);
+        for(let i = 0; i < checkedArray.length; i++) {
+            checkedArray[i] = checked;
+        }
     })
 })
+
+$("#pagination").on("click", "a", function changePage(){
+    let newPage = $(this).data('page');
+  
+    //Change to the new page
+    if(newPage != currentPage) {
+        //For the right chevron
+        if(newPage == "next") {
+            newPage = currentPage+1;
+        }
+        //For the left chevron 
+        else if(newPage == "prev") {
+            newPage = currentPage-1;
+        }
+  
+        //Ensure that the new page can be accessed (in case left or right chevrons move it past the number of pages)
+        if(newPage <= numPages && newPage > 0) {
+            //Change the current page
+            currentPage = newPage;
+
+            populateUserTable(assignmentId, newPage);
+    
+            //Change the active page in the pagination menu
+            document.querySelector("#page" + currentPage).className = "waves-effect";
+            document.querySelector("#page" + newPage).className = "waves-effect active";
+            }
+    }
+  });
+
+/*
+    decode:
+    decodes string when reading encoded string from DB
+*/
+function decode(str)
+{
+    var txt = document.createElement('textarea');
+    txt.innerHTML = str;
+    return txt.value;
+}
+
+/*
+    encode:
+    Encodes assignment label to prevent XSS
+*/
+function encode(str){
+    return String(str).replace(/[^\w. ]/gi, function(c){
+       return '&#'+c.charCodeAt(0)+';';
+    });
+}
