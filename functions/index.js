@@ -72,22 +72,64 @@ exports.addAdminRole = functions.https.onCall(async(data, context) => {
     and adds the admin role to the passed in user, no security checks
 */
 exports.createAdmin = functions.https.onCall(async(data, context) => {
-    // Get the email of the user that you want to make an admin
-    return admin.auth().getUserByEmail(data.email).then(async (user) => {
-        // Set their custom claim to admin: true
-        return admin.auth().setCustomUserClaims(user.uid, {
-            admin: true
+    var anyAdmins = getAdmins();
+
+    if (!anyAdmins)
+    {
+        // Get the email of the user that you want to make an admin
+        return admin.auth().getUserByEmail(data.email).then(async (user) => {
+            // Set their custom claim to admin: true
+            return admin.auth().setCustomUserClaims(user.uid, {
+                admin: true
+            });
+        }).then(() => {
+            // Return success message
+            return {
+                message: 'Success! The user has been made an admin.'
+            }
+        }).catch(error => {
+            // Return error message
+            return {message: error.message};
         });
-    }).then(() => {
-        // Return success message
-        return {
-            message: 'Success! The user has been made an admin.'
-        }
-    }).catch(error => {
-        // Return error message
-        return {message: error.message};
-    });
+    }
+    else
+    {
+        return {message: 'There are admins in the system'};
+    }       
 });
+
+/*
+    getAdmins
+    params: nextPageToken
+    Returns true of there are admins in the system and false if there are none
+*/
+function getAdmins(nextPageToken) {
+    // Call admin auth api to list users
+    return admin.auth().listUsers(1000, nextPageToken).then(function(listUsersResult) {
+        // Loop through list of user records
+        for(const userRecord of listUsersResult.users) 
+        {
+            // If the user has custom claims
+            if(userRecord.customClaims) 
+            {
+                // If the user has the admin custom claim, return true
+                if(userRecord.customClaims.admin)
+                {
+                    return true;
+                }
+            }
+        }
+        // If there are more batches of users, call the function again with the pageToken offset
+        if(listUsersResult.pageToken) {
+            getAdmins(listUsersResult.pageToken);
+        }
+        // If we have gone through entire list, return false
+        return false;
+    }).catch(function(error) {
+        console.log(error);
+        return false;
+    });
+}
 
 
 /*
