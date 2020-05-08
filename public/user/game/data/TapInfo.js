@@ -1,3 +1,7 @@
+//File: /user/game/data/TapInfo.js
+
+//Description: Creates a TapInfo object which holds all the information about a single button press during the game.
+
 class TapInfo{
     beat;
     prevBeat;

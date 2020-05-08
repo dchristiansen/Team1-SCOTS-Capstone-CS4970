@@ -1,3 +1,9 @@
+//File: /user/game/behaviours/Timer.js
+
+//Description: An EdGE behavior which controls the flow of the game over time.
+
+//Controls the start and end of the game and plays the beat sound during the game.
+
 import Base from "../../engine/Base.js"
 import ScoreCalculator from "./ScoreCalculator.js"
 import TapHandler from "./TapHandler.js"
@@ -34,6 +40,12 @@ export default class Timer extends Base.Behavior {
         this.cycles = cycles;
     }
 
+    /*
+        start
+        params: none
+        returns: none
+        Initializes this behavior. Called when EdGE intializes
+    */
     start() {
         this.scoreCalculator = this.gameObject.getComponent(ScoreCalculator);
         this.beatSound = new Audio("./game/assets/newbeat.wav");
@@ -46,14 +58,19 @@ export default class Timer extends Base.Behavior {
         this.mostRecentBeat = new Date().getTime();
     }
 
+    /*
+        playBeat
+        params: none
+        Handles any necessary volume changes and plays the beat sound.
+    */
     playBeat() {
         //Check if we're in the sound on phase
         if (this.soundOn) {
-            
+
             //Check if the sound has maxed out if we are in a new cycle
-            if(!this.soundMax) {
+            if (!this.soundMax) {
                 let newVolume = this.beatSound.volume + this.volumeChange;
-                if(newVolume >= 1) {
+                if (newVolume >= 1) {
                     newVolume = 1;
                     this.soundMax = true;
                 }
@@ -66,58 +83,54 @@ export default class Timer extends Base.Behavior {
                 if (newVolume < 0) {
                     newVolume = 0;
                 }
-                //console.log("Lowering volume to " + newVolume);
                 this.beatSound.volume = newVolume;
             }
             this.beatSound.play();
         }
-        //If we're in the sound off phase, check if we're not on the last cycle
-        // else if (this.currentCycle != this.cycles) {
-        //     //If not on the last cycle, check if we need to raise volume (3/4 of the way through soundOffPhase)
-        //     if (this.currentTime >= (this.phaseSwitchTime + (0.75 * this.noSoundPhaseTime)) && this.startTime != -1) {
-        //         let newVolume = this.beatSound.volume + this.volumeChange;
-        //         if (newVolume > 1) {
-        //             newVolume = 1;
-        //         }
-        //         //console.log("Increasing volume to " + newVolume);
-        //         this.beatSound.volume = newVolume;
-        //     }
-        //     if (this.beatSound.volume > 0){
-        //         this.beatSound.play();
-        //     }
-        // }
         this.mostRecentBeat = new Date().getTime();
     }
 
+    /*
+        startTimer
+        params: none
+        returns: start time of the game
+        Sets the timings of future timer events based on the player's first button press.
+    */
     startTimer() {
         this.tapHandler = this.gameObject.getComponent(TapHandler);
 
         //Set the start time to the most recent beat that they are trying to hit
         this.startTime = this.mostRecentBeat;
+
+        //Set remaining timing events based on this start time
         this.phaseSwitchTime = this.startTime + this.soundPhaseTime;
         this.endTime = this.phaseSwitchTime + this.noSoundPhaseTime + (this.beatTime / 2);
         this.tapHandler.startTime = this.startTime;
         this.soundOn = true;
         this.tapHandler.soundOn = true;
-        //console.log("Start time is " + this.startTime);
         return this.startTime;
     }
 
+    /*
+        update
+        params: none
+        returns: none
+        Runs this behavior's logic. Called every frame by EdGE
+    */
     update() {
         this.currentTime = new Date().getTime();
         //If we're in the sound phase
         if (this.soundOn) {
             if (this.currentTime > this.phaseSwitchTime + (this.beatTime / 2)) {
-                //console.log("Turning sound off");
                 this.soundOn = false;
                 this.beatSound.volume = 0;
                 this.tapHandler.soundOn = false;
                 this.beatSound.volume = 0;
                 this.soundMax = false;
             }
-            //In the sound off phase
+            //If we're in the sound off phase
         } else {
-            //If the current time we are at is the final time
+            //If the cycle has ended
             if (this.currentTime > this.endTime) {
                 if (!this.gameOver) {
                     //If we are on the last cycle
@@ -137,18 +150,21 @@ export default class Timer extends Base.Behavior {
                         //Create a reference to this for use within the auth functions
                         let ref = this;
                         firebase.auth().onAuthStateChanged(async function (firebaseUser) {
+                            //If the player is logged in
                             if (firebaseUser) {
 
-                                //Save the session using the array of csv strings
-                                
-                                //console.log(sesh);
                                 //Set all of the sessionStorage information for use on the graph page
                                 let score = ref.scoreCalculator.newCalculateScore(ref.tapHandler.tapDataSoundOff, ref.beatTime)
                                 sessionStorage.setItem('totalTapArray', JSON.stringify(ref.tapHandler.tapDataTotal));
                                 sessionStorage.setItem('score', score);
                                 sessionStorage.setItem('data', JSON.stringify(ref.tapHandler.tapDataSoundOff));
+
+                                //Save the session to the database using the array of csv strings
                                 let sesh = await createSession(assignmentId, ref.bpm, ref.soundPhaseTime, ref.noSoundPhaseTime, ref.cycles, feedback, firebaseUser.uid, tapArrayString, score);
+
                                 document.location.href = "/user/results.html";
+
+                                //If the player is NOT logged in
                             } else {
                                 //Set all of the sessionStorage information for use on the graph page
                                 sessionStorage.setItem('totalTapArray', JSON.stringify(ref.tapHandler.tapDataTotal));
@@ -159,7 +175,6 @@ export default class Timer extends Base.Behavior {
                         });
                     } else {
                         //Reset everything for the next cycle
-                        //console.log("Resetting");
                         this.currentCycle++;
                         this.startTimer();
                         this.tapHandler.currentCycle = this.currentCycle;
