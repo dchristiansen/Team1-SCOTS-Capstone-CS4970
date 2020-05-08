@@ -1,36 +1,55 @@
+//File: /user/game/scenes/PlayScene.js
+
+//Description: Creates the EdGE scene where the RACTrainer main gameplay happens
+
 import Engine from "../../engine/Engine.js"
 import GameBehaviours from "../GameBehaviors.js"
 
-export default class PlayScene extends Engine.Base.Scene{
-    constructor(bpm, timeWSound, timeWOSound, cycles, feedback){
+export default class PlayScene extends Engine.Base.Scene {
+    constructor(bpm, timeWSound, timeWOSound, cycles, feedback) {
+        //Construct a Scene with name "PlayScene"
         super("PlayScene");
 
-        console.log(bpm + " " + timeWSound + " " + timeWOSound + " " + cycles + " " + feedback);
-        console.log("hello");
+        //Create the feedbackCircle GameObject
+        let feedbackCircle = new Engine.Base.GameObject(320, 240);
 
-        let gameObject = new Engine.Base.GameObject(320, 240);
+        //Create a renderable CircleComponent component and add it to the feedbackCircle GameObject
         let circle = new Engine.Components.CircleComponent(100, "white", "black");
-        gameObject.addComponent(circle);
+        feedbackCircle.addComponent(circle);
 
+        //Create a ScoreCalculator behavior and add it to the feedbackCircle GameObject
         let ScoreCalculator = new GameBehaviours.ScoreCalculator();
-        gameObject.addComponent(ScoreCalculator);
+        feedbackCircle.addComponent(ScoreCalculator);
 
+        //Create a Timer behavior and add it to the feedbackCircle GameObject
         let Timer = new GameBehaviours.Timer(bpm, timeWSound, timeWOSound, cycles);
-        gameObject.addComponent(Timer);
+        feedbackCircle.addComponent(Timer);
 
-        let guideText = new Engine.Base.GameObject(0, -150);
-        let text = new Engine.Components.TextComponent("", "20px Roboto", "white");
-        let textController = new GameBehaviours.TextController(Timer, text);
-        guideText.addComponent(text);
-        guideText.addComponent(textController);
-        gameObject.children.push(guideText);
-
+        //Create a TapHandler behavior and add it to the feedbackCircle GameObject
         let TapHandler = new GameBehaviours.TapHandler(bpm);
-        gameObject.addComponent(TapHandler);
+        feedbackCircle.addComponent(TapHandler);
 
+        //Create a CircleBehavior behavior and add it to the feedbackCircle GameObject
         let CircleBehaviour = new GameBehaviours.CircleBehaviour(feedback);
-        gameObject.addComponent(CircleBehaviour);
+        feedbackCircle.addComponent(CircleBehaviour);
 
-        this.children.push(gameObject);
+        //Create the intruction guideText GameObject
+        let guideText = new Engine.Base.GameObject(0, -150);
+        
+        //Create a renderable TextComponent component and add it to the guideText GameObject
+        let text = new Engine.Components.TextComponent("", "20px Roboto", "white");
+        guideText.addComponent(text);
+
+        //Create a TextController behavior and add it to the guideText GameObject
+        let textController = new GameBehaviours.TextController(Timer, text);
+        guideText.addComponent(textController);
+
+        //Add the guideText GameObject as a child of the feedbackCircle GameObject
+        feedbackCircle.children.push(guideText);
+
+        //Add the feedbackCircle GameObject to the scene
+        this.children.push(feedbackCircle);
+
+
     }
 }
