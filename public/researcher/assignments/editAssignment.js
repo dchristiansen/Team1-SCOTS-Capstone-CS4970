@@ -210,7 +210,7 @@ async function populateUserTable(assignmentId, newPage)
         {
             latestSessionTime = latestSessionTime.seconds * 1000;
             latestSessionTime = new Date(latestSessionTime);
-            
+
         }
         else
         {
@@ -397,7 +397,7 @@ firebase.auth().onAuthStateChanged((user) => {
 $(document).ready(function() {
     $("#btnSelectAll").click(function() {
         let checked = !$(this).data('checked');
-        $('input:checkbox').not("#feedback").prop('checked', checked);
+        $('input:checkbox').not(".rip_kobe").prop('checked', checked);
         $(this).val(checked ? 'uncheck all' : 'check all');
         $(this).data('checked', checked);
         for(let i = 0; i < checkedArray.length; i++) {
