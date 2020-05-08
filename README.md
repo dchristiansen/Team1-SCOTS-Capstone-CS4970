@@ -27,7 +27,7 @@ From the research subject perspective, a user will be able to login to their pro
 4. In the root directory of the project, run `npm install -g firebase-tools`
 5. cd into the functions directory
 6. In the functions directory of the project, run `npm install` to install the node module dependencies for Firebase Functions
-   Run firebase deploy --only functions
+   Run `firebase deploy --only functions` to deploy the functions
 7. Run `firebase login` and login via the browser
 8. Run `firebase projects: list` to verify that the Scots-Capstone project is there
 9. To serve the application locally, run `firebase serve`

@@ -56,7 +56,7 @@ firebase.auth().onAuthStateChanged(async function(user) {
                         firebase.auth().signOut().then(function() {
                             window.location = "/login.html";
                         }).catch(function (error) {
-                            console.log(error);
+
                         });
                     });
                 } else {

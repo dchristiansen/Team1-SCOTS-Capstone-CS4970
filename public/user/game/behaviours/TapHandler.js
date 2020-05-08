@@ -41,7 +41,7 @@ export default class TapHandler extends Base.Behavior {
         this.tapInfo = new TapInfo(currentTime - this.startTime - timing, this.beatTime, currentTime - this.startTime, "none", timeSinceLast, this.soundOn, this.side, this.currentCycle);
         this.lastTap = currentTime - this.startTime;
 
-        return timeSinceLast;
+        return this.tapInfo.delta;
     }
 
     tapUp() {
@@ -52,6 +52,6 @@ export default class TapHandler extends Base.Behavior {
         if(!this.timer.soundOn && !this.timer.gameOver)
             this.tapDataSoundOff.push(this.tapInfo);
         this.tapDataTotal.push(this.tapInfo);
-        console.log(this.tapInfo);
+        
     }
 }

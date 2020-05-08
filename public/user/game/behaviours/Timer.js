@@ -23,6 +23,7 @@ export default class Timer extends Base.Behavior {
     mostRecentBeat = 0;
     volumeChange;
     currentCycle = 1;
+    soundMax = true;
 
     constructor(bpm, soundPhaseTime, noSoundPhaseTime, cycles) {
         super();
@@ -48,6 +49,17 @@ export default class Timer extends Base.Behavior {
     playBeat() {
         //Check if we're in the sound on phase
         if (this.soundOn) {
+            
+            //Check if the sound has maxed out if we are in a new cycle
+            if(!this.soundMax) {
+                let newVolume = this.beatSound.volume + this.volumeChange;
+                if(newVolume >= 1) {
+                    newVolume = 1;
+                    this.soundMax = true;
+                }
+                this.beatSound.volume = newVolume
+            }
+
             //Check if volume needs to be lowered (3/4 of the way through soundPhase), if so lower it
             if (this.currentTime >= (this.startTime + (0.75 * this.soundPhaseTime)) && this.startTime != -1) {
                 let newVolume = this.beatSound.volume - this.volumeChange;
@@ -60,20 +72,20 @@ export default class Timer extends Base.Behavior {
             this.beatSound.play();
         }
         //If we're in the sound off phase, check if we're not on the last cycle
-        else if (this.currentCycle != this.cycles) {
-            //If not on the last cycle, check if we need to raise volume (3/4 of the way through soundOffPhase)
-            if (this.currentTime >= (this.phaseSwitchTime + (0.75 * this.noSoundPhaseTime)) && this.startTime != -1) {
-                let newVolume = this.beatSound.volume + this.volumeChange;
-                if (newVolume > 1) {
-                    newVolume = 1;
-                }
-                //console.log("Increasing volume to " + newVolume);
-                this.beatSound.volume = newVolume;
-            }
-            if (this.beatSound.volume > 0){
-                this.beatSound.play();
-            }
-        }
+        // else if (this.currentCycle != this.cycles) {
+        //     //If not on the last cycle, check if we need to raise volume (3/4 of the way through soundOffPhase)
+        //     if (this.currentTime >= (this.phaseSwitchTime + (0.75 * this.noSoundPhaseTime)) && this.startTime != -1) {
+        //         let newVolume = this.beatSound.volume + this.volumeChange;
+        //         if (newVolume > 1) {
+        //             newVolume = 1;
+        //         }
+        //         //console.log("Increasing volume to " + newVolume);
+        //         this.beatSound.volume = newVolume;
+        //     }
+        //     if (this.beatSound.volume > 0){
+        //         this.beatSound.play();
+        //     }
+        // }
         this.mostRecentBeat = new Date().getTime();
     }
 
@@ -98,7 +110,10 @@ export default class Timer extends Base.Behavior {
             if (this.currentTime > this.phaseSwitchTime + (this.beatTime / 2)) {
                 //console.log("Turning sound off");
                 this.soundOn = false;
+                this.beatSound.volume = 0;
                 this.tapHandler.soundOn = false;
+                this.beatSound.volume = 0;
+                this.soundMax = false;
             }
             //In the sound off phase
         } else {
@@ -115,7 +130,7 @@ export default class Timer extends Base.Behavior {
 
                         //Create the comma separated string to be stored in the database
                         stringJson.forEach(tap => {
-                            let stringToInput = tap.cycleNumber + "," + tap.beat + "," + tap.pressTime + "," + tap.releaseTime + "," + tap.timeSinceLast + "," + tap.delta + "," + tap.duration;
+                            let stringToInput = tap.cycleNumber + "," + tap.soundOn + "," + tap.beat + "," + tap.pressTime + "," + tap.releaseTime + "," + tap.timeSinceLast + "," + tap.delta + "," + tap.duration;
                             tapArrayString.push(stringToInput);
                         });
 
@@ -125,12 +140,14 @@ export default class Timer extends Base.Behavior {
                             if (firebaseUser) {
 
                                 //Save the session using the array of csv strings
-                                let sesh = await createSession(assignmentId, ref.bpm, ref.soundPhaseTime, ref.noSoundPhaseTime, ref.cycles, feedback, firebaseUser.uid, tapArrayString);
+                                
                                 //console.log(sesh);
                                 //Set all of the sessionStorage information for use on the graph page
+                                let score = ref.scoreCalculator.newCalculateScore(ref.tapHandler.tapDataSoundOff, ref.beatTime)
                                 sessionStorage.setItem('totalTapArray', JSON.stringify(ref.tapHandler.tapDataTotal));
-                                sessionStorage.setItem('score', ref.scoreCalculator.newCalculateScore(ref.tapHandler.tapDataSoundOff, ref.beatTime));
+                                sessionStorage.setItem('score', score);
                                 sessionStorage.setItem('data', JSON.stringify(ref.tapHandler.tapDataSoundOff));
+                                let sesh = await createSession(assignmentId, ref.bpm, ref.soundPhaseTime, ref.noSoundPhaseTime, ref.cycles, feedback, firebaseUser.uid, tapArrayString, score);
                                 document.location.href = "/user/results.html";
                             } else {
                                 //Set all of the sessionStorage information for use on the graph page
@@ -145,7 +162,6 @@ export default class Timer extends Base.Behavior {
                         //console.log("Resetting");
                         this.currentCycle++;
                         this.startTimer();
-                        this.beatSound.volume = 1;
                         this.tapHandler.currentCycle = this.currentCycle;
                     }
                 }
