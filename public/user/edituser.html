@@ -1,6 +1,19 @@
+<!-- edituser.html
+This page allows a logged in user to change their personal password
+-->
+
 <!DOCTYPE html>
 <html>
     <head>
+         <!-- Global site tag (gtag.js) - Google Analytics -->
+         <script async src="https://www.googletagmanager.com/gtag/js?id=UA-165901337-1"></script>
+         <script>
+                 window.dataLayer = window.dataLayer || [];
+                 function gtag(){dataLayer.push(arguments);}
+                 gtag('js', new Date());
+ 
+                 gtag('config', 'UA-165901337-1');
+         </script>
         <!--Import Google Icon Font-->
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <!--Import materialize.css-->
@@ -13,6 +26,8 @@
         <script src="/__/firebase/init.js"></script>
         <!--Let browser know website is optimized for mobile-->
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+         
         <style>
             a.brand-logo {
               padding-left: 10px
@@ -36,22 +51,26 @@
             <h2 class="white-text">Change Password</h2>
             <div class="row">
                 <div class="input-field col s12 m6 l6">
+                    <!-- New password input field -->
                     <input type="password" id="password" class="white-text" onkeyup='check();'>
                     <label class="active white-text" for="password">New Password</label>
                 </div>
             </div>
             <div class="row">
                 <div class="input-field col s12 m6 l6">
+                    <!-- Confirm password input field -->
                     <input type="password" id="confirmPassword" class="white-text" onkeyup='check();'>
                     <label class="active white-text" for="confirmPassword">Confirm Password</label>
                 </div>
             </div>
             <div class="row">
+                <!-- Confirm message if the two passwords match -->
                 <div class="input-field col s6 offset-s2">
                     <span id="confirmMessage"></span>
                 </div>
             </div>
             <div class="row">
+                <!-- Button to change password -->
                 <div class="input-field col s6">
                     <button id="btnChangePassword" disabled="true" class="btn btn-large pink darken-2 waves-effect"><i class="material-icons right">chevron_right</i>Change Password</button>
                 </div>
@@ -68,6 +87,7 @@
                 $('.sidenav').sidenav();
               });
             </script>
+            <!-- Function to check if the password field and the confirm password field match-->
             <script>
                 var check = function() {
                     if ((document.getElementById('password').value == document.getElementById('confirmPassword').value) &&

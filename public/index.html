@@ -1,6 +1,20 @@
+<!-- index.html
+Landing page that shows some context about our project. From here, the users
+can login to their existing account or a visitor can play the game
+-->
+
 <!DOCTYPE html>
 <html>
   <head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-165901337-1"></script>
+    <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'UA-165901337-1');
+    </script>
     <!--Import Google Icon Font-->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!--Import materialize.css-->
@@ -13,6 +27,7 @@
     <script defer src="/__/firebase/init.js"></script>
     <!--Let browser know website is optimized for mobile-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+      
     <style>
       a.brand-logo {
 	    padding-left: 10px
@@ -44,15 +59,18 @@
       <br><br>
         <div class="container">
               <h1 class="white-text">Rhythmic Auditory Cueing</h1>
+              <!-- Information about this project -->
               <p class="white-text flow-text">Rhythmic Auditory Cueing (RAC) is a form of rehabilitation that utilizes a recurring beat or rhythm to offer an external cue to influence and improve motor skills, espcially gait. However, the notion of extracting a beat and keeping the same rhythm is challenging for humans, especially if the human has a neurological disorder such as Parkinson's Disease. If disruption to the brain's neural networks occur, by accident or by through neurological disorder, it can affect auditory-motor synchronization to a rhythm.</p>
               <p class="white-text flow-text">This is where RAC Trainer comes into play. Similar to how a metronome helps a musician stay on tempo, rhythmic stimulation or RAC provides an effective approach to improving gait parameters. RAC Trainer is an online game that allows users to visit a website and conduct interval RAC training from the comfort of their own homes.</p>
 
                 <div class="row">
                   <div class="col offset-4">
+                    <!-- Button to redirect to login.html -->
                     <button id="loginBtn" class="btn pink darken-3 waves-effect" onclick="location.href='/login.html';" type="button"><i class="material-icons right">person</i>Login</button>
                   </div>
 
                   <div class="col offset-s1">
+                    <!-- Button to redirect to parameters.html -->
                     <button id="btnPlay" class="btn pink darken-3 waves-effect" onclick="location.href='/user/parameters.html';" type="button"><i class="material-icons right">chevron_right</i>Play Game</button>
                   </div>
         <!-- End of Container -->

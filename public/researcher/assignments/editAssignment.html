@@ -1,7 +1,22 @@
+<!-- editAssignment.html
+This page allows a researcher to edit the parameters of an assignment or the name an assignment.
+Additionally, on this page, a researcher can assign/unassign this assignment to patients in the system,
+or even delete the assignment.
+-->
+
 <!DOCTYPE html>
 <html>
 
 <head>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-165901337-1"></script>
+  <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', 'UA-165901337-1');
+  </script>
   <!--Import Google Icon Font-->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <!--Import materialize.css-->
@@ -15,10 +30,11 @@
   <script src="/__/firebase/init.js"></script>
   <!--Let browser know website is optimized for mobile-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
   <style>
     a.brand-logo {
-    padding-left: 10px
-  }
+      padding-left: 10px
+    }
   </style>
   <title>RAC | Edit Assignment</title>
 </head>
@@ -35,10 +51,11 @@
   </ul>
 
   <div class="container">
-    <h2 class="white-text"  id="assignmentidheader">Assignment: </h2>
+    <h2 class="white-text" id="assignmentidheader">Assignment: </h2>
     <h3 class="white-text">Edit Assignment</h3>
     <div class="row">
       <div class="input-field col s12 m6 l6">
+        <!-- Assignment name -->
         <input  id="assignment_name" type="text" class="validate white-text" value=" ">
         <label for="assignment_name" class="white-text">Assignment Name</label>
       </div>
@@ -46,45 +63,75 @@
     <div class="row">
       <p class="range-field white-text col s12 m3 l3">
         BPM
-      <input type="number" id="BPM" name="BPM" class="white-text tooltipped" data-position="left"  data-tooltip="Beats Per Minute" value="100" min="30" max="1200" />
+        <!-- Beats per Minute -->
+      <input type="number" id="BPM" name="BPM" class="white-text tooltipped" data-position="left"
+          data-tooltip="Beats Per Minute" value="100" min="30" max="1200" />
       </p>
       <p class="range-field white-text col s12 m3 l3">
         Time with sound
-        <input type="number" name="timeWSound" class="white-text tooltipped" data-position="right" data-tooltip="Number of seconds where beat will be played" id="timeWSound" value="10" min="1" max="180" />
+        <!-- Time with Sound -->
+        <input type="number" name="timeWSound" class="white-text tooltipped" data-position="right"
+          data-tooltip="Number of seconds where beat will be played" id="timeWSound" value="10" min="1" max="180" />
       </p>
     </div>
     <div class="row">
       <p class="white-text col s12 m3 l3">Cycles
+        <!-- Number of Cycles -->
         <input type="number" name="cycles" id="cycles" class="white-text tooltipped" data-position="left" data-tooltip="Number of cyles where sound is on & off" value="1" min="1" max="10" />
       </p>
       <p class="range-field white-text col s12 m3 l3">
         Time without sound
+        <!--Time without sound -->
         <input type="number" name="timeWOSound" id="timeWOSound" class="white-text tooltipped" data-position="right" data-tooltip="Number of seconds where beat is off" value="10" min="1" max="180" />
       </p>
     </div>
     <div class="row">
-    <p class="white-text">Feedback</p>
-    <div class="switch col s3">
-      <label class="white-text">
-        Off
-        <input type="checkbox" id="feedback" class="pink" checked>
-        <span class="lever tooltipped" data-position="bottom" data-tooltip="If on will show feedback based on tap"></span>
-        On
-      </label>
+      <div class="col s3">
+        <p class="white-text">Feedback</p>
+        <div class="switch">
+          <label class="white-text">
+            Off
+            <input type="checkbox" id="feedback" class="pink" checked>
+            <span class="lever tooltipped" data-position="bottom"
+              data-tooltip="If on will show feedback based on tap"></span>
+            On
+          </label>
+        </div>
+      </div>
+      <div class="col s3">
+        <p class="white-text">Default Assignments</p>
+        <div class="switch">
+          <label class="white-text">
+            No
+            <input type="checkbox" id="default" class="pink">
+            <span class="lever tooltipped" data-position="bottom"
+              data-tooltip="If yes, all users will receive this assignment"></span>
+            Yes
+          </label>
+        </div>
+      </div>
     </div>
-    <div class="col">
-      <button id="btnSetAssignment" class="btn btn-small  pink darken-3 waves-effect"><i class="material-icons right">assignment</i>Set Assignment</button>
-    </div>
-    <div class="col">
-      <button id="btnDeleteAssignment" class="btn btn-small pink darken-3 waves-effect4"><i class="material-icons right">delete</i>Delete Assignment</button>
-    </div>
+    <br>
+    <div class="row">
+      <div class="col">
+        <button id="btnSetAssignment" class="btn btn-small  pink darken-3 waves-effect"><i
+            class="material-icons right">assignment</i>Set Assignment</button>
+      </div>
+      <div class="col">
+        <button id="btnDeleteAssignment" class="btn btn-small pink darken-3 waves-effect4"><i
+            class="material-icons right">delete</i>Delete Assignment</button>
+      </div>
     </div>
   </div>
 
   <div class="container">
     <h3 class="white-text">Users</h3>
-    <button id="btnAssignToUsers" class="waves-effect btn-large pink darken-3"><i class="material-icons right">assignment_ind</i>Assign to Selected Users</button>
+    <!-- Button that assigns the assignment to selected users -->
+    <button id="btnAssignToUsers" class="waves-effect btn-large pink darken-3"><i
+        class="material-icons right">assignment_ind</i>Assign to Selected Users</button>
+    <!-- Button to select or deselect all users-->
     <button id="btnSelectAll" class="waves-effect btn-large pink darken-3" style="margin-left: 1%">Select/Deselct All</button>
+    <!-- Table of all users in the system -->
     <table class="highlight white-text pink darken-3 centered" style="margin-top:3%">
       <thead>
         <tr>
@@ -96,18 +143,23 @@
       <tbody id="tablebody">
       </tbody>
     </table>
+
+    <div class="row">
+      <div class="col offset-s4">
+      <ul class="pagination" id="pagination">
+     </ul>
+     </div>
+   </div>
   </div>
 
   <script src="/navbar.js" type="module"></script>
   <script src="/researcher/assignments/editAssignment.js" type="module"></script>
-  <script
-    src="https://code.jquery.com/jquery-3.4.1.min.js"
-    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-    crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
   <!--JavaScript at end of body for optimized loading-->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   <script>
-  $(document).ready(function(){
+    $(document).ready(function () {
       $('.sidenav').sidenav();
       $('.tooltipped').tooltip();
     });

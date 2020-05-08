@@ -15,7 +15,7 @@ function insertAssignment() {
     var cycles = document.getElementById("cycles").value;
     var timeWOSound = document.getElementById("timeWOSound").value;
     var feedback = document.getElementById("feedback").checked;
-    
+
     if (assignmentName == null || assignmentName == "" ||
          bpm == null || bpm == "" || 
          timeWSound == null || timeWSound == "" ||
@@ -25,16 +25,22 @@ function insertAssignment() {
         alert("All parameters must be set to create an assignment");
     }
     else{
+        var defaultAssignment = document.querySelector("#default").checked;
         var userIDs = [];
 
         // Call imported createAssignment function to insert assignment into the database
-        createAssignment(assignmentName, bpm, timeWSound, timeWOSound, cycles, feedback, userIDs);
+        createAssignment(assignmentName, bpm, timeWSound, timeWOSound, cycles, feedback, defaultAssignment, userIDs);
     }
 
 }
 btnSetAssignment.onclick = insertAssignment;
 
-// Oberserver for FirebaseAuth
+/*
+  onAuthStateChanged(user)
+  Observer for Authentication State:
+  If the user is not logged in, then redirect to the login screen.
+  If a user is logged in and and not an admin, redirect to userdashboard
+*/
 firebase.auth().onAuthStateChanged(user => {
     // If user is not logged in, then redirect to the login page
     if(!user) {

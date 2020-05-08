@@ -27,7 +27,13 @@
 
     });
 
-    // Observer for FirebaseAuth
+    /*
+        onAuthStateChanged(firebaseUser)
+        Observer for Authentication State:
+        If the user is logged in and the user is an admin, then this listener will
+        redirect to the researcher portal. If the user is not an admin, then it will
+        redirect to the user dashboard
+    */
     firebase.auth().onAuthStateChanged(firebaseUser => {
         // If a user is logged in
         if(firebaseUser) 
