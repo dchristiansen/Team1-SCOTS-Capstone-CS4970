@@ -6,6 +6,15 @@ From this screen, the navbar also contains a link to edituser.html
 <!DOCTYPE html>
 <html>
     <head>
+         <!-- Global site tag (gtag.js) - Google Analytics -->
+         <script async src="https://www.googletagmanager.com/gtag/js?id=UA-165901337-1"></script>
+         <script>
+                 window.dataLayer = window.dataLayer || [];
+                 function gtag(){dataLayer.push(arguments);}
+                 gtag('js', new Date());
+ 
+                 gtag('config', 'UA-165901337-1');
+         </script>
         <!--Import Google Icon Font-->
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <!--Import materialize.css-->
@@ -18,16 +27,6 @@ From this screen, the navbar also contains a link to edituser.html
         <script defer src="/__/firebase/init.js"></script>
         <!--Let browser know website is optimized for mobile-->
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-
-        <!-- Global site tag (gtag.js) - Google Analytics -->
-        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-165901337-1"></script>
-        <script>
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-
-                gtag('config', 'UA-165901337-1');
-        </script>
         <style>
             a.brand-logo {
               padding-left: 10px
@@ -73,14 +72,7 @@ From this screen, the navbar also contains a link to edituser.html
 
           <div class="row">
             <div class="col offset-s4">
-            <ul class="pagination">
-             <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
-             <li class="active"><a href="#!">1</a></li>
-             <li class="waves-effect"><a href="#!">2</a></li>
-             <li class="waves-effect"><a href="#!">3</a></li>
-             <li class="waves-effect"><a href="#!">4</a></li>
-             <li class="waves-effect"><a href="#!">5</a></li>
-             <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
+            <ul class="pagination" id="pagination">
            </ul>
            </div>
          </div>
@@ -134,6 +126,7 @@ From this screen, the navbar also contains a link to edituser.html
             </form>
 
             <script src="/navbar.js" type="module"></script>
+            <script src="/user/userdashboard.js" type="module"></script>
             <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
             <script
               src="https://code.jquery.com/jquery-3.4.1.min.js"
@@ -144,7 +137,6 @@ From this screen, the navbar also contains a link to edituser.html
                   $('.sidenav').sidenav();
                 });
               </script>
-            <script src="/user/userdashboard.js" type="module"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
             <script src="/user/param.js"></script>
         </div>

@@ -5,6 +5,15 @@ This page allows a researcher to create an assignment
 <html>
 
 <head>
+   <!-- Global site tag (gtag.js) - Google Analytics -->
+   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-165901337-1"></script>
+   <script>
+           window.dataLayer = window.dataLayer || [];
+           function gtag(){dataLayer.push(arguments);}
+           gtag('js', new Date());
+
+           gtag('config', 'UA-165901337-1');
+   </script>
   <!--Import Google Icon Font-->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <!--Import materialize.css-->
@@ -18,19 +27,11 @@ This page allows a researcher to create an assignment
   <script src="/__/firebase/init.js"></script>
   <!--Let browser know website is optimized for mobile-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-165901337-1"></script>
-    <script>
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-
-            gtag('config', 'UA-165901337-1');
-    </script>
+   
   <style>
     a.brand-logo {
-    padding-left: 10px
-  }
+      padding-left: 10px
+    }
   </style>
   <title>RAC | Session Assignment</title>
 </head>
@@ -79,32 +80,44 @@ This page allows a researcher to create an assignment
         </p>
       </div>
       <div class="row">
-      <p class="white-text">Feedback</p>
-      <div class="switch col s3">
-        <!-- Feedback checkbox -->
-        <label class="white-text">
-          Off
-          <input type="checkbox" id="feedback" class="pink" checked>
-          <span class="lever tooltipped" data-position="bottom" data-tooltip="If on will show feedback based on tap"></span>
-          On
-        </label>
-      </div>
-      <!-- Button to create the assignment -->
-      <div class="col">
-        <button id="btnSetAssignment" class="btn btn-small  pink darken-3 waves-effect">Set Assignment</button>
+      <div class="col s3">
+        <p class="white-text">Feedback</p>
+        <div class="switch">
+          <label class="white-text">
+            Off
+            <input type="checkbox" id="feedback" class="pink" checked>
+            <span class="lever tooltipped" data-position="bottom"
+              data-tooltip="If on will show feedback based on tap"></span>
+            On
+          </label>
         </div>
       </div>
+      <div class="col s3">
+        <p class="white-text">Default Assignments</p>
+        <div class="switch">
+          <label class="white-text">
+            No
+            <input type="checkbox" id="default" class="pink">
+            <span class="lever tooltipped" data-position="bottom"
+              data-tooltip="If yes, all users will receive this assignment"></span>
+            Yes
+          </label>
+        </div>
+      </div>
+    </div>
+    <br>
+    <div class="row">
+      <button id="btnSetAssignment" class="btn btn-small  pink darken-3 waves-effect">Create Assignment</button>
+    </div>
   </div>
-  
+
   <script src="/navbar.js" type="module"></script>
-  <script
-    src="https://code.jquery.com/jquery-3.4.1.min.js"
-    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-    crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
   <!--JavaScript at end of body for optimized loading-->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   <script>
-  $(document).ready(function(){
+    $(document).ready(function () {
       $('.sidenav').sidenav();
       $('.tooltipped').tooltip();
     });
