@@ -1,7 +1,19 @@
+<!-- createAssignment.html
+This page allows a researcher to create an assignment
+-->
 <!DOCTYPE html>
 <html>
 
 <head>
+   <!-- Global site tag (gtag.js) - Google Analytics -->
+   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-165901337-1"></script>
+   <script>
+           window.dataLayer = window.dataLayer || [];
+           function gtag(){dataLayer.push(arguments);}
+           gtag('js', new Date());
+
+           gtag('config', 'UA-165901337-1');
+   </script>
   <!--Import Google Icon Font-->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <!--Import materialize.css-->
@@ -15,18 +27,19 @@
   <script src="/__/firebase/init.js"></script>
   <!--Let browser know website is optimized for mobile-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+   
   <style>
     a.brand-logo {
       padding-left: 10px
     }
   </style>
-  <title>UNO | Session Assignment</title>
+  <title>RAC | Session Assignment</title>
 </head>
 
 <body class="grey darken-4">
   <nav>
     <div id="navbar" class="nav-wrapper blue darken-2">
-      <a href="/index.html" class="brand-logo">UNO</a>
+      <a href="/index.html" class="brand-logo">RAC</a>
       <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
     </div>
   </nav>
@@ -36,36 +49,37 @@
 
   <div class="container">
     <h2 class="white-text">User Assignment Parameter Select</h2>
-    <div class="row">
-      <div class="input-field col s12 m6 l6">
-        <input id="assignment_name" type="text" class="validate white-text">
-        <label for="assignment_name" class="white-text">Assignment Name</label>
+      <div class="row">
+        <div class="input-field col s12 m6 l6">
+          <!-- Assignment Name -->
+          <input  id="assignment_name" type="text" class="validate white-text">
+          <label for="assignment_name" class="white-text">Assignment Name</label>
+        </div>
       </div>
-    </div>
-    <div class="row">
-      <p class="range-field white-text col s12 m3 l3">
-        BPM
-        <input type="number" id="BPM" name="BPM" class="white-text tooltipped" data-position="left"
-          data-tooltip="Beats Per Minute" value="100" min="30" max="1200" />
-      </p>
-      <p class="range-field white-text col s12 m3 l3">
-        Time with sound
-        <input type="number" name="timeWSound" class="white-text tooltipped" data-position="right"
-          data-tooltip="Number of seconds where beat will be played" id="timeWSound" value="10" min="1" max="180" />
-      </p>
-    </div>
-    <div class="row">
-      <p class="white-text col s12 m3 l3">Cycles
-        <input type="number" name="cycles" id="cycles" class="white-text tooltipped" data-position="left"
-          data-tooltip="Number of cyles where sound is on & off" value="1" min="1" max="10" />
-      </p>
-      <p class="range-field white-text col s12 m3 l3">
-        Time without sound
-        <input type="number" name="timeWOSound" id="timeWOSound" class="white-text tooltipped" data-position="right"
-          data-tooltip="Number of seconds where beat is off" value="10" min="1" max="180" />
-      </p>
-    </div>
-    <div class="row">
+      <div class="row">
+        <p class="range-field white-text col s12 m3 l3">
+          BPM
+          <!-- Beats per Minute -->
+        <input type="number" id="BPM" name="BPM" class="white-text tooltipped" data-position="left"  data-tooltip="Beats Per Minute" value="100" min="30" max="1200" />
+        </p>
+        <p class="range-field white-text col s12 m3 l3">
+          Time with sound
+          <!-- Time with Sound-->
+          <input type="number" name="timeWSound" class="white-text tooltipped" data-position="right" data-tooltip="Number of seconds where beat will be played" id="timeWSound" value="10" min="1" max="180" />
+        </p>
+      </div>
+      <div class="row">
+        <p class="white-text col s12 m3 l3">Cycles
+          <!-- Number of Cycles -->
+          <input type="number" name="cycles" id="cycles" class="white-text tooltipped" data-position="left" data-tooltip="Number of cyles where sound is on & off" value="1" min="1" max="10" />
+        </p>
+        <p class="range-field white-text col s12 m3 l3">
+          Time without sound
+          <!-- Time without sound -->
+          <input type="number" name="timeWOSound" id="timeWOSound" class="white-text tooltipped" data-position="right" data-tooltip="Number of seconds where beat is off" value="10" min="1" max="180" />
+        </p>
+      </div>
+      <div class="row">
       <div class="col s3">
         <p class="white-text">Feedback</p>
         <div class="switch">

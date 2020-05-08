@@ -66,6 +66,31 @@ exports.addAdminRole = functions.https.onCall(async(data, context) => {
 });
 
 /*
+    createAdmin
+    params: data, context
+    Takes in a user email, and admin user context
+    and adds the admin role to the passed in user, no security checks
+*/
+exports.createAdmin = functions.https.onCall(async(data, context) => {
+    // Get the email of the user that you want to make an admin
+    return admin.auth().getUserByEmail(data.email).then(async (user) => {
+        // Set their custom claim to admin: true
+        return admin.auth().setCustomUserClaims(user.uid, {
+            admin: true
+        });
+    }).then(() => {
+        // Return success message
+        return {
+            message: 'Success! The user has been made an admin.'
+        }
+    }).catch(error => {
+        // Return error message
+        return {message: error.message};
+    });
+});
+
+
+/*
     changeUserPassword
     params: uid, password
     Takes in a uid and password and changes the password

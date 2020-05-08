@@ -8,22 +8,39 @@ var btnSetAssignment = document.getElementById("btnSetAssignment");
 function insertAssignment() {
     // Grab fields from the document
     var assignmentName = document.getElementById("assignment_name").value;
+    assignmentName = encode(assignmentName);
+
     var bpm = document.getElementById("BPM").value;
     var timeWSound = document.getElementById("timeWSound").value;
     var cycles = document.getElementById("cycles").value;
     var timeWOSound = document.getElementById("timeWOSound").value;
     var feedback = document.getElementById("feedback").checked;
-    var defaultAssignment = document.querySelector("#default").checked;
 
-    var userIDs = [];
+    if (assignmentName == null || assignmentName == "" ||
+         bpm == null || bpm == "" || 
+         timeWSound == null || timeWSound == "" ||
+         cycles == null || cycles == "" ||
+         timeWOSound == null || timeWOSound == "")
+    {
+        alert("All parameters must be set to create an assignment");
+    }
+    else{
+        var defaultAssignment = document.querySelector("#default").checked;
+        var userIDs = [];
 
-    // Call imported createAssignment function to insert assignment into the database
-    createAssignment(assignmentName, bpm, timeWSound, timeWOSound, cycles, feedback, defaultAssignment, userIDs);
+        // Call imported createAssignment function to insert assignment into the database
+        createAssignment(assignmentName, bpm, timeWSound, timeWOSound, cycles, feedback, defaultAssignment, userIDs);
+    }
 
 }
 btnSetAssignment.onclick = insertAssignment;
 
-// Oberserver for FirebaseAuth
+/*
+  onAuthStateChanged(user)
+  Observer for Authentication State:
+  If the user is not logged in, then redirect to the login screen.
+  If a user is logged in and and not an admin, redirect to userdashboard
+*/
 firebase.auth().onAuthStateChanged(user => {
     // If user is not logged in, then redirect to the login page
     if(!user) {
@@ -47,3 +64,12 @@ firebase.auth().onAuthStateChanged(user => {
     }
 });
 
+/*
+    encode:
+    Encodes assignment label to prevent XSS
+*/
+function encode(str){
+    return String(str).replace(/[^\w. ]/gi, function(c){
+       return '&#'+c.charCodeAt(0)+';';
+    });
+  }

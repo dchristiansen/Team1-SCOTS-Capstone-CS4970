@@ -7,7 +7,13 @@ const greeting = document.getElementById("greeting");
 // username
 var username;
 
-// Observer for FirebaseAuth
+/*
+  onAuthStateChanged(user)
+  Observer for Authentication State:
+  If the user is logged in and an admin, then the table of all users
+  in the system will be populated. Otherwise, go back to the user dashboard
+  or back to the login screen if not authenticated
+*/
 firebase.auth().onAuthStateChanged(user => {
   
   // If user is signed in
@@ -49,20 +55,26 @@ adminForm.addEventListener('submit', (e) => {
     document.getElementById("spinner").style.visibility = "visible";
     // Get the email of the user to be made an admin
     const adminEmail = document.getElementById('admin-email').value;
-    // Get the addAdminRole cloud function from Firebase
-    const addAdminRole = firebase.functions().httpsCallable('addAdminRole');
-    // Call the addAdminRole function passing in the email of the user to be made an admin
-    addAdminRole({ email: adminEmail }).then(result => {
-        console.log(result);
-        document.getElementById("spinner").style.visibility = "hidden";
-        if (result.data.errorInfo == null) {
-            alert(result.data.message);
-            location.reload();
-        }
-        else {
-            alert(result.data.errorInfo.message);
-        }
-    });
+
+    if(adminEmail == null || adminEmail == "")
+    {
+      alert("Please enter a user's email to make them an admin");
+    }
+    else {
+      // Get the addAdminRole cloud function from Firebase
+      const addAdminRole = firebase.functions().httpsCallable('addAdminRole');
+      // Call the addAdminRole function passing in the email of the user to be made an admin
+      addAdminRole({ email: adminEmail }).then(result => {
+          console.log(result);
+          document.getElementById("spinner").style.visibility = "hidden";
+          if (result.data.errorInfo == null) {
+              alert(result.data.message);
+          }
+          else {
+              alert(result.data.errorInfo.message);
+          }
+      });
+    }
 });
 
 /*

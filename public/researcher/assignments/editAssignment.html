@@ -1,7 +1,22 @@
+<!-- editAssignment.html
+This page allows a researcher to edit the parameters of an assignment or the name an assignment.
+Additionally, on this page, a researcher can assign/unassign this assignment to patients in the system,
+or even delete the assignment.
+-->
+
 <!DOCTYPE html>
 <html>
 
 <head>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-165901337-1"></script>
+  <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', 'UA-165901337-1');
+  </script>
   <!--Import Google Icon Font-->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <!--Import materialize.css-->
@@ -15,18 +30,19 @@
   <script src="/__/firebase/init.js"></script>
   <!--Let browser know website is optimized for mobile-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
   <style>
     a.brand-logo {
       padding-left: 10px
     }
   </style>
-  <title>UNO | Edit Assignment</title>
+  <title>RAC | Edit Assignment</title>
 </head>
 
 <body class="grey darken-4">
   <nav>
     <div id="navbar" class="nav-wrapper blue darken-2">
-      <a href="/index.html" class="brand-logo">UNO</a>
+      <a href="/index.html" class="brand-logo">RAC</a>
       <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
     </div>
   </nav>
@@ -39,31 +55,34 @@
     <h3 class="white-text">Edit Assignment</h3>
     <div class="row">
       <div class="input-field col s12 m6 l6">
-        <input id="assignment_name" type="text" class="validate white-text" value=" ">
+        <!-- Assignment name -->
+        <input  id="assignment_name" type="text" class="validate white-text" value=" ">
         <label for="assignment_name" class="white-text">Assignment Name</label>
       </div>
     </div>
     <div class="row">
       <p class="range-field white-text col s12 m3 l3">
         BPM
-        <input type="number" id="BPM" name="BPM" class="white-text tooltipped" data-position="left"
+        <!-- Beats per Minute -->
+      <input type="number" id="BPM" name="BPM" class="white-text tooltipped" data-position="left"
           data-tooltip="Beats Per Minute" value="100" min="30" max="1200" />
       </p>
       <p class="range-field white-text col s12 m3 l3">
         Time with sound
+        <!-- Time with Sound -->
         <input type="number" name="timeWSound" class="white-text tooltipped" data-position="right"
           data-tooltip="Number of seconds where beat will be played" id="timeWSound" value="10" min="1" max="180" />
       </p>
     </div>
     <div class="row">
       <p class="white-text col s12 m3 l3">Cycles
-        <input type="number" name="cycles" id="cycles" class="white-text tooltipped" data-position="left"
-          data-tooltip="Number of cyles where sound is on & off" value="1" min="1" max="10" />
+        <!-- Number of Cycles -->
+        <input type="number" name="cycles" id="cycles" class="white-text tooltipped" data-position="left" data-tooltip="Number of cyles where sound is on & off" value="1" min="1" max="10" />
       </p>
       <p class="range-field white-text col s12 m3 l3">
         Time without sound
-        <input type="number" name="timeWOSound" id="timeWOSound" class="white-text tooltipped" data-position="right"
-          data-tooltip="Number of seconds where beat is off" value="10" min="1" max="180" />
+        <!--Time without sound -->
+        <input type="number" name="timeWOSound" id="timeWOSound" class="white-text tooltipped" data-position="right" data-tooltip="Number of seconds where beat is off" value="10" min="1" max="180" />
       </p>
     </div>
     <div class="row">
@@ -107,10 +126,12 @@
 
   <div class="container">
     <h3 class="white-text">Users</h3>
+    <!-- Button that assigns the assignment to selected users -->
     <button id="btnAssignToUsers" class="waves-effect btn-large pink darken-3"><i
         class="material-icons right">assignment_ind</i>Assign to Selected Users</button>
-    <button id="btnSelectAll" class="waves-effect btn-large pink darken-3" style="margin-left: 1%">Select/Deselct
-      All</button>
+    <!-- Button to select or deselect all users-->
+    <button id="btnSelectAll" class="waves-effect btn-large pink darken-3" style="margin-left: 1%">Select/Deselct All</button>
+    <!-- Table of all users in the system -->
     <table class="highlight white-text pink darken-3 centered" style="margin-top:3%">
       <thead>
         <tr>
