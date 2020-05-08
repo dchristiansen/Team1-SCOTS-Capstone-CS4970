@@ -1,5 +1,5 @@
-<!-- login.html
-Login page
+<!-- contact.html
+A page that has contact information for Dr.Ricks and Dr.Marmelat
 -->
 
 <!DOCTYPE html>
@@ -27,67 +27,46 @@ Login page
     <!--Let browser know website is optimized for mobile-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-
-
     <style>
       a.brand-logo {
 	    padding-left: 10px
     }
     </style>
-    <title>RAC | RAC</title>
+    <title>RAC | Contact</title>
   </head>
     <body class="grey darken-4">
-      <nav>
-        <div id="navbar" class="nav-wrapper blue darken-2">
-          <a href="/index.html" class="brand-logo">RAC</a>
-          <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-        </div>
-      </nav>
-
-      <ul class="sidenav" id="mobile-demo">
+    <nav>
+      <div class="nav-wrapper blue darken-2">
+      <a href="#!" class="brand-logo">RAC</a>
+      <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+      <ul class="right hide-on-med-and-down">
+        <li><a href="#">Home</a></li>
+        <li><a href="/researcher/rPortal.html">Research Portal</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="#">Contact</a></li>
       </ul>
+    </div>
+</nav>
 
+  <ul class="sidenav" id="mobile-demo">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="/researcher/rPortal.html">Research Portal</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="#">Contact</a></li>
+  </ul>
       <br><br>
         <div class="container">
-            <div class="row ">
-              <div class="input-field col s6 offset-s2">
-                <!-- Input field for the username -->
-                <input type="text" id="Uname" class="white-text">
-                <label class="active white-text" for="Uname">Username</label>
-              </div>
-              </div>
-              <div class="row">
-              <div class="input-field col s6 offset-s2">
-                <!-- Input field for the password -->
-                <input id="password" type="password" class="validate white-text">
-                <label class="white-text" for="password">Password</label>
-              </div>
-              </div>
-              <div class="row">
-                  <p >
-                    <label class="input-field col s6 offset-s2">
-                      <input type="checkbox" />
-                      <span class="white-text">Remember Me</span>
-                    </label>
-                  </p>
-                </div>
-                <!-- Login button -->
-                <div class="row">
-                  <div class="col offset-s2">
-                    <button id="btnLogin" class="btn btn-large pink darken-2 waves-effect"><i class="material-icons right">chevron_right</i>Log in</button>
-                  </div>
-                </div>
-                <div class="row">
-                </div>
-
-            <script src="/auth.js" type="module"></script>
-
-
-          <!-- End of Container -->
+          <h2 class="white-text" style="display: inline-block">Dr. Brian Ricks:</h2>
+          <h4 class="white-text" style="display: inline-block; padding-left:2%">bricks@unomaha.edu</h4>
+          <p class="white-text" style="font-size:1.4em">Dr. Ricks is an Assistant Professor of Computer Science at University of Nebraska Omaha</p>
+          <br>
+          <h2 class="white-text" style="display: inline-block">Dr. Vivien Marmelat:</h2>
+          <h4 class="white-text" style="display: inline-block; padding-left:2%">vmarmelat@unomaha.edu</h4>
+          <p class="white-text" style="font-size:1.4em">Dr. Marmelat is an Assistant Professor of Biomechanics at University of Nebraska Omaha</p>
+        <!-- End of Container -->
         </div>
 
         <!--JavaScript at end of body for optimized loading-->
-        <script src="/navbar.js" type="module"></script>
         <script
           src="https://code.jquery.com/jquery-3.4.1.min.js"
           integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="

@@ -18,17 +18,17 @@ firebase.auth().onAuthStateChanged(async function(user) {
     if(loggedIn) {
         //Do the links for a researcher
         if(rPortal) {
-            linkArray.push({link: "/researcher/rPortal.html", text: "Researcher Portal Home"}, {link:"/researcher/assignments/assignments.html", text: "View Assignments"}, 
-            {link:"/researcher/assignments/createassignment.html", text:"Create Assignment"}, {link:"/researcher/users/createuser.html", text: "Create User"}, {link: "Logout", text: "Logout"}, {link: "#", text: "About"}, 
-            {link: "#", text: "Contact"});
-        } 
+            linkArray.push({link: "/researcher/rPortal.html", text: "Researcher Portal Home"}, {link:"/researcher/assignments/assignments.html", text: "View Assignments"},
+            {link:"/researcher/assignments/createassignment.html", text:"Create Assignment"}, {link:"/researcher/users/createuser.html", text: "Create User"}, {link: "Logout", text: "Logout"}, {link: "/about.html", text: "About"},
+            {link: "/contact.html", text: "Contact"});
+        }
         //Do the links for a user
         else {
             linkArray.push({link: "/user/userdashboard.html", text: "User Dashboard"}, {link: "/user/edituser.html", text: "Change Password"}, {link: "Logout", text: "Logout"},
-            {link: "#", text: "About"}, {link: "#", text: "Contact"});
+            {link: "/about.html", text: "About"}, {link: "contact.html", text: "Contact"});
         }
     } else {
-        linkArray.push({link: "/login.html", text: "Login"}, {link: "/user/parameters.html", text: "Parameter Select"}, {link: "#", text: "About"}, {link: "#", text: "Contact"});
+        linkArray.push({link: "/login.html", text: "Login"}, {link: "/user/parameters.html", text: "Parameter Select"}, {link: "about.html", text: "About"}, {link: "/contact.html", text: "Contact"});
     }
 
     //Grab the navbar element
@@ -42,7 +42,7 @@ firebase.auth().onAuthStateChanged(async function(user) {
         let linkList = document.createElement("ul");
         linkList.classList = "right hide-on-med-and-down";
         linkList.id="linkList";
-    
+
         //For each link in our link array, create the corresponding link in the navbar
         linkArray.forEach(element => {
             let pathname = element.link;
@@ -66,12 +66,12 @@ firebase.auth().onAuthStateChanged(async function(user) {
                 listItem.appendChild(itemContents);
                 //Create a copied version of the list item for use in the mobile navmenu
                 let demoItem = listItem.cloneNode(true);
-    
+
                 mobileDemo.appendChild(demoItem);
                 linkList.appendChild(listItem);
             }
         });
-    
+
         //Append the list to the navbar
         navhtml.appendChild(linkList);
     }
