@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>editAssignment.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="..\..\..\docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>editAssignment.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { getUsers } <span class="hljs-keyword">from</span> <span class="hljs-string">"../..//Data.js"</span>;
+
+<span class="hljs-keyword">var</span> firestore = firebase.firestore();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>Button to set the assignment parameters</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> btnSetAssignment = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"btnSetAssignment"</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Button to assign assignments to users</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> btnAssignToUsers = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"btnAssignToUsers"</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Button to delete assignment</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> btnDeleteAssignment = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"btnDeleteAssignment"</span>);
+
+<span class="hljs-keyword">const</span> table = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">"#tablebody"</span>);
+<span class="hljs-keyword">let</span> userData;
+<span class="hljs-keyword">let</span> currentUserArray;
+<span class="hljs-keyword">let</span> numPages;
+<span class="hljs-keyword">let</span> currentPage = <span class="hljs-number">1</span>;
+<span class="hljs-keyword">let</span> entriesPerPage = <span class="hljs-number">5</span>;
+
+<span class="hljs-comment">/*
+    btnDeleteAssignment:
+    Event listener on the button delete an assignment from the database
+*/</span>
+btnDeleteAssignment.addEventListener(<span class="hljs-string">"click"</span>, e =&gt; {
+    <span class="hljs-keyword">if</span>(confirm(<span class="hljs-string">"Are you sure you want to delete this assignment?"</span>))
+    {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Grab doc id of the current assignment</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> params = <span class="hljs-keyword">new</span> URLSearchParams(location.search);
+        <span class="hljs-keyword">let</span> assignmentId = params.get(<span class="hljs-string">'id'</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Grab assignment document and then delete the document</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">var</span> assignmentDoc = firestore.collection(<span class="hljs-string">"assignments"</span>).doc(assignmentId);
+        assignmentDoc.delete().then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+            alert(<span class="hljs-string">"Successfully deleted assignment"</span>);
+            <span class="hljs-built_in">window</span>.location = <span class="hljs-string">"/researcher/assignments/assignments.html"</span>;
+        }).catch(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">error</span>) </span>{
+            alert(<span class="hljs-string">"Error deleting assignment: "</span> + error);
+        });
+    }
+});
+
+<span class="hljs-keyword">let</span> checkedArray;
+
+<span class="hljs-comment">/*
+    btnAssignToUsers:
+    Event Listener on the button to get the array of checked users and
+    set the userIDs field in the database for the assignment
+*/</span>
+btnAssignToUsers.addEventListener(<span class="hljs-string">"click"</span>, e =&gt; {
+    <span class="hljs-keyword">let</span> assignedUIDs = [];
+
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; checkedArray.length; i++) {
+        <span class="hljs-keyword">if</span>(checkedArray[i] == <span class="hljs-literal">true</span>) {
+            <span class="hljs-keyword">let</span> assignTo = userData[i].id;
+            assignedUIDs.push(assignTo);
+        }
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>Grab doc id of the current assignment</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> params = <span class="hljs-keyword">new</span> URLSearchParams(location.search);
+    <span class="hljs-keyword">let</span> assignmentId = params.get(<span class="hljs-string">'id'</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Assignment document reference</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> assignmentDoc = firestore.collection(<span class="hljs-string">"assignments"</span>).doc(assignmentId)</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Update the userIDs array field with assignedUIDs array</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    assignmentDoc.update({
+        <span class="hljs-attr">userIDs</span>: assignedUIDs
+    }).then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+        alert(<span class="hljs-string">"Assigned users successfully updated."</span>);
+    }).catch(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">error</span>) </span>{
+        <span class="hljs-built_in">console</span>.error(error);
+    });
+});
+
+<span class="hljs-comment">/*
+    btnSetAssignment
+    Event Listener on the button update the assignment
+    parameters in the database
+*/</span>
+btnSetAssignment.addEventListener(<span class="hljs-string">"click"</span>, e =&gt; {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>Get fields from the html document</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> assignmentLabel = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"assignment_name"</span>).value;
+    assignmentLabel = encode(assignmentLabel);
+
+    <span class="hljs-keyword">var</span> bpm = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"BPM"</span>).value;
+    <span class="hljs-keyword">var</span> timeWSound = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"timeWSound"</span>).value;
+    <span class="hljs-keyword">var</span> cycles = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"cycles"</span>).value;
+    <span class="hljs-keyword">var</span> timeWOSound = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"timeWOSound"</span>).value;
+    <span class="hljs-keyword">var</span> feedback = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"feedback"</span>).checked;
+    <span class="hljs-keyword">var</span> defaultAssignment = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">"#default"</span>).checked;
+
+    <span class="hljs-keyword">if</span> (assignmentLabel == <span class="hljs-literal">null</span> || assignmentLabel == <span class="hljs-string">""</span> ||
+         bpm == <span class="hljs-literal">null</span> || bpm == <span class="hljs-string">""</span> ||
+         timeWSound == <span class="hljs-literal">null</span> || timeWSound == <span class="hljs-string">""</span> ||
+         cycles == <span class="hljs-literal">null</span> || cycles == <span class="hljs-string">""</span> ||
+         timeWOSound == <span class="hljs-literal">null</span> || timeWOSound == <span class="hljs-string">""</span>)
+    {
+        alert(<span class="hljs-string">"All parameters must be set to edit an assignment"</span>);
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>// TODO: Add elseif to check the Parameter values are in range</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">else</span>
+    {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>Get the assignment document id</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> params = <span class="hljs-keyword">new</span> URLSearchParams(location.search);
+        <span class="hljs-keyword">let</span> assignmentId = params.get(<span class="hljs-string">'id'</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>Create parameters object</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">var</span> parameters = {
+            <span class="hljs-attr">bpm</span>: bpm,
+            <span class="hljs-attr">cycles</span>: cycles,
+            <span class="hljs-attr">feedback</span>: feedback,
+            <span class="hljs-attr">soundOffTime</span>: timeWOSound,
+            <span class="hljs-attr">soundOnTime</span>: timeWSound
+        };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>Assignment document reference</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">var</span> assignmentDoc = firestore.collection(<span class="hljs-string">"assignments"</span>).doc(assignmentId);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>Update the assignment label and the parameters</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      assignmentDoc.update({
+          <span class="hljs-attr">assignmentLabel</span>: assignmentLabel,
+          <span class="hljs-attr">parameters</span>: parameters,
+          <span class="hljs-attr">default</span>: defaultAssignment,
+      }).then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+          alert(<span class="hljs-string">"Assignment successfully updated."</span>);
+      }).catch(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">error</span>) </span>{
+          <span class="hljs-built_in">console</span>.error(error);
+      });
+
+    }
+
+});
+
+<span class="hljs-comment">/*
+    setHeader
+    parameter: assignmentId
+    Set the header with the passed in assignmentId
+*/</span>
+<span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">setHeader</span>(<span class="hljs-params">assignmentId</span>) </span>{
+    <span class="hljs-keyword">let</span> header = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">"#assignmentidheader"</span>);
+    <span class="hljs-keyword">var</span> assignmentDoc = <span class="hljs-keyword">await</span> firestore.collection(<span class="hljs-string">"assignments"</span>).doc(assignmentId);
+    <span class="hljs-keyword">await</span> assignmentDoc.get().then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">doc</span>) </span>{
+        <span class="hljs-keyword">if</span>(doc.exists)
+        {
+            header.innerHTML = <span class="hljs-string">"Assignment: "</span> + doc.data().assignmentLabel;
+        }
+    });
+}
+
+<span class="hljs-comment">/*
+    populateParameters
+    Parameter: assignmentId
+    Repopulate the parameter fields based on the assignment that was clicked
+    on from previous page
+*/</span>
+<span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">populateParameters</span>(<span class="hljs-params">assignmentId</span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>Assignment document reference</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> assignmentDoc = <span class="hljs-keyword">await</span> firestore.collection(<span class="hljs-string">"assignments"</span>).doc(assignmentId);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>Get the assignment document</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">await</span> assignmentDoc.get().then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">doc</span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>If the document exists</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span>(doc.exists)
+        {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>Get fields from the database</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">var</span> assignmentLabel = doc.data().assignmentLabel;
+            assignmentLabel = decode(assignmentLabel);
+
+            <span class="hljs-keyword">var</span> parameters = doc.data().parameters;
+            <span class="hljs-keyword">var</span> defaultAssignment = doc.data().default;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p>Set the values of the html document</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"assignment_name"</span>).value = assignmentLabel;
+            <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"BPM"</span>).value = parameters.bpm;
+            <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"timeWSound"</span>).value = parameters.soundOnTime;
+            <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"timeWOSound"</span>).value = parameters.soundOffTime;
+            <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"cycles"</span>).value = parameters.cycles;
+            <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">"#default"</span>).checked = defaultAssignment;
+            <span class="hljs-keyword">if</span> (!parameters.feedback)
+            {
+                <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"feedback"</span>).removeAttribute(<span class="hljs-string">"checked"</span>);
+            }
+        }
+    });
+}
+
+<span class="hljs-comment">/*
+    populateUserTable
+    Fetch all users and populate the user table
+*/</span>
+<span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">populateUserTable</span>(<span class="hljs-params">assignmentId, newPage</span>)
+</span>{
+    table.innerHTML = <span class="hljs-string">""</span>;
+
+    <span class="hljs-keyword">let</span> startPosition = (newPage - <span class="hljs-number">1</span>) * entriesPerPage;
+
+    <span class="hljs-keyword">let</span> newArray = currentUserArray.slice(startPosition, startPosition + <span class="hljs-number">5</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p>Loop through usersData</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; newArray.length; i++){
+        <span class="hljs-keyword">let</span> obj = newArray[i];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>Create a row entry for each user</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> tr = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'tr'</span>);
+        <span class="hljs-keyword">let</span> td_id = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'td'</span>);
+        <span class="hljs-keyword">let</span> td_ses = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'td'</span>);
+
+        <span class="hljs-keyword">let</span> latestSessionTime = obj.data.latestSessionTime;
+        <span class="hljs-keyword">if</span>(latestSessionTime)
+        {
+            latestSessionTime = latestSessionTime.seconds * <span class="hljs-number">1000</span>;
+            latestSessionTime = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(latestSessionTime);
+
+        }
+        <span class="hljs-keyword">else</span>
+        {
+            latestSessionTime = <span class="hljs-string">"N/A"</span>;
+        }
+        td_ses.innerHTML = latestSessionTime.toLocaleString(navigator.language);
+        td_id.innerHTML = obj.data.userID;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <p>Append the user id and latest session time to the row</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        tr.appendChild(td_id);
+        tr.appendChild(td_ses);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <p>Create checkbox</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> td_checkbox = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'td'</span>);
+        <span class="hljs-keyword">let</span> label = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'label'</span>);
+        <span class="hljs-keyword">let</span> checkbox = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'input'</span>);
+        <span class="hljs-keyword">let</span> span = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'span'</span>);
+        checkbox.type = <span class="hljs-string">"checkbox"</span>;
+        checkbox.addEventListener(<span class="hljs-string">'input'</span>, checkCheckedArray);
+        <span class="hljs-keyword">if</span>(checkedArray[i + (currentPage - <span class="hljs-number">1</span>) * entriesPerPage])
+        {
+            checkbox.checked = <span class="hljs-literal">true</span>;
+        } <span class="hljs-keyword">else</span> {
+            checkbox.checked = <span class="hljs-literal">false</span>;
+        }
+        label.appendChild(checkbox);
+        label.appendChild(span);
+        td_checkbox.appendChild(label);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <p>Append checkbox to the row</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        tr.appendChild(td_checkbox);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
+              </div>
+              <p>Append row to the table</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        table.appendChild(tr);
+    }
+    createPagination();
+}
+
+<span class="hljs-comment">/*
+  createPagination:
+  Creates the pagination icons beneath the table,
+  based on the number of pages
+*/</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">createPagination</span>(<span class="hljs-params"></span>) </span>{
+    pagination.innerHTML = <span class="hljs-string">""</span>;
+    numPages = <span class="hljs-built_in">Math</span>.ceil(currentUserArray.length / entriesPerPage);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <p>Create the left chevron for page scrolling</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> leftChevron = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'li'</span>);
+    leftChevron.className = <span class="hljs-string">"waves-effect"</span>;
+
+    <span class="hljs-keyword">let</span> leftChevronA = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'a'</span>);
+    leftChevronA.href = <span class="hljs-string">"#!"</span>;
+    leftChevronA.setAttribute(<span class="hljs-string">'data-page'</span>, <span class="hljs-string">"prev"</span>);
+
+    <span class="hljs-keyword">let</span> leftChevronIcon = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'i'</span>);
+    leftChevronIcon.className = <span class="hljs-string">"material-icons"</span>;
+    leftChevronIcon.innerHTML = <span class="hljs-string">"chevron_left"</span>;
+
+    leftChevronA.appendChild(leftChevronIcon);
+    leftChevron.appendChild(leftChevronA);
+    pagination.appendChild(leftChevron);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              <p>Create the buttons for each page</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; numPages; i++) {
+        <span class="hljs-keyword">let</span> current = i + <span class="hljs-number">1</span>;
+        <span class="hljs-keyword">let</span> li = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'li'</span>);
+        li.id = <span class="hljs-string">"page"</span> + current;
+        li.className = <span class="hljs-string">"waves-effect"</span>;
+        <span class="hljs-keyword">if</span> (current == currentPage) {
+            li.className += <span class="hljs-string">" active"</span>;
+        }
+
+        <span class="hljs-keyword">let</span> a = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'a'</span>);
+        a.setAttribute(<span class="hljs-string">'data-page'</span>, current)
+        a.innerHTML = current;
+
+        li.appendChild(a);
+        pagination.appendChild(li);
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-29">&#182;</a>
+              </div>
+              <p>Add the right chevron for page scrolling</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> rightChevron = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'li'</span>);
+    rightChevron.className = <span class="hljs-string">"waves-effect"</span>;
+
+    <span class="hljs-keyword">let</span> rightChevronA = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'a'</span>);
+    rightChevronA.href = <span class="hljs-string">"#!"</span>;
+    rightChevronA.setAttribute(<span class="hljs-string">'data-page'</span>, <span class="hljs-string">"next"</span>)
+
+    <span class="hljs-keyword">let</span> rightChevronIcon = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'i'</span>);
+    rightChevronIcon.className = <span class="hljs-string">"material-icons"</span>;
+    rightChevronIcon.innerHTML = <span class="hljs-string">"chevron_right"</span>;
+
+    rightChevronA.appendChild(rightChevronIcon);
+    rightChevron.appendChild(rightChevronA);
+    pagination.appendChild(rightChevron);
+}
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">checkCheckedArray</span>(<span class="hljs-params">e</span>) </span>{
+    <span class="hljs-keyword">let</span> index = e.path[<span class="hljs-number">3</span>].rowIndex - <span class="hljs-number">1</span>;
+    index += (currentPage - <span class="hljs-number">1</span>) * entriesPerPage;
+    checkedArray[index] = !checkedArray[index];
+}
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getAssignedUsers</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; userData.length; i++) {
+        <span class="hljs-keyword">if</span>(assignedUIDs.includes(userData[i].id)) {
+            checkedArray[i] = <span class="hljs-literal">true</span>;
+        } <span class="hljs-keyword">else</span> {
+            checkedArray[i] = <span class="hljs-literal">false</span>;
+        }
+    }
+}
+
+<span class="hljs-keyword">let</span> assignmentId;
+<span class="hljs-keyword">let</span> assignedUIDs = [];
+
+ <span class="hljs-comment">/* onAuthStateChanged(user)
+  Observer for Authentication State:
+  If the user is logged in and the user is an admin, then this listener will
+  set the header, parameters, and the user table. Otherwise, go back to the user dashboard
+  or back to the login screen if not authenticated
+*/</span>
+
+firebase.auth().onAuthStateChanged(<span class="hljs-function">(<span class="hljs-params">user</span>) =&gt;</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-30">&#182;</a>
+              </div>
+              <p>If user is logged in</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span>(user)
+    {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-31">&#182;</a>
+              </div>
+              <p>Get admin token result</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        user.getIdTokenResult().then(<span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">idTokenResult</span>) </span>{
+            user.admin = idTokenResult.claims.admin;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-32">&#182;</a>
+              </div>
+              <p>If user is an admin</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span>(user.admin)
+            {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-33">&#182;</a>
+              </div>
+              <p>Get assignmentId from url (selected from previous page)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">let</span> params = <span class="hljs-keyword">new</span> URLSearchParams(location.search);
+                assignmentId = params.get(<span class="hljs-string">'id'</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-34">&#182;</a>
+              </div>
+              <p>Set the header with assignmentId</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                setHeader(assignmentId);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-35">&#182;</a>
+              </div>
+              <p>Populate the parameters with the assignmentId</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                populateParameters(assignmentId);
+
+                assignedUIDs = [];
+                <span class="hljs-keyword">var</span> assignmentDoc = <span class="hljs-keyword">await</span> firestore.collection(<span class="hljs-string">"assignments"</span>).doc(assignmentId)
+
+                <span class="hljs-keyword">await</span> assignmentDoc.get().then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">doc</span>) </span>{
+                    <span class="hljs-keyword">if</span>(doc.exists)
+                    {
+                        assignedUIDs = doc.data().userIDs;
+                    }
+                });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-36">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-36">&#182;</a>
+              </div>
+              <p>Get users</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">let</span> usersCall = <span class="hljs-keyword">await</span> getUsers();
+                currentUserArray = userData = usersCall.dataArray;
+
+                checkedArray = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Array</span>(userData.length);
+
+                numPages = <span class="hljs-built_in">Math</span>.ceil(currentUserArray.length/entriesPerPage);
+
+                getAssignedUsers();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-37">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-37">&#182;</a>
+              </div>
+              <p>Populate the userTable</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                populateUserTable(assignmentId, <span class="hljs-number">1</span>);
+            }
+            <span class="hljs-keyword">else</span>
+            {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-38">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-38">&#182;</a>
+              </div>
+              <p>Alert that user is not admin and return to user dashboard</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                alert(<span class="hljs-string">"You are not an admin."</span>);
+                <span class="hljs-built_in">window</span>.location = <span class="hljs-string">"/user/userdashboard.html"</span>;
+            }
+        });
+    }
+    <span class="hljs-keyword">else</span>
+    {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-39">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-39">&#182;</a>
+              </div>
+              <p>Not signed in so redirect to login screen</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"You are not signed in."</span>);
+        <span class="hljs-built_in">window</span>.location = <span class="hljs-string">"/login.html"</span>;
+    }
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-40">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-40">&#182;</a>
+              </div>
+              <p>Function to select/deselct all checkboxes</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>$(<span class="hljs-built_in">document</span>).ready(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+    $(<span class="hljs-string">"#btnSelectAll"</span>).click(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+        <span class="hljs-keyword">let</span> checked = !$(<span class="hljs-keyword">this</span>).data(<span class="hljs-string">'checked'</span>);
+        $(<span class="hljs-string">'input:checkbox'</span>).not(<span class="hljs-string">".rip_kobe"</span>).prop(<span class="hljs-string">'checked'</span>, checked);
+        $(<span class="hljs-keyword">this</span>).val(checked ? <span class="hljs-string">'uncheck all'</span> : <span class="hljs-string">'check all'</span>);
+        $(<span class="hljs-keyword">this</span>).data(<span class="hljs-string">'checked'</span>, checked);
+        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; checkedArray.length; i++) {
+            checkedArray[i] = checked;
+        }
+    })
+})
+
+$(<span class="hljs-string">"#pagination"</span>).on(<span class="hljs-string">"click"</span>, <span class="hljs-string">"a"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">changePage</span>(<span class="hljs-params"></span>)</span>{
+    <span class="hljs-keyword">let</span> newPage = $(<span class="hljs-keyword">this</span>).data(<span class="hljs-string">'page'</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-41">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-41">&#182;</a>
+              </div>
+              <p>Change to the new page</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span>(newPage != currentPage) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-42">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-42">&#182;</a>
+              </div>
+              <p>For the right chevron</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span>(newPage == <span class="hljs-string">"next"</span>) {
+            newPage = currentPage+<span class="hljs-number">1</span>;
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-43">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-43">&#182;</a>
+              </div>
+              <p>For the left chevron</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(newPage == <span class="hljs-string">"prev"</span>) {
+            newPage = currentPage<span class="hljs-number">-1</span>;
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-44">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-44">&#182;</a>
+              </div>
+              <p>Ensure that the new page can be accessed (in case left or right chevrons move it past the number of pages)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span>(newPage &lt;= numPages &amp;&amp; newPage &gt; <span class="hljs-number">0</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-45">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-45">&#182;</a>
+              </div>
+              <p>Change the current page</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            currentPage = newPage;
+
+            populateUserTable(assignmentId, newPage);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-46">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-46">&#182;</a>
+              </div>
+              <p>Change the active page in the pagination menu</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">"#page"</span> + currentPage).className = <span class="hljs-string">"waves-effect"</span>;
+            <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">"#page"</span> + newPage).className = <span class="hljs-string">"waves-effect active"</span>;
+            }
+    }
+  });
+
+<span class="hljs-comment">/*
+    decode:
+    decodes string when reading encoded string from DB
+*/</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">decode</span>(<span class="hljs-params">str</span>)
+</span>{
+    <span class="hljs-keyword">var</span> txt = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'textarea'</span>);
+    txt.innerHTML = str;
+    <span class="hljs-keyword">return</span> txt.value;
+}
+
+<span class="hljs-comment">/*
+    encode:
+    Encodes assignment label to prevent XSS
+*/</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">encode</span>(<span class="hljs-params">str</span>)</span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">String</span>(str).replace(<span class="hljs-regexp">/[^\w. ]/gi</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">c</span>)</span>{
+       <span class="hljs-keyword">return</span> <span class="hljs-string">'&amp;#'</span>+c.charCodeAt(<span class="hljs-number">0</span>)+<span class="hljs-string">';'</span>;
+    });
+}</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

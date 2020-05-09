@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>SceneManager.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="..\..\..\docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>SceneManager.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> Engine <span class="hljs-keyword">from</span> <span class="hljs-string">"../engine/Engine.js"</span>
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SceneManager</span> </span>{
+  <span class="hljs-keyword">static</span> scenes = [];
+  <span class="hljs-keyword">static</span> _currentSceneIndex = <span class="hljs-number">-1</span>;
+  <span class="hljs-keyword">static</span> <span class="hljs-keyword">get</span> currentScene() {
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>._currentSceneIndex == <span class="hljs-number">-1</span>) <span class="hljs-keyword">throw</span> <span class="hljs-string">"Current scene index not set. Cannot get current scene."</span>
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.scenes.length == <span class="hljs-number">0</span>) <span class="hljs-keyword">throw</span> <span class="hljs-string">"There are no scenes in the scene manager. Cannot get current scene."</span>
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>._currentSceneIndex &gt;= <span class="hljs-keyword">this</span>.scenes.length) <span class="hljs-keyword">throw</span> <span class="hljs-string">"Current scene index is out of bounds. Cannot get current scene."</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.scenes[<span class="hljs-keyword">this</span>._currentSceneIndex];
+  }
+
+  <span class="hljs-keyword">static</span> <span class="hljs-keyword">set</span> currentScene(argument) {
+    <span class="hljs-keyword">if</span> (argument <span class="hljs-keyword">instanceof</span> Engine.Base.Scene) {
+      <span class="hljs-keyword">let</span> index = <span class="hljs-keyword">this</span>.scenes.indexOf(argument);
+      <span class="hljs-keyword">if</span> (index != <span class="hljs-number">-1</span>) {
+        <span class="hljs-keyword">this</span>._currentSceneIndex = index;
+      }
+      <span class="hljs-keyword">else</span> {
+        <span class="hljs-keyword">this</span>.scenes.push(argument);
+        <span class="hljs-keyword">this</span>._currentSceneIndex == <span class="hljs-keyword">this</span>.scenes.length - <span class="hljs-number">1</span>;
+      }
+    }
+    <span class="hljs-keyword">else</span> {
+      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> argument === <span class="hljs-string">"string"</span>) {
+        <span class="hljs-keyword">let</span> index = <span class="hljs-keyword">this</span>.scenes.findIndex(<span class="hljs-function"><span class="hljs-params">i</span>=&gt;</span>i.name == argument);
+        <span class="hljs-keyword">if</span>(index != <span class="hljs-number">-1</span>){
+          <span class="hljs-keyword">this</span>._currentSceneIndex = index;
+        }
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">throw</span> <span class="hljs-string">"No scene has that name. Current scene index not set."</span>
+      }
+      <span class="hljs-keyword">else</span> {
+        <span class="hljs-keyword">let</span> index = +argument;
+        <span class="hljs-keyword">if</span> (index &lt; <span class="hljs-number">0</span>) <span class="hljs-keyword">throw</span> <span class="hljs-string">"Index is out of bounds. Current scene index not set."</span>
+        <span class="hljs-keyword">if</span> (index &gt;= <span class="hljs-keyword">this</span>.scenes.length) <span class="hljs-keyword">throw</span> <span class="hljs-string">"Index is out of bounds. Current scene index not set."</span>
+        <span class="hljs-keyword">this</span>._currentSceneIndex = +argument;
+      }
+    }
+  }
+
+  <span class="hljs-keyword">static</span> addScene(scene) {
+    <span class="hljs-keyword">this</span>.scenes.push(scene);
+  }
+
+
+}</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>GameObject.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="..\..\..\..\docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>GameObject.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> NameableParent <span class="hljs-keyword">from</span> <span class="hljs-string">"./NamableParent.js"</span>
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">GameObject</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">NameableParent</span> </span>{
+    x; y;
+    scaleX;
+    scaleY;
+    rotation;
+    components = [];
+
+    <span class="hljs-keyword">constructor</span>(x = 0, y = 0, scaleX = 1, scaleY = 1, rotation = 0) {
+        <span class="hljs-keyword">super</span>();
+        [<span class="hljs-keyword">this</span>.x, <span class="hljs-keyword">this</span>.y, <span class="hljs-keyword">this</span>.scaleX, <span class="hljs-keyword">this</span>.scaleY, <span class="hljs-keyword">this</span>.rotation] = [x, y, scaleX, scaleY, rotation];
+    }
+    addComponent(component) {
+        <span class="hljs-keyword">this</span>.components.push(component);
+        component.gameObject = <span class="hljs-keyword">this</span>;
+        <span class="hljs-keyword">if</span>(component.start)
+            component.start();
+    }
+    draw(ctx) {
+        ctx.save();
+        ctx.translate(<span class="hljs-keyword">this</span>.x, <span class="hljs-keyword">this</span>.y);
+        ctx.scale(<span class="hljs-keyword">this</span>.scaleX, <span class="hljs-keyword">this</span>.scaleY);
+        ctx.rotate(<span class="hljs-keyword">this</span>.rotation);
+
+        <span class="hljs-keyword">this</span>.components.filter(<span class="hljs-function"><span class="hljs-params">i</span> =&gt;</span> i.draw).forEach(<span class="hljs-function"><span class="hljs-params">i</span> =&gt;</span> i.draw(ctx));</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>Now draw all the children</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">this</span>.children.filter(<span class="hljs-function"><span class="hljs-params">i</span>=&gt;</span>i.draw).forEach(<span class="hljs-function"><span class="hljs-params">i</span> =&gt;</span> i.draw(ctx))
+
+        ctx.restore();
+    }
+    update() {
+        <span class="hljs-keyword">this</span>.components.filter(<span class="hljs-function"><span class="hljs-params">i</span> =&gt;</span> i.update).forEach(<span class="hljs-function"><span class="hljs-params">i</span> =&gt;</span> i.update());</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Now update all the children</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">this</span>.children.filter(<span class="hljs-function"><span class="hljs-params">i</span>=&gt;</span>i.update).forEach(<span class="hljs-function"><span class="hljs-params">i</span> =&gt;</span> i.update());
+    }
+    getComponent(type) {
+        <span class="hljs-keyword">let</span> component = <span class="hljs-keyword">this</span>.components.find(<span class="hljs-function"><span class="hljs-params">i</span> =&gt;</span> i <span class="hljs-keyword">instanceof</span> type);
+        <span class="hljs-keyword">if</span> (component) <span class="hljs-keyword">return</span> component;
+        <span class="hljs-keyword">throw</span> <span class="hljs-string">"Error, couldn't find type "</span> + type;
+    }
+    pulse() {
+        <span class="hljs-keyword">this</span>.components.filter(<span class="hljs-function"><span class="hljs-params">i</span>=&gt;</span>i.pulse).forEach(<span class="hljs-function"><span class="hljs-params">i</span>=&gt;</span>i.pulse());
+        <span class="hljs-keyword">this</span>.children.filter(<span class="hljs-function"><span class="hljs-params">i</span>=&gt;</span>i.pulse).forEach(<span class="hljs-function"><span class="hljs-params">i</span>=&gt;</span>i.pulse());
+    }
+}</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

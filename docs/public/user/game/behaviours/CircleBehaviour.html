@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>CircleBehaviour.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="..\..\..\..\docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>CircleBehaviour.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <p>File: /user/game/behaviours/CircleBehaviour.js</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>Description: An EdGE behavior which controls the appearance of the feedback circle</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-keyword">import</span> Base <span class="hljs-keyword">from</span> <span class="hljs-string">"../../engine/Base.js"</span>
+<span class="hljs-keyword">import</span> Input <span class="hljs-keyword">from</span> <span class="hljs-string">"../../engine/base/Input.js"</span>
+<span class="hljs-keyword">import</span> CircleComponent <span class="hljs-keyword">from</span> <span class="hljs-string">"../../engine/components/CircleComponent.js"</span>
+<span class="hljs-keyword">import</span> TapHandler <span class="hljs-keyword">from</span> <span class="hljs-string">"./TapHandler.js"</span>;
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CircleBehaviour</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Base</span>.<span class="hljs-title">Behavior</span> </span>{
+    circle;
+    tapHandler;
+    feedback;
+
+    <span class="hljs-keyword">constructor</span>(feedback) {
+        <span class="hljs-keyword">super</span>();
+        <span class="hljs-keyword">this</span>.feedback = feedback;
+    }
+
+    <span class="hljs-comment">/*
+		start
+		params: none
+		returns: none
+		Initializes this behavior. Called when EdGE intializes
+	*/</span>
+    start() {
+        <span class="hljs-keyword">this</span>.circle = <span class="hljs-keyword">this</span>.gameObject.getComponent(CircleComponent);
+        <span class="hljs-keyword">this</span>.tapHandler = <span class="hljs-keyword">this</span>.gameObject.getComponent(TapHandler);
+    }
+
+    <span class="hljs-comment">/*
+		update
+		params: none
+		returns: none
+		Runs this behavior's logic. Called every frame by EdGE
+	*/</span>
+    update() {
+
+    }
+
+    <span class="hljs-comment">/*
+		pulse
+		params: none
+		returns: none
+		Recieves keypress events from EdGE and displays the feedback with the circle object
+	*/</span>
+    pulse() {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>If a tap is in progress</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span>(Input.keys[<span class="hljs-string">' '</span>] || Input.touch) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Constsrict the circle</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">this</span>.circle.radius = <span class="hljs-number">90</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Call the taphandler to handle the press</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">let</span> delta = <span class="hljs-keyword">this</span>.tapHandler.tapDown();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>If feedback is enabled</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span>(<span class="hljs-keyword">this</span>.feedback == <span class="hljs-string">"true"</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>If we are in the soundOn phase (feedback is not displayed during soundOff)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.tapHandler.timer.soundOn) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>If the tap is within 33% of the beat, color the circle green</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Math</span>.abs(delta) &lt; <span class="hljs-keyword">this</span>.tapHandler.beatTime / <span class="hljs-number">6</span>) {
+                        <span class="hljs-keyword">this</span>.circle.fill = <span class="hljs-string">"green"</span>;
+                    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>If the tap is within 66% of the beat, color the circle yellow</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Math</span>.abs(delta) &lt; <span class="hljs-keyword">this</span>.tapHandler.beatTime * <span class="hljs-number">2</span> / <span class="hljs-number">6</span>) {
+                        <span class="hljs-keyword">this</span>.circle.fill = <span class="hljs-string">"yellow"</span>
+                    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>Otherwise color the circle red</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    <span class="hljs-keyword">else</span> {
+                        <span class="hljs-keyword">this</span>.circle.fill = <span class="hljs-string">"red"</span>;
+                    }
+                }
+            }
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>If a tap is not in progress</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (!Input.keys[<span class="hljs-string">' '</span>] &amp;&amp; !Input.touch){</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>Expand the circle and color it white</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">this</span>.circle.radius = <span class="hljs-number">100</span>;
+            <span class="hljs-keyword">this</span>.circle.fill = <span class="hljs-string">"white"</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>Call the taphandler to handle the release</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">this</span>.tapHandler.tapUp();
+        }
+    }
+}</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

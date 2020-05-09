@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>TapHandler.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="..\..\..\..\docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>TapHandler.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <p>File: /user/game/behaviours/TapHandler.js</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>Description: Creates TapInfo objects based off of the player’s button presses</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-keyword">import</span> Base <span class="hljs-keyword">from</span> <span class="hljs-string">"../../engine/Base.js"</span>
+<span class="hljs-keyword">import</span> TapInfo <span class="hljs-keyword">from</span> <span class="hljs-string">"../data/TapInfo.js"</span>
+<span class="hljs-keyword">import</span> Timer <span class="hljs-keyword">from</span> <span class="hljs-string">"./Timer.js"</span>
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TapHandler</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Base</span>.<span class="hljs-title">Behavior</span> </span>{
+
+    startTime = <span class="hljs-number">-1</span>;
+    beatTime = <span class="hljs-number">0</span>;
+    lastTap = <span class="hljs-number">0</span>;
+    soundOn = <span class="hljs-literal">true</span>;
+    side = <span class="hljs-number">0</span>;
+    tapInfo;
+    timer;
+    tapDataSoundOff = [];
+    tapDataTotal = [];
+    currentCycle = <span class="hljs-number">1</span>;
+
+    <span class="hljs-keyword">constructor</span>(bpm) {
+        <span class="hljs-keyword">super</span>();
+        <span class="hljs-keyword">this</span>.beatTime = <span class="hljs-built_in">Math</span>.round(<span class="hljs-number">60000</span>/bpm);
+    }
+
+    <span class="hljs-comment">/*
+		start
+		params: none
+		returns: none
+		Initializes this behavior. Called when EdGE intializes
+	*/</span>
+    start() {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Get a reference to the game’s Timer behavior.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">this</span>.timer = <span class="hljs-keyword">this</span>.gameObject.getComponent(Timer);
+    }
+
+    <span class="hljs-comment">/*
+		tapDown
+		params: none
+		returns: delta of the tap relative to nearest beat
+		Handles the initial button press of a tap
+	*/</span>
+    tapDown() {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Record the current time</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> date = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>();
+        <span class="hljs-keyword">let</span> currentTime = date.getTime();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>First tap, set startTime to the time of the tap</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span>(<span class="hljs-keyword">this</span>.timer.startTime == <span class="hljs-number">-1</span>) {
+            <span class="hljs-keyword">this</span>.startTime = <span class="hljs-keyword">this</span>.timer.startTimer();
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Caculate the delta (time difference between button press and last beat)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> timing = ((currentTime - <span class="hljs-keyword">this</span>.startTime) % <span class="hljs-keyword">this</span>.beatTime);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>If the press is more than 50% late, compare it to the next beat instead</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (timing &gt; <span class="hljs-keyword">this</span>.beatTime / <span class="hljs-number">2</span>) {
+            timing = timing - <span class="hljs-keyword">this</span>.beatTime;
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Calculate time since last tap</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> timeSinceLast = currentTime - <span class="hljs-keyword">this</span>.startTime - <span class="hljs-keyword">this</span>.lastTap;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Create a TapInfo object based on the tap</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">this</span>.tapInfo = <span class="hljs-keyword">new</span> TapInfo(currentTime - <span class="hljs-keyword">this</span>.startTime - timing, <span class="hljs-keyword">this</span>.beatTime, currentTime - <span class="hljs-keyword">this</span>.startTime, <span class="hljs-string">"none"</span>, timeSinceLast, <span class="hljs-keyword">this</span>.soundOn, <span class="hljs-keyword">this</span>.side, <span class="hljs-keyword">this</span>.currentCycle);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>Save time of this tap</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">this</span>.lastTap = currentTime - <span class="hljs-keyword">this</span>.startTime;
+
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.tapInfo.delta;
+    }
+
+    <span class="hljs-comment">/*
+		tapUp
+		params: none
+		returns: none
+		Handles the final button release of a tap
+	*/</span>
+    tapUp() {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>Record the current time</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> date = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>();
+        <span class="hljs-keyword">let</span> currentTime = date.getTime()</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>Set the release time of the TapInfo object</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">this</span>.tapInfo.releaseTime = currentTime - <span class="hljs-keyword">this</span>.startTime;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>Use the release time to calculate the duration of the press</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">this</span>.tapInfo.updateDuration();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>Save the completed TapInfo object to the arrays of taps</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span>(!<span class="hljs-keyword">this</span>.timer.soundOn &amp;&amp; !<span class="hljs-keyword">this</span>.timer.gameOver)
+            <span class="hljs-keyword">this</span>.tapDataSoundOff.push(<span class="hljs-keyword">this</span>.tapInfo);
+        <span class="hljs-keyword">this</span>.tapDataTotal.push(<span class="hljs-keyword">this</span>.tapInfo);
+    }
+}</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>
