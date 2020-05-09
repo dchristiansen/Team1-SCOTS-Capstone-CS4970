@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>ScoreCalculator.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="..\..\..\..\docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>ScoreCalculator.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <p>File: /user/game/behaviours/ScoreCalculator.js</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>Description: Calculates the player’s score at the end of the game</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-keyword">import</span> Base <span class="hljs-keyword">from</span> <span class="hljs-string">"../../engine/Base.js"</span>;
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ScoreCalculator</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Base</span>.<span class="hljs-title">Behavior</span></span>{
+    <span class="hljs-comment">/*
+		oldCalculateScore
+		params: data - The array of scored taps; beatTime - The length of a single beat, phaseTime - The length of a phase; cycles - the number of cycles
+		returns: score - The player's score for the session
+		Calculates the player's score at the end of the session (Old version, no longer used)
+	*/</span>
+    oldCalculateScore(data, beatTime, phaseTime, cycles) {
+        <span class="hljs-keyword">let</span> closestHitDelta = <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">let</span> lastBeat = phaseTime;
+        <span class="hljs-keyword">let</span> misses = <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">let</span> score = phaseTime;
+
+        data.forEach(<span class="hljs-function"><span class="hljs-params">tap</span> =&gt;</span> {
+            <span class="hljs-keyword">let</span> currentBeat = tap.beat;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>New beat</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span>(currentBeat != lastBeat) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>New beat hit</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">if</span>(lastBeat + beatTime == currentBeat) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Factor the last beat hit into the score</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    score -= closestHitDelta;
+                    closestHitDelta = <span class="hljs-built_in">Math</span>.abs(tap.delta);
+                    lastBeat = currentBeat
+                }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Missed a beat</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">else</span> {
+                    <span class="hljs-keyword">let</span> numMisses = (currentBeat - beatTime) - lastBeat;
+                    numMisses = numMisses / beatTime;
+
+                    misses += numMisses;
+                    closestHitDelta = <span class="hljs-built_in">Math</span>.abs(tap.delta);
+                    lastBeat = currentBeat;
+                }
+            }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>Tap on the same beat</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">else</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Current tap is closer</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">if</span>(closestHitDelta &gt; <span class="hljs-built_in">Math</span>.abs(tap.delta)){
+                    closestHitDelta = <span class="hljs-built_in">Math</span>.abs(tap.delta);
+                }
+                misses++;
+            }
+        });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Check if missed the last beat</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span>(lastBeat != (phaseTime*<span class="hljs-number">2</span>)) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>Calculate the number of misses from the last beat</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">let</span> numMisses = (phaseTime*<span class="hljs-number">2</span>) - lastBeat;
+            numMisses = numMisses / beatTime;
+            misses += numMisses;
+        } <span class="hljs-keyword">else</span> {
+            score -= closestHitDelta;
+        }
+
+        <span class="hljs-keyword">let</span> missPenalty = misses * beatTime;
+        score -= missPenalty;
+        score /= ((phaseTime * cycles) + (<span class="hljs-number">0.5</span> * beatTime));
+
+        <span class="hljs-keyword">if</span>(score &lt; <span class="hljs-number">0</span>) {
+            score = <span class="hljs-number">0</span>;
+        }
+
+        <span class="hljs-keyword">return</span> score;
+    }
+
+    <span class="hljs-comment">/*
+		newCalculateScore
+		params: data - The array of scored taps; beatTime - The length of a single beat
+		returns: score - The player's score for the session
+		Calculates the player's score at the end of the session
+	*/</span>
+    newCalculateScore(data, beatTime) {
+        <span class="hljs-keyword">let</span> total = <span class="hljs-number">0</span>;
+
+        data.forEach(<span class="hljs-function"><span class="hljs-params">tap</span> =&gt;</span> {
+            <span class="hljs-keyword">let</span> error = <span class="hljs-number">100</span>*(tap.timeSinceLast - beatTime)/beatTime;
+            error = <span class="hljs-built_in">Math</span>.abs(error);
+            total += (<span class="hljs-number">105</span> - (error * <span class="hljs-number">5</span>));
+        });
+
+        <span class="hljs-keyword">let</span> score = total/data.length;
+        
+        <span class="hljs-keyword">if</span>(score &lt; <span class="hljs-number">0</span>) {
+            score = <span class="hljs-number">0</span>;
+        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(score &gt; <span class="hljs-number">100</span>) {
+            score = <span class="hljs-number">100</span>;
+        }
+
+        <span class="hljs-keyword">return</span> score;
+    }
+}</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

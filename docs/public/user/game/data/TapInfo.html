@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>TapInfo.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="..\..\..\..\docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>TapInfo.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <p>File: /user/game/data/TapInfo.js</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>Description: Creates a TapInfo object which holds all the information about a single button press during the game.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TapInfo</span></span>{
+    beat;
+    prevBeat;
+    nextBeat;
+    pressTime;
+    releaseTime;
+    duration;
+    delta;
+    nextDelta;
+    prevDelta;
+    timeSinceLast;
+    soundOn;
+    side;
+    cycleNumber;
+    <span class="hljs-keyword">constructor</span>(beat, beatLength, pressTime, releaseTime, timeSinceLast, soundOn, side, cycleNumber){
+        <span class="hljs-keyword">this</span>.beat = beat;
+        <span class="hljs-keyword">this</span>.prevBeat = beat - beatLength;
+        <span class="hljs-keyword">this</span>.nextBeat = beat + beatLength;
+        <span class="hljs-keyword">this</span>.pressTime = pressTime;
+        <span class="hljs-keyword">this</span>.releaseTime = releaseTime;
+        <span class="hljs-keyword">this</span>.duration = releaseTime - pressTime;
+        <span class="hljs-keyword">this</span>.delta = pressTime - beat;
+        <span class="hljs-keyword">this</span>.nextDelta = pressTime - <span class="hljs-keyword">this</span>.nextBeat;
+        <span class="hljs-keyword">this</span>.prevDelta = pressTime - <span class="hljs-keyword">this</span>.prevBeat;
+        <span class="hljs-keyword">this</span>.timeSinceLast = timeSinceLast;
+        <span class="hljs-keyword">this</span>.soundOn = soundOn;
+        <span class="hljs-keyword">this</span>.side = side;
+        <span class="hljs-keyword">this</span>.cycleNumber = cycleNumber;
+    }
+    updateDuration(){
+        <span class="hljs-keyword">this</span>.duration = <span class="hljs-keyword">this</span>.releaseTime - <span class="hljs-keyword">this</span>.pressTime;
+    }
+}
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> TapInfo;</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

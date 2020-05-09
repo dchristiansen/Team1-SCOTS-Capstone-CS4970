@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>index.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="..\docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>index.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> functions = <span class="hljs-built_in">require</span>(<span class="hljs-string">'firebase-functions'</span>);
+<span class="hljs-keyword">const</span> admin = <span class="hljs-built_in">require</span>(<span class="hljs-string">'firebase-admin'</span>)
+
+admin.initializeApp();
+
+<span class="hljs-comment">/*
+    addAdminRole
+    params: data, context
+    Takes in a user email, and admin user context
+    and adds the admin role to the passed in user
+*/</span>
+exports.addAdminRole = functions.https.onCall(<span class="hljs-keyword">async</span>(data, context) =&gt; {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>If a user is not authenticated, return an error message</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (!context.auth)
+    {
+        <span class="hljs-keyword">return</span> {<span class="hljs-attr">message</span>: <span class="hljs-string">"The user is not authenticated."</span>};
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>If a user is not an admin, return an error message</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span>(!context.auth.token.admin)
+    {
+        <span class="hljs-keyword">return</span> {<span class="hljs-attr">message</span>: <span class="hljs-string">"Only admin users can add other admins."</span>};
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Get the email of the user that you want to make an admin</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> admin.auth().getUserByEmail(data.email).then(<span class="hljs-keyword">async</span> (user) =&gt; {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Delete that user’s record from the database</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> docRef = <span class="hljs-keyword">await</span> admin.firestore().collection(<span class="hljs-string">"users"</span>).doc(user.uid);
+        <span class="hljs-keyword">await</span> docRef.delete();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Delete the sessions created by the user</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> sessionQuery = <span class="hljs-keyword">await</span> admin.firestore().collection(<span class="hljs-string">"sessions"</span>).where(<span class="hljs-string">"userID"</span>, <span class="hljs-string">"=="</span>, user.uid)
+        <span class="hljs-keyword">await</span> sessionQuery.get().then(<span class="hljs-function"><span class="hljs-params">querySnapshot</span> =&gt;</span> {
+            querySnapshot.forEach(<span class="hljs-function"><span class="hljs-params">documentSnapshot</span> =&gt;</span> {
+                <span class="hljs-keyword">let</span> documentRef = admin.firestore().collection(<span class="hljs-string">"sessions"</span>).doc(documentSnapshot.id);
+                documentRef.delete();
+            });
+        });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>Remove the user from each assignment record that the user was assigned to</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> assignmentQuery = <span class="hljs-keyword">await</span> admin.firestore().collection(<span class="hljs-string">"assignments"</span>).where(<span class="hljs-string">"userIDs"</span>, <span class="hljs-string">"array-contains"</span>, user.uid);
+        <span class="hljs-keyword">let</span> assignmentPromise = <span class="hljs-keyword">await</span> assignmentQuery.get();
+        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">const</span> assignmentDoc <span class="hljs-keyword">of</span> assignmentPromise.docs) {
+            <span class="hljs-keyword">let</span> assignedUIDs = <span class="hljs-keyword">await</span> assignmentDoc.data().userIDs;
+            <span class="hljs-keyword">await</span> assignedUIDs.splice( assignedUIDs.indexOf(data.uid), <span class="hljs-number">1</span> );
+            <span class="hljs-keyword">let</span> assignmentRef = admin.firestore().collection(<span class="hljs-string">"assignments"</span>).doc(assignmentDoc.id);
+            
+            <span class="hljs-keyword">await</span> assignmentRef.update({
+                <span class="hljs-attr">userIDs</span>: assignedUIDs
+            });
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Set their custom claim to admin: true</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">return</span> admin.auth().setCustomUserClaims(user.uid, {
+            <span class="hljs-attr">admin</span>: <span class="hljs-literal">true</span>
+        });
+    }).then(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Return success message</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">return</span> {
+            <span class="hljs-attr">message</span>: <span class="hljs-string">'Success! The user has been made an admin.'</span>
+        }
+    }).catch(<span class="hljs-function"><span class="hljs-params">error</span> =&gt;</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>Return error message</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">return</span> {<span class="hljs-attr">message</span>: error.message};
+    });
+});
+
+<span class="hljs-comment">/*
+    createAdmin
+    params: data, context
+    Takes in a user email, and admin user context
+    and adds the admin role to the passed in user, no security checks
+*/</span>
+exports.createAdmin = functions.https.onCall(<span class="hljs-keyword">async</span>(data, context) =&gt; {
+    <span class="hljs-keyword">var</span> anyAdmins = getAdmins();
+
+    <span class="hljs-keyword">if</span> (!anyAdmins)
+    {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>Get the email of the user that you want to make an admin</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">return</span> admin.auth().getUserByEmail(data.email).then(<span class="hljs-keyword">async</span> (user) =&gt; {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>Set their custom claim to admin: true</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">return</span> admin.auth().setCustomUserClaims(user.uid, {
+                <span class="hljs-attr">admin</span>: <span class="hljs-literal">true</span>
+            });
+        }).then(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>Return success message</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">return</span> {
+                <span class="hljs-attr">message</span>: <span class="hljs-string">'Success! The user has been made an admin.'</span>
+            }
+        }).catch(<span class="hljs-function"><span class="hljs-params">error</span> =&gt;</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>Return error message</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">return</span> {<span class="hljs-attr">message</span>: error.message};
+        });
+    }
+    <span class="hljs-keyword">else</span>
+    {
+        <span class="hljs-keyword">return</span> {<span class="hljs-attr">message</span>: <span class="hljs-string">'There are admins in the system'</span>};
+    }       
+});
+
+<span class="hljs-comment">/*
+    getAdmins
+    params: nextPageToken
+    Returns true of there are admins in the system and false if there are none
+*/</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getAdmins</span>(<span class="hljs-params">nextPageToken</span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>Call admin auth api to list users</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> admin.auth().listUsers(<span class="hljs-number">1000</span>, nextPageToken).then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">listUsersResult</span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>Loop through list of user records</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">const</span> userRecord <span class="hljs-keyword">of</span> listUsersResult.users) 
+        {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>If the user has custom claims</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span>(userRecord.customClaims) 
+            {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>If the user has the admin custom claim, return true</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">if</span>(userRecord.customClaims.admin)
+                {
+                    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+                }
+            }
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>If there are more batches of users, call the function again with the pageToken offset</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span>(listUsersResult.pageToken) {
+            getAdmins(listUsersResult.pageToken);
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p>If we have gone through entire list, return false</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+    }).catch(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">error</span>) </span>{
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+    });
+}
+
+
+<span class="hljs-comment">/*
+    changeUserPassword
+    params: uid, password
+    Takes in a uid and password and changes the password
+    corresponding users password
+*/</span>
+exports.changeUserPassword = functions.https.onCall(<span class="hljs-keyword">async</span>(data, context) =&gt; {
+    <span class="hljs-keyword">try</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p>If the user is not authenticated, return an error message</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span>(!context.auth)
+        {
+            <span class="hljs-keyword">return</span> {<span class="hljs-attr">message</span>: <span class="hljs-string">"The user is not authenticated."</span>};
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>If the user is not an admin, return an error message</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span>(!context.auth.token.admin)
+        {
+            <span class="hljs-keyword">return</span> {<span class="hljs-attr">message</span>: <span class="hljs-string">"Only admin users can change other users' passwords."</span>};
+        }
+
+        admin.auth().updateUser(data.uid, {
+            <span class="hljs-attr">password</span>: data.password
+        });
+
+        <span class="hljs-keyword">return</span> {<span class="hljs-attr">message</span>: <span class="hljs-string">"Successfully updated user password."</span>};
+    }
+    <span class="hljs-keyword">catch</span> (error)
+    {
+        <span class="hljs-keyword">return</span> {<span class="hljs-attr">message</span>: error.message};
+    }
+});
+
+<span class="hljs-comment">/*
+    deleteUser
+    param: uid
+    Deletes a user based on the passed in uid
+*/</span>
+exports.deleteUser = functions.https.onCall(<span class="hljs-keyword">async</span>(data, context) =&gt; {
+    <span class="hljs-keyword">try</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <p>If the user is not authentication, return an error message</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span>(!context.auth) {
+            <span class="hljs-keyword">return</span> {<span class="hljs-attr">message</span>: <span class="hljs-string">"The user is not authenticated."</span>};
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <p>If the user is not an admin, return an error message</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span>(!context.auth.token.admin) {
+            <span class="hljs-keyword">return</span> {<span class="hljs-attr">message</span>: <span class="hljs-string">"Only admin users can delete users."</span>};
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <p>Delete the user from firebase auth</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">await</span> admin.auth().deleteUser(data.uid);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
+              </div>
+              <p>Delete the user from users document</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> userDoc = <span class="hljs-keyword">await</span> admin.firestore().collection(<span class="hljs-string">"users"</span>).doc(data.uid);
+        <span class="hljs-keyword">await</span> userDoc.delete();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <p>Delete the sessions created by the user</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> sessionQuery = <span class="hljs-keyword">await</span> admin.firestore().collection(<span class="hljs-string">"sessions"</span>).where(<span class="hljs-string">"userID"</span>, <span class="hljs-string">"=="</span>, data.uid)
+        <span class="hljs-keyword">await</span> sessionQuery.get().then(<span class="hljs-function"><span class="hljs-params">querySnapshot</span> =&gt;</span> {
+            querySnapshot.forEach(<span class="hljs-function"><span class="hljs-params">documentSnapshot</span> =&gt;</span> {
+                <span class="hljs-keyword">let</span> documentRef = admin.firestore().collection(<span class="hljs-string">"sessions"</span>).doc(documentSnapshot.id);
+                documentRef.delete();
+            });
+        });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              <p>Remove the user from each assignment record that the user was assigned to</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> assignmentQuery = <span class="hljs-keyword">await</span> admin.firestore().collection(<span class="hljs-string">"assignments"</span>).where(<span class="hljs-string">"userIDs"</span>, <span class="hljs-string">"array-contains"</span>, data.uid);
+        <span class="hljs-keyword">let</span> assignmentPromise = <span class="hljs-keyword">await</span> assignmentQuery.get();
+        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">const</span> assignmentDoc <span class="hljs-keyword">of</span> assignmentPromise.docs) {
+            <span class="hljs-keyword">let</span> assignedUIDs = <span class="hljs-keyword">await</span> assignmentDoc.data().userIDs;
+            <span class="hljs-keyword">await</span> assignedUIDs.splice( assignedUIDs.indexOf(data.uid), <span class="hljs-number">1</span> );
+            <span class="hljs-keyword">let</span> assignmentRef = admin.firestore().collection(<span class="hljs-string">"assignments"</span>).doc(assignmentDoc.id);
+            
+            <span class="hljs-keyword">await</span> assignmentRef.update({
+                <span class="hljs-attr">userIDs</span>: assignedUIDs
+            });
+        }
+
+
+        <span class="hljs-keyword">return</span> {<span class="hljs-attr">message</span>: <span class="hljs-string">"Successfully deleted user"</span>};
+    } <span class="hljs-keyword">catch</span>(error) {
+        <span class="hljs-keyword">return</span> {<span class="hljs-attr">message</span>: error.message};
+    }
+});
+
+<span class="hljs-comment">/*
+    createUser
+    params: data, context
+    Takes in a new user email, new user password, and admin user context
+    and creates a new user based on the passed in email and password
+
+*/</span>
+exports.createUser = functions.https.onCall(<span class="hljs-keyword">async</span> (data, context) =&gt; {
+    <span class="hljs-keyword">try</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-29">&#182;</a>
+              </div>
+              <p>If the user is not authenticated, return an error message</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span>(!context.auth) {
+            <span class="hljs-keyword">return</span> {<span class="hljs-attr">message</span>: <span class="hljs-string">"The user is not authenticated."</span>};
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-30">&#182;</a>
+              </div>
+              <p>If the user is not an admin, return an error message</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span>(!context.auth.token.admin) {
+            <span class="hljs-keyword">return</span> {<span class="hljs-attr">message</span>: <span class="hljs-string">"Only admin users can create new users."</span>};
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-31">&#182;</a>
+              </div>
+              <p>Construct a new user object</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> newUser = {
+            <span class="hljs-attr">email</span>: data.email,
+            <span class="hljs-attr">password</span>: data.password
+        };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-32">&#182;</a>
+              </div>
+              <p>Create a new user using the admin API</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> userRecord = <span class="hljs-keyword">await</span> admin.auth().createUser(newUser);
+        <span class="hljs-keyword">const</span> userUID = userRecord.uid;
+        <span class="hljs-keyword">const</span> userID = data.email.split(<span class="hljs-string">"@"</span>)[<span class="hljs-number">0</span>];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-33">&#182;</a>
+              </div>
+              <p>Construct a new database record object</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> dbRecord = {
+            <span class="hljs-attr">userID</span>: userID,
+            <span class="hljs-attr">changePassword</span>: <span class="hljs-literal">false</span>
+        };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-34">&#182;</a>
+              </div>
+              <p>Create a new document in the users collection with the document
+ID as the user uid</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">await</span> admin.firestore().collection(<span class="hljs-string">"users"</span>).doc(userUID).set(dbRecord);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-35">&#182;</a>
+              </div>
+              <p>Return success message</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">return</span> {<span class="hljs-attr">message</span>: <span class="hljs-string">'Success! The user has been created.'</span>}
+    } <span class="hljs-keyword">catch</span> (error) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-36">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-36">&#182;</a>
+              </div>
+              <p>Return error message</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>       <span class="hljs-keyword">return</span> {<span class="hljs-attr">message</span>: error.message};
+    }
+});</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

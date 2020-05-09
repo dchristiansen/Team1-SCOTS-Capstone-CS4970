@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>/Data.js</title>
+  <title>Data.js</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="..\docco.css" />
@@ -15,7 +15,7 @@
         
           <li id="title">
               <div class="annotation">
-                  <h1>/Data.js</h1>
+                  <h1>Data.js</h1>
               </div>
           </li>
         
@@ -206,12 +206,12 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
-              <p>Description: Creates new session upon completion of game. Stores tap objects as an array of TapObjects. 
+              <p>Description: Creates new session upon completion of game. Stores tap objects as an array of TapObjects.
 Also updates the user document with the latest session time</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">createSession</span>(<span class="hljs-params">assignmentID, bpm, soundOn, soundOff, cycles, feedback, userID, tapData</span>)</span>{</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">createSession</span>(<span class="hljs-params">assignmentID, bpm, soundOn, soundOff, cycles, feedback, userID, tapData, score</span>)</span>{</pre></div></div>
             
         </li>
         
@@ -254,7 +254,8 @@ Also updates the user document with the latest session time</p>
         },
         <span class="hljs-attr">userID</span>: userID,
         <span class="hljs-attr">sessionTime</span>: firebase.firestore.Timestamp.now(),
-        <span class="hljs-attr">taps</span>: tapData
+        <span class="hljs-attr">taps</span>: tapData,
+        <span class="hljs-attr">score</span>: score
     };
     batch.set(newSessionRef, docData);</pre></div></div>
             
@@ -288,9 +289,9 @@ Also updates the user document with the latest session time</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>   <span class="hljs-keyword">return</span> batch.commit().then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
-        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"New Session successfully written! "</span>, newSessionRef.id);
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"New Session successfully written!"</span>);
     }).catch(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">error</span>)</span>{
-        <span class="hljs-built_in">console</span>.error(<span class="hljs-string">"Error when adding new session: "</span>, error);
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Error when writing session!"</span>);
     });
 }</pre></div></div>
             
@@ -347,7 +348,7 @@ Also updates the user document with the latest session time</p>
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getSession</span>(<span class="hljs-params">sessionID</span>)</span>{
-    
+
     <span class="hljs-keyword">var</span> sessionData = {};</pre></div></div>
             
         </li>
@@ -367,7 +368,7 @@ Also updates the user document with the latest session time</p>
         <span class="hljs-keyword">var</span> returnData = {<span class="hljs-attr">id</span>: <span class="hljs-literal">null</span>};
         <span class="hljs-keyword">var</span> docRef = firestore.collection(<span class="hljs-string">"sessions"</span>).doc(sessionID);
         <span class="hljs-keyword">let</span> promise = <span class="hljs-keyword">await</span> docRef.get();
-        
+
         <span class="hljs-keyword">if</span>(promise.exists){
             returnData = {
                 <span class="hljs-attr">id</span>: promise.id,
@@ -395,12 +396,11 @@ Also updates the user document with the latest session time</p>
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">try</span> {
         sessionsData = <span class="hljs-keyword">await</span> getSessionData(sessionID);
     } <span class="hljs-keyword">catch</span>(err){
-        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Error getting sessions "</span>, err);
+        alert(<span class="hljs-string">"Unable to display Session!"</span>);
     } <span class="hljs-keyword">finally</span>{
-          <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"returning data to client..."</span>, sessionsData);
           <span class="hljs-keyword">return</span> sessionsData;
     }
-    
+
 }</pre></div></div>
             
         </li>
@@ -470,33 +470,18 @@ Also updates the user document with the latest session time</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
-              <p>Return data as an array of maps, where each item contains the docID and session data
-We can change this to return a custom object later</p>
+              <p>Return data as an array of maps, where each item contains the docID and session data</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">var</span> returnData = {
+            <div class="content"><div class='highlight'><pre>        
+        <span class="hljs-keyword">var</span> returnData = {
             <span class="hljs-attr">dataArray</span>: []
         }
 
-        <span class="hljs-keyword">var</span> sessions = firestore.collection(<span class="hljs-string">"sessions"</span>).orderBy(<span class="hljs-string">"sessionTime"</span>);</pre></div></div>
-            
-        </li>
+        <span class="hljs-keyword">var</span> sessions = firestore.collection(<span class="hljs-string">"sessions"</span>).orderBy(<span class="hljs-string">"sessionTime"</span>, <span class="hljs-string">"desc"</span>);
         
-        
-        <li id="section-31">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
-              </div>
-              <p>IMPORTANT
-we can implement pagination later on to perform batched reads
-I am implementing a limit so we don’t run into pricing issues</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">var</span> query = sessions.where(<span class="hljs-string">"userID"</span>, <span class="hljs-string">"=="</span>, userID).limit(<span class="hljs-number">20</span>);
+        <span class="hljs-keyword">var</span> query = sessions.where(<span class="hljs-string">"userID"</span>, <span class="hljs-string">"=="</span>, userID);
 
         <span class="hljs-keyword">let</span> promise = <span class="hljs-keyword">await</span> query.get();
         <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> sess <span class="hljs-keyword">of</span> promise.docs){
@@ -513,12 +498,24 @@ I am implementing a limit so we don’t run into pricing issues</p>
     <span class="hljs-keyword">try</span> {
         sessionsArray = <span class="hljs-keyword">await</span> getSessionData(userID);
     } <span class="hljs-keyword">catch</span>(err){
-        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Error getting sessions "</span>, err);
+        alert(<span class="hljs-string">"Unable to display Sessions!"</span>);
     } <span class="hljs-keyword">finally</span>{
-          <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"returning data to client..."</span>, sessionsArray);
           <span class="hljs-keyword">return</span> sessionsArray;
     }
 }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-31">&#182;</a>
+              </div>
+              <p>Function: getUser</p>
+
+            </div>
             
         </li>
         
@@ -529,7 +526,7 @@ I am implementing a limit so we don’t run into pricing issues</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
-              <p>Function: getUser</p>
+              <p>Input: string userID, the id of the requested user</p>
 
             </div>
             
@@ -542,7 +539,7 @@ I am implementing a limit so we don’t run into pricing issues</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
-              <p>Input: string userID, the id of the requested user</p>
+              <p>Output: returns userData = {id: user doc id, data: user doc data}</p>
 
             </div>
             
@@ -555,9 +552,39 @@ I am implementing a limit so we don’t run into pricing issues</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
-              <p>Output: returns userData = {id: user doc id, data: user doc data}</p>
+              <p>Description: Returns the user document of the requested user</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getUser</span>(<span class="hljs-params">userID</span>)</span>{
+
+    <span class="hljs-keyword">var</span> userData = {};
+    <span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getUserData</span>(<span class="hljs-params">userID</span>)</span>{
+        <span class="hljs-keyword">var</span> returnData = {<span class="hljs-attr">id</span>: <span class="hljs-literal">null</span>};
+        <span class="hljs-keyword">var</span> docRef = firestore.collection(<span class="hljs-string">"users"</span>).doc(userID);
+        <span class="hljs-keyword">let</span> promise = <span class="hljs-keyword">await</span> docRef.get();
+
+        <span class="hljs-keyword">if</span>(promise.exists){
+            returnData = {
+                <span class="hljs-attr">id</span>: promise.id,
+                <span class="hljs-attr">data</span>: promise.data()
+            }
+        }<span class="hljs-keyword">else</span>{
+            <span class="hljs-keyword">throw</span> error(<span class="hljs-string">"Requested user does not exist!"</span>);
+        }
+
+        <span class="hljs-keyword">return</span> returnData;
+    }
+
+    <span class="hljs-keyword">try</span> {
+        userData = <span class="hljs-keyword">await</span> getUserData(userID);
+    } <span class="hljs-keyword">catch</span>(err){
+        alert(<span class="hljs-string">"Unable to display User!"</span>);
+    } <span class="hljs-keyword">finally</span>{
+          <span class="hljs-keyword">return</span> userData;
+    }
+
+}</pre></div></div>
             
         </li>
         
@@ -568,40 +595,9 @@ I am implementing a limit so we don’t run into pricing issues</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
-              <p>Description: Returns the user document of the requested user</p>
+              <p>Function: getUsers</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getUser</span>(<span class="hljs-params">userID</span>)</span>{
-    
-    <span class="hljs-keyword">var</span> userData = {};
-    <span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getUserData</span>(<span class="hljs-params">userID</span>)</span>{
-        <span class="hljs-keyword">var</span> returnData = {<span class="hljs-attr">id</span>: <span class="hljs-literal">null</span>};
-        <span class="hljs-keyword">var</span> docRef = firestore.collection(<span class="hljs-string">"users"</span>).doc(userID);
-        <span class="hljs-keyword">let</span> promise = <span class="hljs-keyword">await</span> docRef.get();
-        
-        <span class="hljs-keyword">if</span>(promise.exists){
-            returnData = {
-                <span class="hljs-attr">id</span>: promise.id,
-                <span class="hljs-attr">data</span>: promise.data()
-            }
-        }<span class="hljs-keyword">else</span>{
-            <span class="hljs-keyword">throw</span> error(<span class="hljs-string">"Requested user does not exist!"</span>);
-        }
-        
-        <span class="hljs-keyword">return</span> returnData;
-    }
-
-    <span class="hljs-keyword">try</span> {
-        userData = <span class="hljs-keyword">await</span> getUserData(userID);
-    } <span class="hljs-keyword">catch</span>(err){
-        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Error getting user "</span>, err);
-    } <span class="hljs-keyword">finally</span>{
-          <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"returning data to client..."</span>, userData);
-          <span class="hljs-keyword">return</span> userData;
-    }
-    
-}</pre></div></div>
             
         </li>
         
@@ -612,7 +608,7 @@ I am implementing a limit so we don’t run into pricing issues</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
-              <p>Function: getUsers</p>
+              <p>Input: none</p>
 
             </div>
             
@@ -625,7 +621,7 @@ I am implementing a limit so we don’t run into pricing issues</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
-              <p>Input: none</p>
+              <p>Output: returns usersArray = {dataArray:[{id: user doc id, data: user doc data},{…},{…}]}</p>
 
             </div>
             
@@ -638,37 +634,12 @@ I am implementing a limit so we don’t run into pricing issues</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
-              <p>Output: returns usersArray = {dataArray:[{id: user doc id, data: user doc data},{…},{…}]}</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-39">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-39">&#182;</a>
-              </div>
               <p>Description: Returns all the users in the users collection</p>
 
             </div>
             
-        </li>
-        
-        
-        <li id="section-40">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
-              </div>
-              <p>TODO: Implement limit? Paginate data?</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getUsers</span>(<span class="hljs-params"></span>)</span>{
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getUsers</span>(<span class="hljs-params"></span>)</span>{
 
     <span class="hljs-keyword">var</span> usersArray = {<span class="hljs-attr">dataArray</span>: <span class="hljs-literal">null</span>};
 
@@ -692,12 +663,37 @@ I am implementing a limit so we don’t run into pricing issues</p>
     <span class="hljs-keyword">try</span> {
         usersArray = <span class="hljs-keyword">await</span> getUserData();
       }<span class="hljs-keyword">catch</span>(err){
-        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Error getting users "</span>, err);
+        alert(<span class="hljs-string">"Unable to display Users!"</span>);
       }<span class="hljs-keyword">finally</span>{
-          <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"returning data to client..."</span>, usersArray);
           <span class="hljs-keyword">return</span> usersArray;
       }
 }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-39">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-39">&#182;</a>
+              </div>
+              <p>Function: createAssignment</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-40">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-40">&#182;</a>
+              </div>
+              <p>Input: string assignmentLabel: the name of the assignment</p>
+
+            </div>
             
         </li>
         
@@ -708,8 +704,7 @@ I am implementing a limit so we don’t run into pricing issues</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-41">&#182;</a>
               </div>
-              <p>Function: createAssignment</p>
-
+              <pre><code>  int bpm: beats per minute</code></pre>
             </div>
             
         </li>
@@ -721,8 +716,7 @@ I am implementing a limit so we don’t run into pricing issues</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-42">&#182;</a>
               </div>
-              <p>Input: string assignmentLabel: the name of the assignment</p>
-
+              <pre><code>  int soundOn: time <span class="hljs-keyword">in</span> seconds <span class="hljs-keyword">of</span> game phase where sound was on</code></pre>
             </div>
             
         </li>
@@ -734,7 +728,7 @@ I am implementing a limit so we don’t run into pricing issues</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-43">&#182;</a>
               </div>
-              <pre><code>  int bpm: beats per minute</code></pre>
+              <pre><code>  int soundOff: int,time <span class="hljs-keyword">in</span> seconds <span class="hljs-keyword">of</span> game phase where sound was off</code></pre>
             </div>
             
         </li>
@@ -746,7 +740,7 @@ I am implementing a limit so we don’t run into pricing issues</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-44">&#182;</a>
               </div>
-              <pre><code>  int soundOn: time <span class="hljs-keyword">in</span> seconds <span class="hljs-keyword">of</span> game phase where sound was on</code></pre>
+              <pre><code>  int cycles: the amount <span class="hljs-keyword">of</span> times the game cycled. <span class="hljs-number">1</span> cycle = soundOn + soundOff, <span class="hljs-number">2</span> cycles = soundOn + soundOff + soundOn + soundOff, etc</code></pre>
             </div>
             
         </li>
@@ -758,7 +752,7 @@ I am implementing a limit so we don’t run into pricing issues</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-45">&#182;</a>
               </div>
-              <pre><code>  int soundOff: int,time <span class="hljs-keyword">in</span> seconds <span class="hljs-keyword">of</span> game phase where sound was off</code></pre>
+              <pre><code>  boolean feedback: <span class="hljs-literal">true</span> <span class="hljs-keyword">if</span> feedback was enabled, <span class="hljs-literal">false</span> <span class="hljs-keyword">if</span> not</code></pre>
             </div>
             
         </li>
@@ -770,7 +764,7 @@ I am implementing a limit so we don’t run into pricing issues</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-46">&#182;</a>
               </div>
-              <pre><code>  int cycles: the amount <span class="hljs-keyword">of</span> times the game cycled. <span class="hljs-number">1</span> cycle = soundOn + soundOff, <span class="hljs-number">2</span> cycles = soundOn + soundOff + soundOn + soundOff, etc</code></pre>
+              <pre><code>  boolean defaultAssignment: <span class="hljs-literal">true</span> <span class="hljs-keyword">if</span> the assignment is a <span class="hljs-keyword">default</span> assignment to be assigned to all users</code></pre>
             </div>
             
         </li>
@@ -782,7 +776,7 @@ I am implementing a limit so we don’t run into pricing issues</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-47">&#182;</a>
               </div>
-              <pre><code>  boolean feedback: <span class="hljs-literal">true</span> <span class="hljs-keyword">if</span> feedback was enabled, <span class="hljs-literal">false</span> <span class="hljs-keyword">if</span> not</code></pre>
+              <pre><code>  string array userIDs: the list <span class="hljs-keyword">of</span> users that are assigned <span class="hljs-keyword">this</span> assignment</code></pre>
             </div>
             
         </li>
@@ -794,7 +788,8 @@ I am implementing a limit so we don’t run into pricing issues</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-48">&#182;</a>
               </div>
-              <pre><code>  string array userIDs: the list <span class="hljs-keyword">of</span> users that are assigned <span class="hljs-keyword">this</span> assignment</code></pre>
+              <p>Output: none</p>
+
             </div>
             
         </li>
@@ -806,9 +801,31 @@ I am implementing a limit so we don’t run into pricing issues</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-49">&#182;</a>
               </div>
-              <p>Output: none</p>
+              <p>Description: Creates new assignment for listed users based off of passed parameters</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">createAssignment</span>(<span class="hljs-params">assignmentLabel, bpm, soundOn, soundOff, cycles, feedback, defaultAssignment, userIDs </span>)</span>{
+    <span class="hljs-keyword">let</span> assignments = firestore.collection(<span class="hljs-string">"assignments"</span>);
+    <span class="hljs-keyword">let</span> docData = {
+        <span class="hljs-attr">assignmentLabel</span>: assignmentLabel,
+        <span class="hljs-attr">parameters</span>: {
+            <span class="hljs-attr">bpm</span>: bpm,
+            <span class="hljs-attr">soundOnTime</span>: soundOn,
+            <span class="hljs-attr">soundOffTime</span>: soundOff,
+            <span class="hljs-attr">cycles</span>: cycles,
+            <span class="hljs-attr">feedback</span>: feedback,
+        },
+        <span class="hljs-attr">default</span>: defaultAssignment,
+        <span class="hljs-attr">userIDs</span>: userIDs,
+    };
+    assignments.add(docData).then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+        alert(<span class="hljs-string">"New Assignment successfully written!"</span>);
+    }).catch(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">error</span>) </span>{
+        alert(<span class="hljs-string">"Unable to write new Assignment"</span>);
+    });
+}</pre></div></div>
             
         </li>
         
@@ -819,7 +836,7 @@ I am implementing a limit so we don’t run into pricing issues</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-50">&#182;</a>
               </div>
-              <p>Description: Creates new assignment for listed users based off of passed parameters</p>
+              <p>Function: getAssignmentsForUser</p>
 
             </div>
             
@@ -832,27 +849,9 @@ I am implementing a limit so we don’t run into pricing issues</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-51">&#182;</a>
               </div>
-              <p>TODO: Add error handling</p>
+              <p>Input: string userID, id of user that is tied to requested assignments</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">createAssignment</span>(<span class="hljs-params">assignmentLabel, bpm, soundOn, soundOff, cycles, feedback, userIDs </span>)</span>{
-    <span class="hljs-keyword">let</span> assignments = firestore.collection(<span class="hljs-string">"assignments"</span>);
-    <span class="hljs-keyword">let</span> docData = {
-        <span class="hljs-attr">assignmentLabel</span>: assignmentLabel,
-        <span class="hljs-attr">parameters</span>: {
-            <span class="hljs-attr">bpm</span>: bpm,
-            <span class="hljs-attr">soundOnTime</span>: soundOn,
-            <span class="hljs-attr">soundOffTime</span>: soundOff,
-            <span class="hljs-attr">cycles</span>: cycles,
-            <span class="hljs-attr">feedback</span>: feedback,
-        },
-        <span class="hljs-attr">userIDs</span>: userIDs,
-    };
-    assignments.add(docData).then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
-        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"New Assignment successfully written!"</span>);
-    });
-}</pre></div></div>
             
         </li>
         
@@ -863,7 +862,7 @@ I am implementing a limit so we don’t run into pricing issues</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-52">&#182;</a>
               </div>
-              <p>Function: getAssignmentsForUser</p>
+              <p>Output: returns assignmentsArray = {dataArray:[{id: assignment doc id, data: assignment doc data},{…},{…}]}</p>
 
             </div>
             
@@ -876,50 +875,12 @@ I am implementing a limit so we don’t run into pricing issues</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-53">&#182;</a>
               </div>
-              <p>Input: string userID, id of user that is tied to requested assignments</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-54">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-54">&#182;</a>
-              </div>
-              <p>Output: returns assignmentsArray = {dataArray:[{id: assignment doc id, data: assignment doc data},{…},{…}]}</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-55">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-55">&#182;</a>
-              </div>
               <p>Description: Returns all the assignments for the passed userID</p>
 
             </div>
             
-        </li>
-        
-        
-        <li id="section-56">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-56">&#182;</a>
-              </div>
-              <p>TODO: Pagination?</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getAssignmentsForUser</span>(<span class="hljs-params">userID</span>)</span>{
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getAssignmentsForUser</span>(<span class="hljs-params">userID</span>)</span>{
 
     <span class="hljs-keyword">var</span> assignmentsArray = {<span class="hljs-attr">dataArray</span>: <span class="hljs-literal">null</span>};
 
@@ -928,11 +889,12 @@ I am implementing a limit so we don’t run into pricing issues</p>
             <span class="hljs-attr">dataArray</span>: []
         }
         <span class="hljs-keyword">var</span> assignments = firestore.collection(<span class="hljs-string">"assignments"</span>).orderBy(<span class="hljs-string">"assignmentLabel"</span>);
-        <span class="hljs-keyword">var</span> query = assignments.where(<span class="hljs-string">"userIDs"</span>, <span class="hljs-string">"array-contains"</span>, userID).limit(<span class="hljs-number">20</span>);
+        <span class="hljs-keyword">var</span> userIdQuery = assignments.where(<span class="hljs-string">"userIDs"</span>, <span class="hljs-string">"array-contains"</span>, userID);
+        <span class="hljs-keyword">var</span> defaultQuery = assignments.where(<span class="hljs-string">"default"</span>, <span class="hljs-string">"=="</span>, <span class="hljs-literal">true</span>);
 
-        <span class="hljs-keyword">let</span> promise = <span class="hljs-keyword">await</span> query.get();
+        <span class="hljs-keyword">let</span> userIdPromise = <span class="hljs-keyword">await</span> userIdQuery.get();
 
-        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> assign <span class="hljs-keyword">of</span> promise.docs){
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> assign <span class="hljs-keyword">of</span> userIdPromise.docs){
             returnData.dataArray.push(
                 {
                     <span class="hljs-attr">id</span>: assign.id,
@@ -940,20 +902,66 @@ I am implementing a limit so we don’t run into pricing issues</p>
                 }
             );
         }
+
+        <span class="hljs-keyword">let</span> defaultPromise = <span class="hljs-keyword">await</span> defaultQuery.get();
+
+        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">const</span> assign <span class="hljs-keyword">of</span> defaultPromise.docs) {
+            <span class="hljs-keyword">if</span>(!returnData.dataArray.includes(assign)){
+                returnData.dataArray.push(
+                    {
+                        <span class="hljs-attr">id</span>: assign.id,
+                        <span class="hljs-attr">data</span>:assign.data()
+                    }
+                )
+            }
+        }
+
         <span class="hljs-keyword">return</span> returnData;
     }
 
     <span class="hljs-keyword">try</span> {
         assignmentsArray = <span class="hljs-keyword">await</span> getAssignmentData(userID);
     } <span class="hljs-keyword">catch</span>(err){
-        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Error getting assignments "</span>, err);
+        alert(<span class="hljs-string">"Unable to display Assignments!"</span>);
     } <span class="hljs-keyword">finally</span>{
-          <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"returning data to client..."</span>, assignmentsArray);
           <span class="hljs-keyword">return</span> assignmentsArray;
     }
 }
 
-<span class="hljs-keyword">export</span> {createAssignment, createSession, getAllSessionsForUser, getAssignmentsForUser, getUsers, getSession, getUser}</pre></div></div>
+<span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getAllAssignments</span>(<span class="hljs-params"></span>)</span>{
+  <span class="hljs-keyword">var</span> assignmentsArray = {<span class="hljs-attr">dataArray</span>: <span class="hljs-literal">null</span>};
+
+  <span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getAssignmentData</span>(<span class="hljs-params"></span>)</span>{
+      <span class="hljs-keyword">var</span> returnData = {
+          <span class="hljs-attr">dataArray</span>: []
+      }
+      <span class="hljs-keyword">var</span> assignments = firestore.collection(<span class="hljs-string">"assignments"</span>).orderBy(<span class="hljs-string">"assignmentLabel"</span>);
+
+      <span class="hljs-keyword">let</span> promise = <span class="hljs-keyword">await</span> assignments.get();
+
+      <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> assign <span class="hljs-keyword">of</span> promise.docs){
+          returnData.dataArray.push(
+              {
+                  <span class="hljs-attr">id</span>: assign.id,
+                  <span class="hljs-attr">data</span>: assign.data()
+              }
+          );
+      }
+      <span class="hljs-keyword">return</span> returnData;
+  }
+
+  <span class="hljs-keyword">try</span> {
+      assignmentsArray = <span class="hljs-keyword">await</span> getAssignmentData();
+  } <span class="hljs-keyword">catch</span>(err){
+    alert(<span class="hljs-string">"Unable to display Assignments!"</span>);
+  } <span class="hljs-keyword">finally</span>{
+        <span class="hljs-keyword">return</span> assignmentsArray;
+  }
+
+}
+
+
+<span class="hljs-keyword">export</span> {createAssignment, createSession, getAllSessionsForUser, getAssignmentsForUser, getUsers, getSession, getUser, getAllAssignments}</pre></div></div>
             
         </li>
         

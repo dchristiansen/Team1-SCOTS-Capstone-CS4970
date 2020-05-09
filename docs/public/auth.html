@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>auth.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="..\docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>auth.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>Element for the username field  </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> usernameField = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'Uname'</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Element for the password field</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> passwordField = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'password'</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Button for login</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> btnLogin = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'btnLogin'</span>);
+    
+    <span class="hljs-keyword">var</span> firestore = firebase.firestore();
+    
+    <span class="hljs-comment">/*
+        btnLogin:
+        Listener for the login button that logs in a user with FirebaseAuth
+    */</span>
+    btnLogin.addEventListener(<span class="hljs-string">'click'</span>, e =&gt; {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Grab username and password</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> username = usernameField.value;
+        <span class="hljs-keyword">const</span> password = passwordField.value;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Get FirebaseAuth instance</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> auth = firebase.auth();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>Sign in with the username and password and return a promise</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> promise = auth.signInWithEmailAndPassword(username,password);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>If there is an error, alert the error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        promise.catch(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> alert(e.message));
+
+    });
+
+    <span class="hljs-comment">/*
+        onAuthStateChanged(firebaseUser)
+        Observer for Authentication State:
+        If the user is logged in and the user is an admin, then this listener will
+        redirect to the researcher portal. If the user is not an admin, then it will
+        redirect to the user dashboard
+    */</span>
+    firebase.auth().onAuthStateChanged(<span class="hljs-function"><span class="hljs-params">firebaseUser</span> =&gt;</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>If a user is logged in</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span>(firebaseUser) 
+        {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>Get admin token result</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            firebaseUser.getIdTokenResult().then(<span class="hljs-function"><span class="hljs-params">idTokenResult</span> =&gt;</span> {
+                firebaseUser.admin = idTokenResult.claims.admin;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>If user is an admin</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">if</span> (firebaseUser.admin)
+                {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>Redirect to researcher portal</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    <span class="hljs-built_in">window</span>.location = <span class="hljs-string">"/researcher/rPortal.html"</span>;
+                }
+                <span class="hljs-keyword">else</span> 
+                {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>Read into users table to get the changePassword field</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    firestore.collection(<span class="hljs-string">'users'</span>).doc(firebaseUser.uid).get().then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">doc</span>) </span>{
+                        <span class="hljs-keyword">if</span>(doc.exists) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>If a user has not changed their password</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                            <span class="hljs-keyword">if</span>(!doc.data().changePassword)
+                            {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>Alert that the user is being redirected to the edituser</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                                alert(<span class="hljs-string">"You have not changed your password since you were first registered. Please change your password before proceeding."</span>);
+                                <span class="hljs-built_in">window</span>.location = <span class="hljs-string">"/user/edituser.html"</span>;
+                            }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>Else redirect to the userdashboard</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                            <span class="hljs-keyword">else</span>
+                            {
+                                <span class="hljs-built_in">window</span>.location = <span class="hljs-string">"/user/userdashboard.html"</span>;
+                            }
+                        }
+                        <span class="hljs-keyword">else</span> {
+                            alert(<span class="hljs-string">"The user has not been registered in the database."</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>window.location = “/user/userdashboard.html”;</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                        }
+                    })
+                }
+            });
+        }
+    });
+}());</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

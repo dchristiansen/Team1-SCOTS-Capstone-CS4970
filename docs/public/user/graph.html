@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>graph.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="..\..\docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>graph.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> intervalGraphElement = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'intervalGraph'</span>);
+<span class="hljs-keyword">let</span> asynchronyGraphElement = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'asynchronyGraph'</span>);
+<span class="hljs-keyword">let</span> score = sessionStorage.getItem(<span class="hljs-string">'score'</span>);
+<span class="hljs-keyword">let</span> data = sessionStorage.getItem(<span class="hljs-string">'totalTapArray'</span>);
+<span class="hljs-keyword">let</span> soundOnTime = sessionStorage.getItem(<span class="hljs-string">'timeWSound'</span>);
+<span class="hljs-keyword">let</span> soundOffTime = sessionStorage.getItem(<span class="hljs-string">'timeWOSound'</span>);
+<span class="hljs-keyword">let</span> cycles = sessionStorage.getItem(<span class="hljs-string">'cycles'</span>);
+<span class="hljs-keyword">let</span> bpm = sessionStorage.getItem(<span class="hljs-string">'bpm'</span>);
+<span class="hljs-keyword">let</span> total = sessionStorage.getItem(<span class="hljs-string">'totalTapArray'</span>);
+
+data = <span class="hljs-built_in">JSON</span>.parse(data);
+
+<span class="hljs-keyword">let</span> yMaxInterval = <span class="hljs-number">0</span>, yMinInterval = <span class="hljs-number">-1</span>, xMax = <span class="hljs-number">0</span>;
+
+<span class="hljs-keyword">let</span> beatTime = <span class="hljs-built_in">Math</span>.round((<span class="hljs-number">60000</span> / bpm));
+
+<span class="hljs-keyword">let</span> yMaxAsynchrony = beatTime / <span class="hljs-number">2</span>, yMinAsynchrony = -yMaxAsynchrony;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>Creating the x,y pair array for the interval and asynchrony arrays</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> intervalChartArray = [];
+<span class="hljs-keyword">let</span> asynchronyChartArray = [];
+<span class="hljs-keyword">let</span> prev;
+data.splice(<span class="hljs-number">0</span>, <span class="hljs-number">1</span>);
+data.forEach(<span class="hljs-function"><span class="hljs-params">tap</span> =&gt;</span> {
+
+    <span class="hljs-keyword">let</span> timeSinceLast = tap.timeSinceLast;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Calculate pressTime taking into account cycle number</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> pressTime = (tap.pressTime/<span class="hljs-number">1000</span>) + ((<span class="hljs-built_in">parseInt</span>(soundOnTime) + <span class="hljs-built_in">parseInt</span>(soundOffTime)) * (tap.cycleNumber - <span class="hljs-number">1</span>));
+    pressTime = <span class="hljs-built_in">Math</span>.round(pressTime * <span class="hljs-number">100</span>) / <span class="hljs-number">100</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Calculate the current beat taking into account cycle number</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> currentBeat = (tap.beat/<span class="hljs-number">1000</span>) + ((<span class="hljs-built_in">parseInt</span>(soundOnTime) + <span class="hljs-built_in">parseInt</span>(soundOffTime)) * (tap.cycleNumber - <span class="hljs-number">1</span>));
+    currentBeat = <span class="hljs-built_in">Math</span>.round(currentBeat * <span class="hljs-number">100</span>) / <span class="hljs-number">100</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>If this is a tap within our y-bounds (less than 2 times the beat time)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (timeSinceLast &lt; (<span class="hljs-number">2</span> * beatTime) &amp;&amp; timeSinceLast &gt; (beatTime / <span class="hljs-number">2</span>)) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>On sound reset get a negative number, this fixes the bug, might want to investigate a fix in taphandler</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (timeSinceLast &lt; <span class="hljs-number">0</span>) {
+            timeSinceLast = (pressTime - prev.pressTime);
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>Get the max y value</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (timeSinceLast &gt; yMaxInterval) {
+            yMaxInterval = timeSinceLast;
+        }
+
+        <span class="hljs-keyword">if</span> (yMinInterval == <span class="hljs-number">-1</span> || timeSinceLast &lt; yMinInterval) {
+            yMinInterval = timeSinceLast;
+        }
+
+        intervalChartArray.push({ <span class="hljs-attr">x</span>: pressTime, <span class="hljs-attr">y</span>: timeSinceLast });
+    }
+    
+    asynchronyChartArray.push({ <span class="hljs-attr">x</span>: currentBeat, <span class="hljs-attr">y</span>: tap.delta});
+
+    prev = tap;
+});
+
+xMax = asynchronyChartArray[asynchronyChartArray.length - <span class="hljs-number">1</span>].x;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Calculate the green, yellow, and red line positions based off of the bpm for the interval chart</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> greenYPosInterval = beatTime + (beatTime * <span class="hljs-number">0.1</span>);
+<span class="hljs-keyword">let</span> greenYNegInterval = beatTime - (beatTime * <span class="hljs-number">0.1</span>);
+<span class="hljs-keyword">let</span> yellowYPosInterval = beatTime + (beatTime * <span class="hljs-number">0.15</span>);
+<span class="hljs-keyword">let</span> yellowYNegInterval = beatTime - (beatTime * <span class="hljs-number">0.15</span>);
+<span class="hljs-keyword">let</span> redYPosInterval = beatTime + (beatTime * <span class="hljs-number">0.2</span>);
+<span class="hljs-keyword">let</span> redYNegInterval = beatTime - (beatTime * <span class="hljs-number">0.2</span>);
+
+<span class="hljs-keyword">let</span> greenZonePosInterval = [{ <span class="hljs-attr">x</span>: <span class="hljs-number">0</span>, <span class="hljs-attr">y</span>: greenYPosInterval }, { <span class="hljs-attr">x</span>: xMax, <span class="hljs-attr">y</span>: greenYPosInterval }];
+<span class="hljs-keyword">let</span> greenZoneNegInterval = [{ <span class="hljs-attr">x</span>: <span class="hljs-number">0</span>, <span class="hljs-attr">y</span>: greenYNegInterval }, { <span class="hljs-attr">x</span>: xMax, <span class="hljs-attr">y</span>: greenYNegInterval }];
+<span class="hljs-keyword">let</span> yellowZonePosInterval = [{ <span class="hljs-attr">x</span>: <span class="hljs-number">0</span>, <span class="hljs-attr">y</span>: yellowYPosInterval }, { <span class="hljs-attr">x</span>: xMax, <span class="hljs-attr">y</span>: yellowYPosInterval }];
+<span class="hljs-keyword">let</span> yellowZoneNegInterval = [{ <span class="hljs-attr">x</span>: <span class="hljs-number">0</span>, <span class="hljs-attr">y</span>: yellowYNegInterval }, { <span class="hljs-attr">x</span>: xMax, <span class="hljs-attr">y</span>: yellowYNegInterval }];
+<span class="hljs-keyword">let</span> redZonePosInterval = [{ <span class="hljs-attr">x</span>: <span class="hljs-number">0</span>, <span class="hljs-attr">y</span>: redYPosInterval }, { <span class="hljs-attr">x</span>: xMax, <span class="hljs-attr">y</span>: redYPosInterval }];
+<span class="hljs-keyword">let</span> redZoneNegInterval = [{ <span class="hljs-attr">x</span>: <span class="hljs-number">0</span>, <span class="hljs-attr">y</span>: redYNegInterval }, { <span class="hljs-attr">x</span>: xMax, <span class="hljs-attr">y</span>: redYNegInterval }];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Check if the red zones are greater than the current y min/max, if so set them to be our new min/max</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">if</span> (redYPosInterval &gt; yMaxInterval) {
+    yMaxInterval = redYPosInterval;
+}
+<span class="hljs-keyword">if</span> (redYNegInterval &lt; yMinInterval) {
+    yMinInterval = redYNegInterval;
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>Calculate the green, yellow, and red line positions based off of the bpm for the asynchrony chart</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> greenYPosAsynchrony = beatTime / <span class="hljs-number">6</span>;
+<span class="hljs-keyword">let</span> greenYNegAsynchrony = -greenYPosAsynchrony;
+<span class="hljs-keyword">let</span> yellowYPosAsynchrony = beatTime / <span class="hljs-number">3</span>;
+<span class="hljs-keyword">let</span> yellowYNegAsynchrony = -yellowYPosAsynchrony;
+<span class="hljs-keyword">let</span> redYPosAsynchrony = yMaxAsynchrony;
+<span class="hljs-keyword">let</span> redYNegAsynchrony = -redYPosAsynchrony;
+
+<span class="hljs-keyword">let</span> greenZonePosAsynchrony = [{ <span class="hljs-attr">x</span>: <span class="hljs-number">0</span>, <span class="hljs-attr">y</span>: greenYPosAsynchrony }, { <span class="hljs-attr">x</span>: xMax, <span class="hljs-attr">y</span>: greenYPosAsynchrony }];
+<span class="hljs-keyword">let</span> greenZoneNegAsynchrony = [{ <span class="hljs-attr">x</span>: <span class="hljs-number">0</span>, <span class="hljs-attr">y</span>: greenYNegAsynchrony }, { <span class="hljs-attr">x</span>: xMax, <span class="hljs-attr">y</span>: greenYNegAsynchrony }];
+<span class="hljs-keyword">let</span> yellowZonePosAsynchrony = [{ <span class="hljs-attr">x</span>: <span class="hljs-number">0</span>, <span class="hljs-attr">y</span>: yellowYPosAsynchrony }, { <span class="hljs-attr">x</span>: xMax, <span class="hljs-attr">y</span>: yellowYPosAsynchrony }];
+<span class="hljs-keyword">let</span> yellowZoneNegAsynchrony = [{ <span class="hljs-attr">x</span>: <span class="hljs-number">0</span>, <span class="hljs-attr">y</span>: yellowYNegAsynchrony }, { <span class="hljs-attr">x</span>: xMax, <span class="hljs-attr">y</span>: yellowYNegAsynchrony }];
+<span class="hljs-keyword">let</span> redZonePosAsynchrony = [{ <span class="hljs-attr">x</span>: <span class="hljs-number">0</span>, <span class="hljs-attr">y</span>: redYPosAsynchrony }, { <span class="hljs-attr">x</span>: xMax, <span class="hljs-attr">y</span>: redYPosAsynchrony }];
+<span class="hljs-keyword">let</span> redZoneNegAsynchrony = [{ <span class="hljs-attr">x</span>: <span class="hljs-number">0</span>, <span class="hljs-attr">y</span>: redYNegAsynchrony }, { <span class="hljs-attr">x</span>: xMax, <span class="hljs-attr">y</span>: redYNegAsynchrony }];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>Calculate the sound on/sound off lines for interval and asynchrony graphs</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> soundOffLineInterval = [{ <span class="hljs-attr">x</span>: soundOnTime, <span class="hljs-attr">y</span>: yMaxInterval }, { <span class="hljs-attr">x</span>: soundOnTime, <span class="hljs-attr">y</span>: yMinInterval }];
+<span class="hljs-keyword">let</span> soundOffLineAsynchrony = [{ <span class="hljs-attr">x</span>: soundOnTime, <span class="hljs-attr">y</span>: yMaxAsynchrony }, { <span class="hljs-attr">x</span>: soundOnTime, <span class="hljs-attr">y</span>: yMinAsynchrony }];
+<span class="hljs-keyword">let</span> soundOnLineInterval = [], soundOnLineAsynchrony = [];
+<span class="hljs-keyword">let</span> currentTime = <span class="hljs-built_in">parseInt</span>(soundOnTime);
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">1</span>; i &lt; cycles; i++) {
+    currentTime += <span class="hljs-built_in">parseInt</span>(soundOffTime);
+    soundOffLineInterval.push(<span class="hljs-literal">NaN</span>);
+    soundOffLineAsynchrony.push(<span class="hljs-literal">NaN</span>);
+    soundOnLineInterval.push({ <span class="hljs-attr">x</span>: currentTime, <span class="hljs-attr">y</span>: yMaxInterval }, { <span class="hljs-attr">x</span>: currentTime, <span class="hljs-attr">y</span>: yMinInterval });
+    soundOnLineAsynchrony.push({ <span class="hljs-attr">x</span>: currentTime, <span class="hljs-attr">y</span>: yMaxAsynchrony }, { <span class="hljs-attr">x</span>: currentTime, <span class="hljs-attr">y</span>: yMinAsynchrony });
+    soundOnLineInterval.push(<span class="hljs-literal">NaN</span>);
+    soundOnLineAsynchrony.push(<span class="hljs-literal">NaN</span>);
+    currentTime += <span class="hljs-built_in">parseInt</span>(soundOnTime);
+    soundOffLineInterval.push({ <span class="hljs-attr">x</span>: currentTime, <span class="hljs-attr">y</span>: yMaxInterval }, { <span class="hljs-attr">x</span>: currentTime, <span class="hljs-attr">y</span>: yMinInterval });
+    soundOffLineAsynchrony.push({ <span class="hljs-attr">x</span>: currentTime, <span class="hljs-attr">y</span>: yMaxAsynchrony }, { <span class="hljs-attr">x</span>: currentTime, <span class="hljs-attr">y</span>: yMinAsynchrony });
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>Create the chart for the intertap interval graph</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> intervalGraph = <span class="hljs-keyword">new</span> Chart(intervalGraphElement.getContext(<span class="hljs-string">'2d'</span>), {
+    <span class="hljs-attr">type</span>: <span class="hljs-string">'scatter'</span>,
+    <span class="hljs-attr">data</span>: {
+        <span class="hljs-attr">fill</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">'rgba(255, 99, 132, 1)'</span>,
+        <span class="hljs-attr">datasets</span>: [{
+            <span class="hljs-attr">order</span>: <span class="hljs-number">0</span>,
+            <span class="hljs-attr">label</span>: <span class="hljs-string">'Inter-tap Interval'</span>,
+            <span class="hljs-attr">data</span>: intervalChartArray,
+            <span class="hljs-attr">pointStyle</span>: <span class="hljs-string">'rectRot'</span>,
+            <span class="hljs-attr">radius</span>: <span class="hljs-number">5</span>,
+            <span class="hljs-attr">hoverRadius</span>: <span class="hljs-number">10</span>,
+            <span class="hljs-attr">borderColor</span>: <span class="hljs-string">'rgba(255, 99, 132, 1)'</span>,
+            <span class="hljs-attr">borderWidth</span>: <span class="hljs-number">1.2</span>
+        },
+        {
+            <span class="hljs-attr">data</span>: greenZonePosInterval,
+            <span class="hljs-attr">borderColor</span>: <span class="hljs-string">'rgba(44, 155, 8, 0.6)'</span>,
+            <span class="hljs-attr">borderDash</span>: [<span class="hljs-number">5</span>, <span class="hljs-number">15</span>],
+            <span class="hljs-attr">type</span>: <span class="hljs-string">'line'</span>,
+            <span class="hljs-attr">showLine</span>: <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">pointRadius</span>: <span class="hljs-number">0</span>,
+            <span class="hljs-attr">fill</span>: <span class="hljs-literal">false</span>
+        }, {
+            <span class="hljs-attr">data</span>: yellowZonePosInterval,
+            <span class="hljs-attr">borderColor</span>: <span class="hljs-string">'rgba(218, 251, 8, 0.6)'</span>,
+            <span class="hljs-attr">borderDash</span>: [<span class="hljs-number">5</span>, <span class="hljs-number">15</span>],
+            <span class="hljs-attr">type</span>: <span class="hljs-string">'line'</span>,
+            <span class="hljs-attr">showLine</span>: <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">pointRadius</span>: <span class="hljs-number">0</span>,
+            <span class="hljs-attr">fill</span>: <span class="hljs-literal">false</span>
+        }, {
+            <span class="hljs-attr">data</span>: redZonePosInterval,
+            <span class="hljs-attr">borderColor</span>: <span class="hljs-string">'rgba(194, 33, 9, 0.6)'</span>,
+            <span class="hljs-attr">borderDash</span>: [<span class="hljs-number">5</span>, <span class="hljs-number">15</span>],
+            <span class="hljs-attr">type</span>: <span class="hljs-string">'line'</span>,
+            <span class="hljs-attr">showLine</span>: <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">pointRadius</span>: <span class="hljs-number">0</span>,
+            <span class="hljs-attr">fill</span>: <span class="hljs-literal">false</span>
+        }, {
+            <span class="hljs-attr">data</span>: greenZoneNegInterval,
+            <span class="hljs-attr">borderColor</span>: <span class="hljs-string">'rgba(44, 155, 8, 0.6)'</span>,
+            <span class="hljs-attr">borderDash</span>: [<span class="hljs-number">5</span>, <span class="hljs-number">15</span>],
+            <span class="hljs-attr">type</span>: <span class="hljs-string">'line'</span>,
+            <span class="hljs-attr">showLine</span>: <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">pointRadius</span>: <span class="hljs-number">0</span>,
+            <span class="hljs-attr">fill</span>: <span class="hljs-literal">false</span>
+        }, {
+            <span class="hljs-attr">data</span>: yellowZoneNegInterval,
+            <span class="hljs-attr">borderColor</span>: <span class="hljs-string">'rgba(218, 251, 8, 0.6)'</span>,
+            <span class="hljs-attr">borderDash</span>: [<span class="hljs-number">5</span>, <span class="hljs-number">15</span>],
+            <span class="hljs-attr">type</span>: <span class="hljs-string">'line'</span>,
+            <span class="hljs-attr">showLine</span>: <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">pointRadius</span>: <span class="hljs-number">0</span>,
+            <span class="hljs-attr">fill</span>: <span class="hljs-literal">false</span>
+        }, {
+            <span class="hljs-attr">data</span>: redZoneNegInterval,
+            <span class="hljs-attr">borderColor</span>: <span class="hljs-string">'rgba(194, 33, 9, 0.6)'</span>,
+            <span class="hljs-attr">borderDash</span>: [<span class="hljs-number">5</span>, <span class="hljs-number">15</span>],
+            <span class="hljs-attr">type</span>: <span class="hljs-string">'line'</span>,
+            <span class="hljs-attr">showLine</span>: <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">pointRadius</span>: <span class="hljs-number">0</span>,
+            <span class="hljs-attr">fill</span>: <span class="hljs-literal">false</span>
+        },
+        {
+            <span class="hljs-attr">data</span>: soundOffLineInterval,
+            <span class="hljs-attr">borderColor</span>: <span class="hljs-string">'rgba(255, 99, 132, 0.3)'</span>,
+            <span class="hljs-attr">borderDash</span>: [<span class="hljs-number">5</span>, <span class="hljs-number">15</span>],
+            <span class="hljs-attr">type</span>: <span class="hljs-string">'line'</span>,
+            <span class="hljs-attr">showLine</span>: <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">pointRadius</span>: <span class="hljs-number">0</span>,
+            <span class="hljs-attr">fill</span>: <span class="hljs-literal">false</span>,
+            <span class="hljs-attr">spanGaps</span>: <span class="hljs-literal">false</span>
+        },
+        {
+            <span class="hljs-attr">data</span>: soundOnLineInterval,
+            <span class="hljs-attr">borderColor</span>: <span class="hljs-string">'rgba(12, 176, 12, 0.3)'</span>,
+            <span class="hljs-attr">borderDash</span>: [<span class="hljs-number">5</span>, <span class="hljs-number">15</span>],
+            <span class="hljs-attr">type</span>: <span class="hljs-string">'line'</span>,
+            <span class="hljs-attr">showLine</span>: <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">pointRadius</span>: <span class="hljs-number">0</span>,
+            <span class="hljs-attr">fill</span>: <span class="hljs-literal">false</span>,
+            <span class="hljs-attr">spanGaps</span>: <span class="hljs-literal">false</span>
+        }],
+    },
+    <span class="hljs-attr">options</span>: {
+        <span class="hljs-attr">scales</span>: {
+            <span class="hljs-attr">yAxes</span>: [{
+                <span class="hljs-attr">ticks</span>: {
+                    <span class="hljs-attr">beginAtZero</span>: <span class="hljs-literal">false</span>,
+                    <span class="hljs-attr">max</span>: yMaxInterval,
+                    <span class="hljs-attr">min</span>: yMinInterval
+                }
+            }],
+            <span class="hljs-attr">xAxes</span>: [{
+                <span class="hljs-attr">ticks</span>: {
+                    <span class="hljs-attr">max</span>: xMax
+                }
+            }]
+        },
+        <span class="hljs-attr">legend</span>: {
+            <span class="hljs-attr">labels</span>: {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>Only display the label for the accuracy of taps</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                filter: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">legendItem, data</span>) </span>{
+                    <span class="hljs-keyword">return</span> legendItem.datasetIndex == <span class="hljs-number">0</span>;
+                }
+            }
+        }
+    }
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>Create the chart for the asynchrony graph</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> asynchronyGraph = <span class="hljs-keyword">new</span> Chart(asynchronyGraphElement.getContext(<span class="hljs-string">'2d'</span>), {
+    <span class="hljs-attr">type</span>: <span class="hljs-string">'scatter'</span>,
+    <span class="hljs-attr">data</span>: {
+        <span class="hljs-attr">fill</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">'rgba(255, 99, 132, 1)'</span>,
+        <span class="hljs-attr">datasets</span>: [{
+            <span class="hljs-attr">order</span>: <span class="hljs-number">0</span>,
+            <span class="hljs-attr">label</span>: <span class="hljs-string">'Asynchrony'</span>,
+            <span class="hljs-attr">data</span>: asynchronyChartArray,
+            <span class="hljs-attr">pointStyle</span>: <span class="hljs-string">'rectRot'</span>,
+            <span class="hljs-attr">radius</span>: <span class="hljs-number">5</span>,
+            <span class="hljs-attr">hoverRadius</span>: <span class="hljs-number">10</span>,
+            <span class="hljs-attr">borderColor</span>: <span class="hljs-string">'rgba(255, 99, 132, 1)'</span>,
+            <span class="hljs-attr">borderWidth</span>: <span class="hljs-number">1.2</span>
+        },
+        {
+            <span class="hljs-attr">data</span>: greenZonePosAsynchrony,
+            <span class="hljs-attr">borderColor</span>: <span class="hljs-string">'rgba(44, 155, 8, 0.6)'</span>,
+            <span class="hljs-attr">borderDash</span>: [<span class="hljs-number">5</span>, <span class="hljs-number">15</span>],
+            <span class="hljs-attr">type</span>: <span class="hljs-string">'line'</span>,
+            <span class="hljs-attr">showLine</span>: <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">pointRadius</span>: <span class="hljs-number">0</span>,
+            <span class="hljs-attr">fill</span>: <span class="hljs-literal">false</span>
+        }, {
+            <span class="hljs-attr">data</span>: yellowZonePosAsynchrony,
+            <span class="hljs-attr">borderColor</span>: <span class="hljs-string">'rgba(218, 251, 8, 0.6)'</span>,
+            <span class="hljs-attr">borderDash</span>: [<span class="hljs-number">5</span>, <span class="hljs-number">15</span>],
+            <span class="hljs-attr">type</span>: <span class="hljs-string">'line'</span>,
+            <span class="hljs-attr">showLine</span>: <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">pointRadius</span>: <span class="hljs-number">0</span>,
+            <span class="hljs-attr">fill</span>: <span class="hljs-literal">false</span>
+        }, {
+            <span class="hljs-attr">data</span>: redZonePosAsynchrony,
+            <span class="hljs-attr">borderColor</span>: <span class="hljs-string">'rgba(194, 33, 9, 0.6)'</span>,
+            <span class="hljs-attr">borderDash</span>: [<span class="hljs-number">5</span>, <span class="hljs-number">15</span>],
+            <span class="hljs-attr">type</span>: <span class="hljs-string">'line'</span>,
+            <span class="hljs-attr">showLine</span>: <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">pointRadius</span>: <span class="hljs-number">0</span>,
+            <span class="hljs-attr">fill</span>: <span class="hljs-literal">false</span>
+        }, {
+            <span class="hljs-attr">data</span>: greenZoneNegAsynchrony,
+            <span class="hljs-attr">borderColor</span>: <span class="hljs-string">'rgba(44, 155, 8, 0.6)'</span>,
+            <span class="hljs-attr">borderDash</span>: [<span class="hljs-number">5</span>, <span class="hljs-number">15</span>],
+            <span class="hljs-attr">type</span>: <span class="hljs-string">'line'</span>,
+            <span class="hljs-attr">showLine</span>: <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">pointRadius</span>: <span class="hljs-number">0</span>,
+            <span class="hljs-attr">fill</span>: <span class="hljs-literal">false</span>
+        }, {
+            <span class="hljs-attr">data</span>: yellowZoneNegAsynchrony,
+            <span class="hljs-attr">borderColor</span>: <span class="hljs-string">'rgba(218, 251, 8, 0.6)'</span>,
+            <span class="hljs-attr">borderDash</span>: [<span class="hljs-number">5</span>, <span class="hljs-number">15</span>],
+            <span class="hljs-attr">type</span>: <span class="hljs-string">'line'</span>,
+            <span class="hljs-attr">showLine</span>: <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">pointRadius</span>: <span class="hljs-number">0</span>,
+            <span class="hljs-attr">fill</span>: <span class="hljs-literal">false</span>
+        }, {
+            <span class="hljs-attr">data</span>: redZoneNegAsynchrony,
+            <span class="hljs-attr">borderColor</span>: <span class="hljs-string">'rgba(194, 33, 9, 0.6)'</span>,
+            <span class="hljs-attr">borderDash</span>: [<span class="hljs-number">5</span>, <span class="hljs-number">15</span>],
+            <span class="hljs-attr">type</span>: <span class="hljs-string">'line'</span>,
+            <span class="hljs-attr">showLine</span>: <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">pointRadius</span>: <span class="hljs-number">0</span>,
+            <span class="hljs-attr">fill</span>: <span class="hljs-literal">false</span>
+        },
+        {
+            <span class="hljs-attr">data</span>: soundOffLineAsynchrony,
+            <span class="hljs-attr">borderColor</span>: <span class="hljs-string">'rgba(255, 99, 132, 0.3)'</span>,
+            <span class="hljs-attr">borderDash</span>: [<span class="hljs-number">5</span>, <span class="hljs-number">15</span>],
+            <span class="hljs-attr">type</span>: <span class="hljs-string">'line'</span>,
+            <span class="hljs-attr">showLine</span>: <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">pointRadius</span>: <span class="hljs-number">0</span>,
+            <span class="hljs-attr">fill</span>: <span class="hljs-literal">false</span>,
+            <span class="hljs-attr">spanGaps</span>: <span class="hljs-literal">false</span>
+        },
+        {
+            <span class="hljs-attr">data</span>: soundOnLineAsynchrony,
+            <span class="hljs-attr">borderColor</span>: <span class="hljs-string">'rgba(12, 176, 12, 0.3)'</span>,
+            <span class="hljs-attr">borderDash</span>: [<span class="hljs-number">5</span>, <span class="hljs-number">15</span>],
+            <span class="hljs-attr">type</span>: <span class="hljs-string">'line'</span>,
+            <span class="hljs-attr">showLine</span>: <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">pointRadius</span>: <span class="hljs-number">0</span>,
+            <span class="hljs-attr">fill</span>: <span class="hljs-literal">false</span>,
+            <span class="hljs-attr">spanGaps</span>: <span class="hljs-literal">false</span>
+        }],
+    },
+    <span class="hljs-attr">options</span>: {
+        <span class="hljs-attr">scales</span>: {
+            <span class="hljs-attr">yAxes</span>: [{
+                <span class="hljs-attr">ticks</span>: {
+                    <span class="hljs-attr">beginAtZero</span>: <span class="hljs-literal">false</span>,
+                    <span class="hljs-attr">max</span>: yMaxAsynchrony,
+                    <span class="hljs-attr">min</span>: yMinAsynchrony
+                }
+            }],
+            <span class="hljs-attr">xAxes</span>: [{
+                <span class="hljs-attr">ticks</span>: {
+                    <span class="hljs-attr">max</span>: xMax
+                }
+            }]
+        },
+        <span class="hljs-attr">legend</span>: {
+            <span class="hljs-attr">labels</span>: {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>Only display the label for the accuracy of taps</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                filter: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">legendItem, data</span>) </span>{
+                    <span class="hljs-keyword">return</span> legendItem.datasetIndex == <span class="hljs-number">0</span>;
+                }
+            }
+        }
+    }
+});
+
+<span class="hljs-keyword">let</span> scoreString = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">"#score"</span>);
+
+score = <span class="hljs-built_in">Math</span>.round(score * <span class="hljs-number">100</span>) / <span class="hljs-number">100</span>;
+
+
+scoreString.innerHTML = <span class="hljs-string">"Score: "</span> + score + <span class="hljs-string">"%"</span>;
+
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">resetToParamSelect</span>(<span class="hljs-params"></span>) </span>{
+    firebase.auth().onAuthStateChanged(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">user</span>) </span>{
+        <span class="hljs-keyword">if</span> (user) {
+            <span class="hljs-built_in">window</span>.location = <span class="hljs-string">"userdashboard.html"</span>;
+        } <span class="hljs-keyword">else</span> {
+            <span class="hljs-built_in">window</span>.location = <span class="hljs-string">"parameters.html"</span>;
+        }
+    });
+}
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">changeToIntervalGraph</span>(<span class="hljs-params"></span>) </span>{
+    intervalGraphElement.style.display = <span class="hljs-string">"initial"</span>;
+    asynchronyGraphElement.style.display = <span class="hljs-string">"none"</span>;
+}
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">changeToAsynchronyGraph</span>(<span class="hljs-params"></span>) </span>{
+    intervalGraphElement.style.display = <span class="hljs-string">"none"</span>;
+    asynchronyGraphElement.style.display = <span class="hljs-string">"initial"</span>;
+}</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>
