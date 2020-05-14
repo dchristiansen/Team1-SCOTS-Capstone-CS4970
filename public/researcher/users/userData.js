@@ -154,6 +154,12 @@ function createPagination() {
     pagination.appendChild(rightChevron);
 }
 
+/*
+    checkCheckedArray
+    Receives: event e
+    Changes the value within the checked array corresponding to the checked checkbox
+*/
+//Issue here with Firefox compatibility. Events are recorded differently on Firefox breaking this function
 function checkCheckedArray(e) {
     let index = e.path[3].rowIndex - 1;
     index += (currentPage - 1) * entriesPerPage;
@@ -365,6 +371,7 @@ deleteUserForm.addEventListener('submit', (e) => {
     }
 });
 
+//Function to handle pressing any of the pagination buttons
 $("#pagination").on("click", "a", function changePage(){
     let newPage = $(this).data('page');
   

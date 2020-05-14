@@ -123,6 +123,7 @@ function createPagination() {
         let current = i + 1;
         let li = document.createElement('li');
         li.className = "waves-effect";
+        li.id = "page" + current;
         if(current == currentPage) {
             li.className += " active";
         }
@@ -189,7 +190,7 @@ $("#pagination").on("click", "a", function changePage() {
         }
 
         if (newPage <= numPages && newPage > 0) {
-            populateTable(newArray);
+            populateTable(newPage);
 
             document.querySelector("#page" + currentPage).className = "waves-effect";
             document.querySelector("#page" + newPage).className = "waves-effect active";
